@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.web.WebView?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.robinsonpn.controller.MainWindowController">
+   <children>
+      <MenuBar prefHeight="23.0" prefWidth="600.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Open" />
+                  <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#optionsAction" text="Options" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TreeView fx:id="emailTreeview" layoutY="28.0" prefHeight="373.0" prefWidth="197.0" />
+      <TableView fx:id="emailsTableview" layoutX="197.0" layoutY="28.0" prefHeight="132.0" prefWidth="401.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="Sender" />
+          <TableColumn prefWidth="75.0" text="Subject" />
+            <TableColumn prefWidth="75.0" text="Size" />
+            <TableColumn prefWidth="75.0" text="Date" />
+            <TableColumn prefWidth="75.0" text="Recipient" />
+        </columns>
+      </TableView>
+      <WebView fx:id="emailsWebview" layoutX="197.0" layoutY="160.0" prefHeight="239.0" prefWidth="401.0" />
+   </children>
+</AnchorPane>

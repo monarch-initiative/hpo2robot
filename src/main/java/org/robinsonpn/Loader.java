@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * JavaFX App
@@ -20,33 +21,14 @@ public class Loader extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        /*var javaVersion = SystemInfo.javaVersion();
-        var javafxVersion = SystemInfo.javafxVersion();
-
-        var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        var scene = new Scene(new StackPane(label), 640, 480);
-        stage.setScene(scene); */
-        System.out.println(Loader.class);
-        //URL url = getClass().getResource("fxml/")
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("view/LoginWindow.fxml"));
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("view/LoginWindow.fxml"));
-
-      // Parent parent = fxmlLoader.load();
-        //System.err.println("parent " + root);
-      Scene scene = new Scene(root, 300,200);
-      stage.setScene(scene);
+        URL location = getClass().getResource("view/LoginWindow.fxml");
+        Parent parent = FXMLLoader.load(location);
+        Scene scene = new Scene(parent, 510, 325);
+        stage.setScene(scene);
         stage.show();
 
-        //System.err.println("url - " + parent);
-       // URL url2 = Objects.requireNonNull(getClass().getResource("view/first.fxml"));
-
-       /* Parent parent = FXMLLoader.load(url);
-
-
-        */
         System.out.println("hello");
     }
-
 
 
 }
