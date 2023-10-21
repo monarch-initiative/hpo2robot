@@ -21,7 +21,7 @@ public class Loader extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        URL location = getClass().getResource("view/LoginWindow.fxml");
+        URL location = getClass().getResource("view/MainWindow.fxml");
         Parent parent = FXMLLoader.load(location);
         Scene scene = new Scene(parent, 510, 325);
         stage.setScene(scene);
