@@ -1,16 +1,16 @@
-package org.robinsonpn.view;
+package org.monarchinitiative.view;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import org.robinsonpn.EmailManager;
-import org.robinsonpn.Launcher;
-import org.robinsonpn.controller.BaseController;
-import org.robinsonpn.controller.LoginWindowController;
-import org.robinsonpn.controller.MainWindowController;
-import org.robinsonpn.controller.OptionsWindowController;
+import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.Launcher;
+import org.monarchinitiative.controller.BaseController;
+import org.monarchinitiative.controller.LoginWindowController;
+import org.monarchinitiative.controller.MainWindowController;
+import org.monarchinitiative.controller.OptionsWindowController;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.robinsonpn.view;
+package org.monarchinitiative.view;
 
 public enum FontSize {
     SMALL,

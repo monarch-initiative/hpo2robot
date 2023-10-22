@@ -5,7 +5,7 @@
 
 <AnchorPane prefHeight="325.0" prefWidth="510.0" styleClass="container"
             xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.robinsonpn.controller.LoginWindowController">
+            fx:controller="org.monarchinitiative.controller.LoginWindowController">
     <Button layoutX="195.0" layoutY="213.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="121.0" text="Login"
         onAction="#loginButtonAction" />
     <Label layoutX="27.0" layoutY="132.0" text="Email Address"/>

@@ -1,7 +1,7 @@
-package org.robinsonpn.controller;
+package org.monarchinitiative.controller;
 
-import org.robinsonpn.EmailManager;
-import org.robinsonpn.view.ViewFactory;
+import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.view.ViewFactory;
 
 
 

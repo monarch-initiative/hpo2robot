@@ -1,6 +1,5 @@
-package org.robinsonpn.controller;
+package org.monarchinitiative.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -8,10 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.robinsonpn.EmailManager;
-import org.robinsonpn.controller.services.LoginService;
-import org.robinsonpn.model.EmailAccount;
-import org.robinsonpn.view.ViewFactory;
+import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.controller.services.LoginService;
+import org.monarchinitiative.model.EmailAccount;
+import org.monarchinitiative.view.ViewFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;

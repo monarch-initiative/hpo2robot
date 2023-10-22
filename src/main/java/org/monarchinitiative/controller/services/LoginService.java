@@ -1,11 +1,11 @@
-package org.robinsonpn.controller.services;
+package org.monarchinitiative.controller.services;
 
 import javax.mail.*;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.robinsonpn.EmailManager;
-import org.robinsonpn.controller.EmailLoginResult;
-import org.robinsonpn.model.EmailAccount;
+import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.controller.EmailLoginResult;
+import org.monarchinitiative.model.EmailAccount;
 
 public class LoginService extends Service<EmailLoginResult> {
 

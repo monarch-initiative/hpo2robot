@@ -1,4 +1,4 @@
-package org.robinsonpn.controller;
+package org.monarchinitiative.controller;
 
 public enum EmailLoginResult {
 

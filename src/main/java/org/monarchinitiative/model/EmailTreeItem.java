@@ -1,4 +1,4 @@
-package org.robinsonpn.model;
+package org.monarchinitiative.model;
 
 import javafx.scene.control.TreeItem;
 

@@ -1,8 +1,8 @@
-package org.robinsonpn.controller.services;
+package org.monarchinitiative.controller.services;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.robinsonpn.model.EmailTreeItem;
+import org.monarchinitiative.model.EmailTreeItem;
 
 import javax.mail.Folder;
 import javax.mail.MessagingException;

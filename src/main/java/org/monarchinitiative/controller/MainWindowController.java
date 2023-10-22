@@ -1,11 +1,11 @@
-package org.robinsonpn.controller;
+package org.monarchinitiative.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeView;
 import javafx.scene.web.WebView;
-import org.robinsonpn.EmailManager;
-import org.robinsonpn.view.ViewFactory;
+import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.view.ViewFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;

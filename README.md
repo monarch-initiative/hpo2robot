@@ -6,7 +6,7 @@ mymail
 
 
 --add-reads
-org.robinsonpn=ALL-UNNAMED
+org.monarchinitiative=ALL-UNNAMED
 --add-exports=javafx.base/com.sun.javafx.event=org.controlsfx.controls
 --add-opens
 javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED

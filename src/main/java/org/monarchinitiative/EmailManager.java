@@ -1,9 +1,9 @@
-package org.robinsonpn;
+package org.monarchinitiative;
 
 import javafx.scene.control.TreeItem;
-import org.robinsonpn.controller.services.FetchFoldersService;
-import org.robinsonpn.model.EmailAccount;
-import org.robinsonpn.model.EmailTreeItem;
+import org.monarchinitiative.controller.services.FetchFoldersService;
+import org.monarchinitiative.model.EmailAccount;
+import org.monarchinitiative.model.EmailTreeItem;
 
 public class EmailManager {
 
