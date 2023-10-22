@@ -15,12 +15,22 @@ import org.robinsonpn.controller.OptionsWindowController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewFactory {
     private final EmailManager emailManager;
 
+    private ColorTheme colorTheme = ColorTheme.DEFAULT;
+
+    private FontSize fontSize = FontSize.MEDIUM;
+
+
+    private List<Stage> activeStageList;
+
     public ViewFactory(EmailManager emailManager) {
         this.emailManager = emailManager;
+        activeStageList = new ArrayList<>();
     }
 
     public void showLoginWindow()  {
@@ -29,7 +39,8 @@ public class ViewFactory {
     }
 
     private  void initializeStage(BaseController controller) {
-        URL location = getLocation(controller.getFxmlName());
+        String fxmlDir = "view";
+        URL location = getLocation(fxmlDir, controller.getFxmlName());
         FXMLLoader loader = new FXMLLoader(location);
 
         // This is used to customize the creation of controller injected by javaFX when defining them with fx:controller attribute inside FXML files
@@ -64,6 +75,7 @@ public class ViewFactory {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
+        activeStageList.add(stage);
     }
 
 
@@ -78,8 +90,8 @@ public class ViewFactory {
         initializeStage(controller);
     }
 
-    public URL getLocation(String fxmlName) {
-        String path = "view" + File.separator + fxmlName;
+    public URL getLocation(String dir, String fxmlName) {
+        String path = dir + File.separator + fxmlName;
         System.out.printf("path = %s\n",path);
         URL location = Launcher.class.getResource(path);
         System.out.println("getLocation="+location);
@@ -88,7 +100,33 @@ public class ViewFactory {
 
     public void closeStage(Stage stage) {
         stage.close();
+        activeStageList.remove(stage);
     }
 
+    public ColorTheme getColorTheme() {
+        return colorTheme;
+    }
 
+    public void setColorTheme(ColorTheme colorTheme) {
+        this.colorTheme = colorTheme;
+    }
+
+    public FontSize getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(FontSize fontSize) {
+        this.fontSize = fontSize;
+    }
+
+    public void updateStyles() {
+        for (Stage stage : activeStageList) {
+            Scene scene = stage.getScene();
+            scene.getStylesheets().clear();
+            String cssDir = "css";
+            URL location =  getLocation(cssDir, "fontBig.css");
+            System.out.println("styles - " + location);
+
+        }
+    }
 }

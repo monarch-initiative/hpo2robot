@@ -6,15 +6,13 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.robinsonpn.controller.OptionsWindowController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.robinsonpn.controller.OptionsWindowController">
    <children>
       <Slider fx:id="fontSizePicker" layoutX="176.0" layoutY="91.0" prefHeight="16.0" prefWidth="264.0" />
       <ChoiceBox fx:id="themePicker" layoutX="176.0" layoutY="151.0" prefHeight="26.0" prefWidth="264.0" />
       <Label layoutX="51.0" layoutY="91.0" text="Select font size" />
       <Label layoutX="63.0" layoutY="169.0" text="Select theme" />
-      <Label layoutX="146.0" layoutY="26.0" prefHeight="17.0" prefWidth="336.0" text="Options" />
+      <Label layoutX="146.0" layoutY="26.0" prefHeight="17.0" prefWidth="336.0" styleClass=".big" text="Options" />
       <Button layoutX="325.0" layoutY="339.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
       <Button layoutX="455.0" layoutY="340.0" mnemonicParsing="false" onAction="#okButtonAction" text="OK" />
    </children>
