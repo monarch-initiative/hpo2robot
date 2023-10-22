@@ -15,6 +15,7 @@
              AnchorPane.topAnchor="0.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" text="Open"/>
+            <MenuItem mnemonicParsing="false" text="Login" onAction="#addAccount"/>
             <MenuItem mnemonicParsing="false" text="Close"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">

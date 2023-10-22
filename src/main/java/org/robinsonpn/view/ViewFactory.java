@@ -92,9 +92,9 @@ public class ViewFactory {
 
     public URL getLocation(String dir, String fxmlName) {
         String path = dir + File.separator + fxmlName;
-        System.out.printf("path = %s\n",path);
         URL location = Launcher.class.getResource(path);
-        System.out.println("getLocation="+location);
+//        System.out.printf("path = %s\n",path);
+//        System.out.println("getLocation="+location);
         return location;
     }
 
@@ -124,9 +124,12 @@ public class ViewFactory {
             Scene scene = stage.getScene();
             scene.getStylesheets().clear();
             String cssDir = "css";
-            URL location =  getLocation(cssDir, "fontBig.css");
-            System.out.println("styles - " + location);
-
+            String cssName = ColorTheme.getCssFileName(getColorTheme());
+            URL location =  getLocation(cssDir, cssName);
+            scene.getStylesheets().add(location.toExternalForm());
+            cssName = FontSize.getCssFileName(getFontSize());
+            location =  getLocation(cssDir, cssName);
+            scene.getStylesheets().add(location.toExternalForm());
         }
     }
 }
