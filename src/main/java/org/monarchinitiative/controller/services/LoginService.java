@@ -3,16 +3,16 @@ package org.monarchinitiative.controller.services;
 import javax.mail.*;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.Hpo2RobotManager;
 import org.monarchinitiative.controller.EmailLoginResult;
 import org.monarchinitiative.model.EmailAccount;
 
 public class LoginService extends Service<EmailLoginResult> {
 
     EmailAccount emailAccount;
-    EmailManager emailManager;
+    Hpo2RobotManager emailManager;
 
-    public LoginService(EmailAccount emailAccount, EmailManager emailManager) {
+    public LoginService(EmailAccount emailAccount, Hpo2RobotManager emailManager) {
         this.emailAccount = emailAccount;
         this.emailManager = emailManager;
     }

@@ -5,12 +5,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.Hpo2RobotManager;
 import org.monarchinitiative.Launcher;
 import org.monarchinitiative.controller.BaseController;
-import org.monarchinitiative.controller.LoginWindowController;
 import org.monarchinitiative.controller.MainWindowController;
 import org.monarchinitiative.controller.OptionsWindowController;
+import org.monarchinitiative.model.Options;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewFactory {
-    private final EmailManager emailManager;
+    private final Hpo2RobotManager hpo2robotManager;
 
     private ColorTheme colorTheme = ColorTheme.DEFAULT;
 
@@ -28,17 +28,12 @@ public class ViewFactory {
 
     private List<Stage> activeStageList;
 
-    public ViewFactory(EmailManager emailManager) {
-        this.emailManager = emailManager;
+    public ViewFactory(Hpo2RobotManager emailManager) {
+        this.hpo2robotManager = emailManager;
         activeStageList = new ArrayList<>();
     }
 
-    public void showLoginWindow()  {
-        BaseController controller = new LoginWindowController(emailManager, this, "LoginWindow.fxml");
-        initializeStage(controller);
-    }
-
-    private  void initializeStage(BaseController controller) {
+    private void initializeStage(BaseController controller) {
         String fxmlDir = "view";
         URL location = getLocation(fxmlDir, controller.getFxmlName());
         FXMLLoader loader = new FXMLLoader(location);
@@ -80,13 +75,13 @@ public class ViewFactory {
 
 
     public void showMainWindow() {
-        BaseController controller = new MainWindowController(emailManager, this, "MainWindow.fxml");
+        BaseController controller = new MainWindowController(hpo2robotManager, this, "MainWindow.fxml");
         initializeStage(controller);
     }
 
 
     public void showOptionsWindow() {
-        BaseController controller = new OptionsWindowController(emailManager, this, "OptionsWindow.fxml");
+        BaseController controller = new OptionsWindowController(hpo2robotManager, this, "OptionsWindow.fxml");
         initializeStage(controller);
     }
 
@@ -131,5 +126,9 @@ public class ViewFactory {
             location =  getLocation(cssDir, cssName);
             scene.getStylesheets().add(location.toExternalForm());
         }
+    }
+
+    public Options getOptions() {
+        return this.hpo2robotManager.getOptions();
     }
 }

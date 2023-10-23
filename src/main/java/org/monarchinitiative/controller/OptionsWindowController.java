@@ -2,25 +2,19 @@ package org.monarchinitiative.controller;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
-import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.Hpo2RobotManager;
 import org.monarchinitiative.model.Options;
-import org.monarchinitiative.view.ColorTheme;
-import org.monarchinitiative.view.FontSize;
 import org.monarchinitiative.view.ViewFactory;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -74,7 +68,7 @@ public class OptionsWindowController extends BaseController implements Initializ
         viewFactory.showMainWindow();
     }
 
-    public OptionsWindowController(EmailManager emailManager, ViewFactory viewFactory, String fxmlName) {
+    public OptionsWindowController(Hpo2RobotManager emailManager, ViewFactory viewFactory, String fxmlName) {
         super(emailManager, viewFactory, fxmlName);
     }
 

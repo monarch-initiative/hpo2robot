@@ -4,7 +4,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeView;
 import javafx.scene.web.WebView;
-import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.Hpo2RobotManager;
 import org.monarchinitiative.view.ViewFactory;
 
 import java.net.URL;
@@ -23,7 +23,10 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     private WebView emailsWebview;
 
-    public MainWindowController(EmailManager emailManager, ViewFactory viewFactory, String fxmlName) {
+    @FXML
+    private RobotPaneController roboPane;
+
+    public MainWindowController(Hpo2RobotManager emailManager, ViewFactory viewFactory, String fxmlName) {
         super(emailManager, viewFactory, fxmlName);
     }
 
@@ -32,13 +35,12 @@ public class MainWindowController extends BaseController implements Initializabl
         this.viewFactory.showOptionsWindow();
     }
 
-    public void addAccount() {
-        viewFactory.showLoginWindow();
-    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setUpEmailTreeview();
+        System.out.println("Main init");
+       // setUpEmailTreeview();
     }
 
     private void setUpEmailTreeview() {

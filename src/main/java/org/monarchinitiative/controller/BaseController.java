@@ -1,19 +1,19 @@
 package org.monarchinitiative.controller;
 
-import org.monarchinitiative.EmailManager;
+import org.monarchinitiative.Hpo2RobotManager;
 import org.monarchinitiative.view.ViewFactory;
 
 
 
 public abstract class BaseController {
 
-    protected final EmailManager emailManager;
+    protected final Hpo2RobotManager emailManager;
 
     protected final ViewFactory viewFactory;
 
     private final String fxmlName;
 
-    public BaseController(EmailManager emailManager, ViewFactory viewFactory, String fxmlName) {
+    public BaseController(Hpo2RobotManager emailManager, ViewFactory viewFactory, String fxmlName) {
         this.emailManager = emailManager;
         this.viewFactory = viewFactory;
         this.fxmlName = fxmlName;

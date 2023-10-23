@@ -1,6 +1,12 @@
 package org.monarchinitiative.model;
 
-public class Options {
+import java.io.Serializable;
+
+/**
+ * Stores the current HPO file, ROBOT file, and ORCID identifier of the curator
+ * between HPO2ROBOT sessions.
+ */
+public class Options implements Serializable {
 
     private static String N_A = "";
 
