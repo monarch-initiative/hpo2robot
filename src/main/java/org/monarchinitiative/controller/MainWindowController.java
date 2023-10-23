@@ -37,8 +37,6 @@ public class MainWindowController extends BaseController implements Initializabl
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Main init");
         termLabelValidator.setFieldLabel("New Term Label");
-       // roboPane.debug();
-       // setUpEmailTreeview();
     }
 
     private void setUpEmailTreeview() {
