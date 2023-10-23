@@ -9,15 +9,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-
-<?import org.monarchinitiative.controller.RobotPaneController?>
+<?import org.monarchinitiative.controller.RobotPane?>
 <AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.controller.MainWindowController">
     <MenuBar prefHeight="23.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
              AnchorPane.topAnchor="0.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" text="Open"/>
-            <MenuItem mnemonicParsing="false" text="Login" onAction="#addAccount"/>
             <MenuItem mnemonicParsing="false" text="Close"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
@@ -40,6 +38,6 @@
       </columns>
     </TableView>
 
-    <fx:include source="RobotPane.fxml"/>
+    <RobotPane/>
 
 </AnchorPane>

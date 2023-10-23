@@ -7,15 +7,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 
-import org.controlsfx.control.textfield.TextFields;
-
 import org.monarchinitiative.Launcher;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class RobotPaneController extends AnchorPane  {
+public class RobotPane extends AnchorPane  {
 
     @FXML
     private TextField commentTextField;
@@ -42,16 +40,19 @@ public class RobotPaneController extends AnchorPane  {
 
     }
 
-    public RobotPaneController() {
+    public RobotPane() {
+        System.out.println("RB");
         FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("view/RobotPane.fxml"));
-       // fxmlLoader.setRoot(this);
-       // fxmlLoader.setController(RobotPaneController.this);
+      // fxmlLoader.setRoot(this);
+       fxmlLoader.setController(RobotPane.this);
 
-//        try {
-//            fxmlLoader.load();
-//        } catch (IOException exception) {
-//            throw new RuntimeException(exception);
-//        }
+       try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
+
 
         initElements();
     }

@@ -21,12 +21,8 @@ import java.util.List;
 public class ViewFactory {
     private final Hpo2RobotManager hpo2robotManager;
 
-    private ColorTheme colorTheme = ColorTheme.DEFAULT;
 
-    private FontSize fontSize = FontSize.MEDIUM;
-
-
-    private List<Stage> activeStageList;
+    private final List<Stage> activeStageList;
 
     public ViewFactory(Hpo2RobotManager emailManager) {
         this.hpo2robotManager = emailManager;
@@ -96,36 +92,6 @@ public class ViewFactory {
     public void closeStage(Stage stage) {
         stage.close();
         activeStageList.remove(stage);
-    }
-
-    public ColorTheme getColorTheme() {
-        return colorTheme;
-    }
-
-    public void setColorTheme(ColorTheme colorTheme) {
-        this.colorTheme = colorTheme;
-    }
-
-    public FontSize getFontSize() {
-        return fontSize;
-    }
-
-    public void setFontSize(FontSize fontSize) {
-        this.fontSize = fontSize;
-    }
-
-    public void updateStyles() {
-        for (Stage stage : activeStageList) {
-            Scene scene = stage.getScene();
-            scene.getStylesheets().clear();
-            String cssDir = "css";
-            String cssName = ColorTheme.getCssFileName(getColorTheme());
-            URL location =  getLocation(cssDir, cssName);
-            scene.getStylesheets().add(location.toExternalForm());
-            cssName = FontSize.getCssFileName(getFontSize());
-            location =  getLocation(cssDir, cssName);
-            scene.getStylesheets().add(location.toExternalForm());
-        }
     }
 
     public Options getOptions() {

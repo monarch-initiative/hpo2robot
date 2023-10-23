@@ -9,8 +9,8 @@ import org.monarchinitiative.model.Options;
 public class Hpo2RobotManager {
 
     // handle folders
-    private Options options;
-    private EmailTreeItem<String> foldersRoot = new EmailTreeItem<String>("");
+    private final Options options;
+    private final EmailTreeItem<String> foldersRoot = new EmailTreeItem<>("");
 
     public TreeItem<String> getFoldersRoot() {
         return foldersRoot;

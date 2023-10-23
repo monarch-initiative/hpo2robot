@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class Options implements Serializable {
 
-    private static String N_A = "";
+    private static final String N_A = "";
 
     private String hpJsonFile;
 

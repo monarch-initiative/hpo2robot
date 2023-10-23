@@ -24,7 +24,7 @@ public class MainWindowController extends BaseController implements Initializabl
     private WebView emailsWebview;
 
     @FXML
-    private RobotPaneController roboPane;
+    private RobotPane roboPane;
 
     public MainWindowController(Hpo2RobotManager emailManager, ViewFactory viewFactory, String fxmlName) {
         super(emailManager, viewFactory, fxmlName);

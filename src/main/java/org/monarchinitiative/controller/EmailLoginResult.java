@@ -6,5 +6,5 @@ public enum EmailLoginResult {
     FAILED_BY_CREDENTIALS,
     FAILED_BY_NETWORK,
 
-    UNEXPECTED_ERROR;
+    UNEXPECTED_ERROR
 }
