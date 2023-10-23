@@ -10,9 +10,13 @@
 
 
 <?import org.monarchinitiative.controller.RobotPane?>
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21"
+<?import org.monarchinitiative.view.ValidatingPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<AnchorPane prefHeight="1000.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.controller.MainWindowController">
-    <MenuBar prefHeight="23.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+    <MenuBar prefHeight="23.0" prefWidth="1200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
              AnchorPane.topAnchor="0.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" text="Open"/>
@@ -25,19 +29,32 @@
             <MenuItem mnemonicParsing="false" text="About"/>
         </Menu>
     </MenuBar>
-    <TreeView fx:id="emailTreeview" layoutY="28.0" prefHeight="373.0" prefWidth="197.0" AnchorPane.bottomAnchor="0.0"
-              AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="27.0"/>
-    <TableView fx:id="emailsTableview" layoutX="197.0" layoutY="28.0" prefHeight="179.0" prefWidth="1004.0"
-               AnchorPane.leftAnchor="196.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
-      <columns>
-          <TableColumn prefWidth="75.0" text="Sender"/>
-          <TableColumn prefWidth="75.0" text="Subject"/>
-          <TableColumn prefWidth="75.0" text="Size"/>
-          <TableColumn prefWidth="75.0" text="Date"/>
-          <TableColumn prefWidth="75.0" text="Recipient"/>
-      </columns>
-    </TableView>
+    <HBox>
+        <TreeView fx:id="emailTreeview" layoutY="28.0" prefHeight="977.0" prefWidth="300"
+                  AnchorPane.bottomAnchor="0.0"
+                  AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="27.0"/>
+        <VBox prefHeight="977.0" prefWidth="300"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+            <TableView fx:id="emailsTableview" layoutX="197.0" layoutY="28.0" prefHeight="179.0" prefWidth="1004.0"
+                       AnchorPane.leftAnchor="196.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+                <columns>
+                    <TableColumn prefWidth="75.0" text="Sender"/>
+                    <TableColumn prefWidth="75.0" text="Subject"/>
+                    <TableColumn prefWidth="75.0" text="Size"/>
+                    <TableColumn prefWidth="75.0" text="Date"/>
+                    <TableColumn prefWidth="75.0" text="Recipient"/>
+                </columns>
+            </TableView>
 
-    <RobotPane/>
-
+            <VBox prefHeight="600" prefWidth="1400" xmlns="http://javafx.com/javafx/21"
+                  xmlns:fx="http://javafx.com/fxml/1"
+                  AnchorPane.leftAnchor="300.0"
+                  AnchorPane.bottomAnchor="0.0">
+                <Label text="ajhjh"/>
+                <ValidatingPane fx:id="termLabelValidator"/>
+                <ValidatingPane fx:id="termLabelValidator2"/>
+            </VBox>
+        </VBox>
+    </HBox>
 </AnchorPane>
