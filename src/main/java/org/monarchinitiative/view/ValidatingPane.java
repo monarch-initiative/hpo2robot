@@ -21,7 +21,6 @@ public class ValidatingPane extends AnchorPane {
 
     public ValidatingPane(){
         super();
-        System.out.println("valudating");
         try {
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/ValidatingPane.fxml"));
             controller = new ValidatingLabelPaneController();

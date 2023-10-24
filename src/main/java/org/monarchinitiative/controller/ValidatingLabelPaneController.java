@@ -56,7 +56,7 @@ public class ValidatingLabelPaneController implements Initializable {
                 setInvalid("Label must not start with space");
             } else if (newval.endsWith(" ")) {
                 setInvalid("Label must not end with space");
-            }else if (nonStandardChar) {
+            } else if (nonStandardChar) {
                 setInvalid("Text contains a non-ASCII character encoding: " + diff + " (Not allowed in labels).");
             } else {
                 setValid();

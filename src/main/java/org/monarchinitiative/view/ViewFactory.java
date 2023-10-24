@@ -59,7 +59,7 @@ public class ViewFactory {
         try {
             parent = loader.load();
         } catch (IOException e) {
-            e.getStackTrace();
+            e.printStackTrace();
             return;
         }
         Scene scene = new Scene(parent);
