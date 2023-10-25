@@ -1,12 +1,22 @@
 package org.monarchinitiative.model;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Stores the current HPO file, ROBOT file, and ORCID identifier of the curator
  * between HPO2ROBOT sessions.
  */
 public class Options implements Serializable {
+
+    /** Regular expression to check whether an input string is a valid ORCID id. (just the 16 digits) */
+    private static final String ORCID_REGEX =
+            "^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$";
+
+    /** Regular expression to check whether an input string is a valid ORCID id. */
+    private static final Pattern ORCID_PATTERN = Pattern.compile(ORCID_REGEX);
 
     private static final String N_A = "";
 
@@ -50,5 +60,36 @@ public class Options implements Serializable {
 
     public void setOrcid(String orcid) {
         this.orcid = orcid;
+    }
+
+
+    public boolean isValid() {
+        if (hpJsonFile.equals(N_A)) {
+            return false;
+        }
+        File f = new File(hpJsonFile);
+        if (! f.isFile()) {
+            return false;
+        }
+        if (robotFile.equals(N_A)) {
+            return false;
+        }
+        f = new File(robotFile);
+        if (! f.isFile()) {
+            return false;
+        }
+        // the last thing to check is if the ORCID matches
+        final Matcher matcher = ORCID_PATTERN.matcher(orcid);
+        return  matcher.matches();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("""
+                                HPO: %s
+                                ROBOT: %s
+                                biocurator: %s
+                                valid: %s""",
+                this.hpJsonFile, this.robotFile, orcid, isValid());
     }
 }

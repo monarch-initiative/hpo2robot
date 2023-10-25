@@ -5,11 +5,12 @@ import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.monarchinitiative.Hpo2RobotManager;
+import org.monarchinitiative.Launcher;
 import org.monarchinitiative.model.Options;
 import org.monarchinitiative.view.ViewFactory;
 
@@ -58,18 +59,16 @@ public class OptionsWindowController extends BaseController implements Initializ
         }
         Stage stage = (Stage) this.orcidLabel.getScene().getWindow();
         viewFactory.closeStage(stage);
-        viewFactory.showMainWindow();
     }
 
     @FXML
     void cancelButtonAction() {
         Stage stage = (Stage) this.orcidLabel.getScene().getWindow();
         viewFactory.closeStage(stage);
-        viewFactory.showMainWindow();
     }
 
-    public OptionsWindowController(Hpo2RobotManager emailManager, ViewFactory viewFactory, String fxmlName) {
-        super(emailManager, viewFactory, fxmlName);
+    public OptionsWindowController(ViewFactory viewFactory, String fxmlName) {
+        super(viewFactory, fxmlName);
     }
 
     @Override
@@ -81,6 +80,17 @@ public class OptionsWindowController extends BaseController implements Initializ
         robotFileProperty.bindBidirectional(robotFileLabel.textProperty());
         orcidProperty = new SimpleStringProperty(NOT_INITIALIZED);
         orcidProperty.bindBidirectional(orcidLabel.textProperty());
+        setupCss();
+    }
+
+    private void setupCss() {
+        try {
+            Scene scene = this.hpJsonLabel.getScene();
+            scene.getStylesheets().add(Launcher.class.getResource("css/application.css").toExternalForm());
+
+        }catch (Exception e) {
+            System.err.println("[ERROR] Could not set up CSS for options: " + e.getMessage());
+        }
     }
 
 
@@ -96,12 +106,26 @@ public class OptionsWindowController extends BaseController implements Initializ
         }
     }
 
-    public void setRobotFile(ActionEvent actionEvent) {
+    public void openRobotFile(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select robot (.tsv) File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Robot files", "*.tsv"));
         Stage stage = (Stage) this.hpJsonLabel.getScene().getWindow();
+        //fileChooser.
         File f = fileChooser.showOpenDialog(stage);
+        if (f != null) {
+            this.options.setRobotFile(f.getAbsolutePath());
+            this.robotFileProperty.set(f.getAbsolutePath());
+        }
+    }
+
+    public void createRobotFile(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Set location of new robot (.tsv) File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Robot files", "*.tsv"));
+        Stage stage = (Stage) this.hpJsonLabel.getScene().getWindow();
+        //fileChooser.
+        File f = fileChooser.showSaveDialog(stage);
         if (f != null) {
             this.options.setRobotFile(f.getAbsolutePath());
             this.robotFileProperty.set(f.getAbsolutePath());
@@ -137,4 +161,13 @@ public class OptionsWindowController extends BaseController implements Initializ
             this.orcidProperty.set(orcid);
         }
     }
+
+    public Options getOptions() {
+        return new Options(hpJsonProperty.get(), robotFileProperty.get(), orcidProperty.get());
+    }
+
+    public void hpJsonDownload(ActionEvent actionEvent) {
+    }
+
+
 }

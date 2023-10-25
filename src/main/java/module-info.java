@@ -3,8 +3,9 @@ module org.robinsonpn {
     requires javafx.fxml;
     requires javafx.web;
     requires jakarta.activation;
-   // requires jakarta.mail;
-    requires java.mail;
+    requires org.monarchinitiative.phenol.core;
+    requires org.monarchinitiative.phenol.io;
+    requires com.fasterxml.jackson.databind;
     requires org.controlsfx.controls;
 
     opens org.monarchinitiative.view to javafx.fxml, javafx.web;

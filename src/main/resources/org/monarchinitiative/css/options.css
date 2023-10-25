@@ -1,0 +1,7 @@
+.button {
+    -fx-pref-width: 150px;
+}
+.anchorpane {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}

@@ -5,12 +5,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import org.monarchinitiative.Hpo2RobotManager;
 import org.monarchinitiative.Launcher;
 import org.monarchinitiative.controller.BaseController;
 import org.monarchinitiative.controller.MainWindowController;
 import org.monarchinitiative.controller.OptionsWindowController;
 import org.monarchinitiative.model.Options;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,13 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewFactory {
-    private final Hpo2RobotManager hpo2robotManager;
 
 
     private final List<Stage> activeStageList;
 
-    public ViewFactory(Hpo2RobotManager emailManager) {
-        this.hpo2robotManager = emailManager;
+    private Options options;
+
+    public ViewFactory(Options options) {
+        this.options = options;
+        activeStageList = new ArrayList<>();
+    }
+
+    public ViewFactory() {
+        this.options = new Options(); // initialize to default (empty)
         activeStageList = new ArrayList<>();
     }
 
@@ -71,21 +77,20 @@ public class ViewFactory {
 
 
     public void showMainWindow() {
-        BaseController controller = new MainWindowController(hpo2robotManager, this, "MainWindow.fxml");
+        BaseController controller = new MainWindowController(this, "MainWindow.fxml");
         initializeStage(controller);
     }
 
 
     public void showOptionsWindow() {
-        BaseController controller = new OptionsWindowController(hpo2robotManager, this, "OptionsWindow.fxml");
+        OptionsWindowController controller = new OptionsWindowController( this, "OptionsWindow.fxml");
         initializeStage(controller);
+        this.options = controller.getOptions();
     }
 
     public URL getLocation(String dir, String fxmlName) {
         String path = dir + File.separator + fxmlName;
         URL location = Launcher.class.getResource(path);
-//        System.out.printf("path = %s\n",path);
-//        System.out.println("getLocation="+location);
         return location;
     }
 
@@ -94,7 +99,9 @@ public class ViewFactory {
         activeStageList.remove(stage);
     }
 
+
+
     public Options getOptions() {
-        return this.hpo2robotManager.getOptions();
+        return this.options;
     }
 }
