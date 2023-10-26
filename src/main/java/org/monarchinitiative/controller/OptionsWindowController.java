@@ -87,8 +87,7 @@ public class OptionsWindowController extends BaseController implements Initializ
         try {
             Scene scene = this.hpJsonLabel.getScene();
             scene.getStylesheets().add(Launcher.class.getResource("css/application.css").toExternalForm());
-
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("[ERROR] Could not set up CSS for options: " + e.getMessage());
         }
     }

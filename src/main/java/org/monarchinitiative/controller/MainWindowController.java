@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import org.monarchinitiative.controller.services.LoadHpoService;
 import org.monarchinitiative.model.Options;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.view.ValidatingPane;
@@ -22,10 +22,14 @@ import org.monarchinitiative.view.ValidatingTextEntryPane;
 import org.monarchinitiative.view.ViewFactory;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainWindowController extends BaseController implements Initializable {
+    Logger LOGGER = LoggerFactory.getLogger(MainWindowController.class);
 
 
     @FXML
@@ -55,11 +59,13 @@ public class MainWindowController extends BaseController implements Initializabl
 
     private Options options;
 
+    private Ontology hpOntology;
+
     /** This gets set to true once the Ontology tree has finished initiatializing. Before that
      * we can check to make sure the user does not try to open a disease before the Ontology is
      * done loading.
      */
-    private BooleanProperty doneInitializingOntology = new SimpleBooleanProperty(false);
+    private BooleanProperty ontologyLoadedProperty = new SimpleBooleanProperty(false);
 
     public MainWindowController(ViewFactory viewFactory, String fxmlName) {
         super(viewFactory, fxmlName);
@@ -68,13 +74,31 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     void optionsAction() {
         this.viewFactory.showOptionsWindow();
+        options = viewFactory.getOptions();
+        System.out.println("After get options");
+        if (checkOptionsReadiness()) {
+            LOGGER.trace("loading hp.json");
+            LoadHpoService service = new LoadHpoService(options.getHpJsonFile());
+            service.setOnSucceeded(e -> {
+                this.hpOntology = service.getValue();
+                Map<String, String> metamap = hpOntology.getMetaInfo();
+                String version = metamap.getOrDefault("data-version", "n/a");
+                LOGGER.info("Loaded HPO, version {}", version);
+                ontologyLoadedProperty.set(true);
+            });
+            service.setOnFailed(e -> {
+                LOGGER.error("Could not load hp.jsdon");
+                ontologyLoadedProperty.set(false);
+            });
+            service.start();
+        }
     }
 
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("Main init");
+        LOGGER.trace("Initializing MainWindowController");
         termLabelValidator.setFieldLabel("New Term Label");
         definitionPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_DEFINITION);
         commentPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_COMMENT);
@@ -110,19 +134,19 @@ public class MainWindowController extends BaseController implements Initializabl
             ontologyTreeViewPane.getChildren().remove(initOntoLabel);
             setupAutocomplete();
             setupOntologyTreeView();
-            doneInitializingOntology.set(true);
+            ontologyLoadedProperty.set(true);
+            statusBarOptions();
         });
         setUpStatusBar();
         readinessProperty = new SimpleBooleanProperty(false);
-        checkReadiness();
+        checkOptionsReadiness();
     }
 
-    private void checkReadiness() {
+    private boolean checkOptionsReadiness() {
        this.options = viewFactory.getOptions();
        readinessProperty.set(options.isValid());
        statusBarOptions();
-
-
+       return options.isValid();
     }
 
 
@@ -131,8 +155,13 @@ public class MainWindowController extends BaseController implements Initializabl
             statusBarTextProperty.set("input data: ready");
             statusBarLabel.setTextFill(Color.BLACK);
             statusBarLabel.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
+            if (! ontologyLoadedProperty.get()) {
+                statusBarTextProperty.set("hp.json not loaded.");
+                statusBarLabel.setTextFill(Color.RED);
+                statusBarLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
+            }
         } else {
-            statusBarTextProperty.set("Need to load options!");
+            statusBarTextProperty.set(this.options.getErrorMessage());
             statusBarLabel.setTextFill(Color.RED);
             statusBarLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
         }

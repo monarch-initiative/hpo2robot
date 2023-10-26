@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ViewFactory {
 
@@ -35,11 +36,11 @@ public class ViewFactory {
         activeStageList = new ArrayList<>();
     }
 
-    private void initializeStage(BaseController controller) {
+
+    private Optional<Parent>  initializeBaseStage(BaseController controller) {
         String fxmlDir = "view";
         URL location = getLocation(fxmlDir, controller.getFxmlName());
         FXMLLoader loader = new FXMLLoader(location);
-
         // This is used to customize the creation of controller injected by javaFX when defining them with fx:controller attribute inside FXML files
         // Using the controller factory instead of setting the controller directly with fxmlLoader.setController() allows us to keep the fx:controller
         // attribute inside FXML files. This makes it easier for IDE to link fxml with controllers and check for errors
@@ -56,23 +57,47 @@ public class ViewFactory {
                     exc.printStackTrace();
                     throw new RuntimeException(exc); // fatal, just bail...
                 }
-            }
-        };
+            }};
 
         loader.setControllerFactory(controllerFactory);
-       // loader.setController(controller);
+        // loader.setController(controller);
         Parent parent;
         try {
             parent = loader.load();
+            return  Optional.of(parent);
         } catch (IOException e) {
             e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    private void initializeStage(BaseController controller) {
+        Optional<Parent> opt = initializeBaseStage(controller);
+        if (opt.isEmpty()) {
+            System.err.println("[ERROR] could not initialize stage");
             return;
         }
+        Parent parent = opt.get();
         Scene scene = new Scene(parent);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
         activeStageList.add(stage);
+    }
+
+
+
+    private void initializeStageAndWait(BaseController controller) {
+        Optional<Parent> opt = initializeBaseStage(controller);
+        if (opt.isEmpty()) {
+            System.err.println("[ERROR] could not initialize stage");
+            return;
+        }
+        Parent parent = opt.get();
+        Scene scene = new Scene(parent);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.showAndWait();
     }
 
 
@@ -84,8 +109,9 @@ public class ViewFactory {
 
     public void showOptionsWindow() {
         OptionsWindowController controller = new OptionsWindowController( this, "OptionsWindow.fxml");
-        initializeStage(controller);
+        initializeStageAndWait(controller);
         this.options = controller.getOptions();
+        System.out.println("ShowOptionsWindow: " + options);
     }
 
     public URL getLocation(String dir, String fxmlName) {
