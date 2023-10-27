@@ -26,8 +26,8 @@
         <MenuBar prefHeight="23.0" prefWidth="1200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                  AnchorPane.topAnchor="0.0">
             <Menu mnemonicParsing="false" text="File">
-                <MenuItem mnemonicParsing="false" text="Open"/>
-                <MenuItem mnemonicParsing="false" text="Close"/>
+                <MenuItem mnemonicParsing="false" text="Open" fx:id="newMenuItem"/>
+                <MenuItem mnemonicParsing="false" text="Exit" onAction="#exitGui" fx:id="exitMenuItem"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
                 <MenuItem mnemonicParsing="false" onAction="#optionsAction" text="Options"/>
