@@ -1,4 +1,4 @@
-package org.monarchinitiative.model;
+package org.monarchinitiative.hpo2robot.model;
 
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class HpoRosettaStone {
 
-    private Ontology hpo;
+    private final Ontology hpo;
 
     private final Map<String, Term> labelToTermMap;
 

@@ -1,4 +1,4 @@
-package org.monarchinitiative.model;
+package org.monarchinitiative.hpo2robot.model;
 
 import java.io.File;
 import java.io.Serializable;

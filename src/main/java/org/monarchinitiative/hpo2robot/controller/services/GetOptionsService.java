@@ -1,9 +1,9 @@
-package org.monarchinitiative.controller.services;
+package org.monarchinitiative.hpo2robot.controller.services;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.monarchinitiative.model.Options;
-import org.monarchinitiative.view.ViewFactory;
+import org.monarchinitiative.hpo2robot.model.Options;
+import org.monarchinitiative.hpo2robot.view.ViewFactory;
 
 public class GetOptionsService extends Service<Options> {
    // Logger LOGGER = null;

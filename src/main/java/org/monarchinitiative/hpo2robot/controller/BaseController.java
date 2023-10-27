@@ -1,7 +1,6 @@
-package org.monarchinitiative.controller;
+package org.monarchinitiative.hpo2robot.controller;
 
-import org.monarchinitiative.view.ViewFactory;
-
+import org.monarchinitiative.hpo2robot.view.ViewFactory;
 
 
 public abstract class BaseController {

@@ -19,7 +19,7 @@
       maxWidth="1.7976931348623157E308"
       xmlns="http://javafx.com/javafx/8.0.111"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.monarchinitiative.controller.OntologyTree">
+      fx:controller="org.monarchinitiative.hpo2robot.controller.OntologyTree">
     <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
         <SplitPane dividerPositions="0.9" orientation="VERTICAL" prefWidth="400.0">
             <VBox>

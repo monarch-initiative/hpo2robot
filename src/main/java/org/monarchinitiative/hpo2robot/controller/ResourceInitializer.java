@@ -1,4 +1,4 @@
-package org.monarchinitiative.controller;
+package org.monarchinitiative.hpo2robot.controller;
 
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -14,6 +14,7 @@ import java.util.Map;
  * Create a label to prefered label map for use in Automcompletion
  * Should be used within a Task in the Main controller
  */
+@Deprecated(forRemoval = true)
 public class ResourceInitializer {
     private final Logger LOGGER = LoggerFactory.getLogger(ResourceInitializer.class);
 
@@ -21,7 +22,7 @@ public class ResourceInitializer {
     public static Map<String, String> initializeLabelMap(Ontology hpoOntology) {
         Map<String, String> labelMap = new HashMap<>();
 
-        for (Term hterm : hpoOntology.getTermMap().values()) {
+        for (Term hterm : hpoOntology.getTerms()) {
             if (hterm.isObsolete()) {
                 continue;
             }

@@ -1,15 +1,15 @@
-package org.monarchinitiative.view;
+package org.monarchinitiative.hpo2robot.view;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import org.monarchinitiative.Launcher;
-import org.monarchinitiative.controller.BaseController;
-import org.monarchinitiative.controller.MainWindowController;
-import org.monarchinitiative.controller.OptionsWindowController;
-import org.monarchinitiative.model.Options;
+import org.monarchinitiative.hpo2robot.Launcher;
+import org.monarchinitiative.hpo2robot.controller.MainWindowController;
+import org.monarchinitiative.hpo2robot.controller.OptionsWindowController;
+import org.monarchinitiative.hpo2robot.model.Options;
+import org.monarchinitiative.hpo2robot.controller.BaseController;
 
 import java.io.File;
 import java.io.IOException;

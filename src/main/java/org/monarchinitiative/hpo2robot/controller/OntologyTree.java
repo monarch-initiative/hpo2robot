@@ -1,4 +1,4 @@
-package org.monarchinitiative.controller;
+package org.monarchinitiative.hpo2robot.controller;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
-import org.monarchinitiative.phenol.ontology.algo.OntologyAlgorithm;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -126,7 +125,9 @@ public class OntologyTree {
     public void searchTextFieldAction() {
         TermId id = labels.get(searchTextField.getText());
         if (id != null) {
-            expandUntilTerm(ontology.getTermMap().get(id));
+            Optional<Term> opt = ontology.termForTermId(id);
+            opt.ifPresent(this::expandUntilTerm);
+            //expandUntilTerm(ontology.getTermMap().get(id));
             searchTextField.clear();
         }
     }
@@ -156,9 +157,12 @@ public class OntologyTree {
     public void initialize() {
         // make sure that the content & controls of the OntologyTree will be disabled if the ontology is not present
         String introHtmlMessage;
-        if (ontology != null) {
+        TermId rootId = ontology.getRootTermId();
+        Optional<Term> rootOpt = ontology.termForTermId(rootId); // should always be present
+        if (ontology != null && rootOpt.isPresent()) {
+            Term rootTerm = rootOpt.get();
             // populate the TreeView with top-level elements from ontology hierarchy
-            TreeItem<Term> root = new OntologyTree.TermTreeItem(ontology.getTermMap().get(ontology.getRootTermId()));
+            TreeItem<Term> root = new OntologyTree.TermTreeItem(rootTerm);
             root.setExpanded(true);
             ontologyTreeView.setShowRoot(false);
             ontologyTreeView.setRoot(root);
@@ -330,7 +334,9 @@ public class OntologyTree {
          */
         @Override
         public boolean isLeaf() {
-            return OntologyAlgorithm.getChildTerms(ontology, getValue().id(), false).size() == 0;
+            Iterable<TermId> iterable = ontology.graph().getChildren(getValue().id(), false);
+            return  ! iterable.iterator().hasNext();
+            //return OntologyAlgorithm.getChildTerms(ontology, getValue().id(), false).size() == 0;
         }
 
 
@@ -344,9 +350,17 @@ public class OntologyTree {
             if (childrenList == null) {
                 LOGGER.debug(String.format("Getting children for term %s", getValue().getName()));
                 childrenList = FXCollections.observableArrayList();
-                Set<Term> children = OntologyAlgorithm.getChildTerms(ontology, getValue().id(), false).stream()
-                        .map(ontology.getTermMap()::get)
-                        .collect(Collectors.toSet());
+                Iterable<TermId> iterable = ontology.graph().getChildren(getValue().id(), false);
+                Set<Term> children = new HashSet<>();
+                Iterator<TermId> it = iterable.iterator();
+                while (it.hasNext()) {
+                    var iter = it.next();
+                    Optional<Term> opt = ontology.termForTermId(iter);
+                    opt.ifPresent(children::add);
+                }
+//                Set<Term> children = OntologyAlgorithm.getChildTerms(ontology, getValue().id(), false).stream()
+//                        .map(ontology.getTermMap()::get)
+//                        .collect(Collectors.toSet());
 
                 children.stream()
                         .sorted(Comparator.comparing(Term::getName))

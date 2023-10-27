@@ -1,4 +1,4 @@
-package org.monarchinitiative.view;
+package org.monarchinitiative.hpo2robot.view;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -7,8 +7,8 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import org.monarchinitiative.Launcher;
-import org.monarchinitiative.controller.ValidatingTextEntryPaneController;
+import org.monarchinitiative.hpo2robot.Launcher;
+import org.monarchinitiative.hpo2robot.controller.ValidatingTextEntryPaneController;
 
 public class ValidatingTextEntryPane extends AnchorPane {
 

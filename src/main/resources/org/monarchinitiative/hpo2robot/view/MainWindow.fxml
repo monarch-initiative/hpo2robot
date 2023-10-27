@@ -4,14 +4,14 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.monarchinitiative.view.ValidatingPane?>
-<?import org.monarchinitiative.view.ValidatingTextEntryPane?>
-<?import org.monarchinitiative.view.ParentTermAdder?>
+<?import org.monarchinitiative.hpo2robot.view.ValidatingPane?>
+<?import org.monarchinitiative.hpo2robot.view.ValidatingTextEntryPane?>
+<?import org.monarchinitiative.hpo2robot.view.ParentTermAdder?>
 
 <BorderPane prefHeight="1000.0" prefWidth="1200.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.monarchinitiative.controller.MainWindowController">
+            fx:controller="org.monarchinitiative.hpo2robot.controller.MainWindowController">
     <top>
         <MenuBar prefHeight="23.0" prefWidth="1200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                  AnchorPane.topAnchor="0.0">
@@ -62,7 +62,6 @@
                   AnchorPane.bottomAnchor="0.0">
                 <Label text="ajhjh"/>
                 <ValidatingPane fx:id="termLabelValidator"/>
-                <ParentTermAdder fx:id="parentTermAdder"/>
                 <ValidatingTextEntryPane fx:id="definitionPane"/>
                 <ValidatingTextEntryPane fx:id="commentPane"/>
 

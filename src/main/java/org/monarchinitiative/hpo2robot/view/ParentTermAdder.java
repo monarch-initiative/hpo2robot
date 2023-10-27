@@ -1,4 +1,4 @@
-package org.monarchinitiative.view;
+package org.monarchinitiative.hpo2robot.view;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -6,9 +6,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
-import org.monarchinitiative.Launcher;
-import org.monarchinitiative.controller.ParentTermAdderController;
-import org.monarchinitiative.model.HpoRosettaStone;
+import org.monarchinitiative.hpo2robot.Launcher;
+import org.monarchinitiative.hpo2robot.controller.ParentTermAdderController;
+import org.monarchinitiative.hpo2robot.model.HpoRosettaStone;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
@@ -31,8 +31,6 @@ public class ParentTermAdder extends HBox {
 
     ParentTermAdder() {
         super();
-
-
         try {
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/ParentTermAdder.fxml"));
             controller = new ParentTermAdderController();
@@ -41,7 +39,6 @@ public class ParentTermAdder extends HBox {
             this.getChildren().add(node);
             parentTermLabelStringProperty = new SimpleStringProperty("");
             parentTermLabelStringProperty.bindBidirectional(controller.parentTermProperty());
-
         } catch (Exception e) {
             e.printStackTrace();
         }

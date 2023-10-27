@@ -1,4 +1,4 @@
-package org.monarchinitiative.controller;
+package org.monarchinitiative.hpo2robot.controller;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -71,7 +71,6 @@ public class ValidatingLabelPaneController implements Initializable {
     }
 
     private String checkNonASCII(String originalLine, String decodedLine) {
-        StringBuilder sb = new StringBuilder(originalLine.length());
         for (int i = 0; i < originalLine.length(); i++) {
             if (originalLine.charAt(i) > 0x7F) {
                 return String.format("Offering character: %c", originalLine.charAt(i));

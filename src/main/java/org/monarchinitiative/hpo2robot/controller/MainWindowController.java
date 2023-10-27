@@ -1,4 +1,4 @@
-package org.monarchinitiative.controller;
+package org.monarchinitiative.hpo2robot.controller;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -15,15 +15,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import org.monarchinitiative.Launcher;
-import org.monarchinitiative.controller.services.LoadHpoService;
-import org.monarchinitiative.model.Options;
+import org.monarchinitiative.hpo2robot.Launcher;
+import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
+import org.monarchinitiative.hpo2robot.view.ParentTermAdder;
+import org.monarchinitiative.hpo2robot.view.ValidatingPane;
+import org.monarchinitiative.hpo2robot.view.ValidatingTextEntryPane;
+import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
-import org.monarchinitiative.view.ParentTermAdder;
-import org.monarchinitiative.view.ValidatingPane;
-import org.monarchinitiative.view.ValidatingTextEntryPane;
-import org.monarchinitiative.view.ViewFactory;
+import org.monarchinitiative.hpo2robot.view.ViewFactory;
 
 import java.io.IOException;
 import java.net.URL;

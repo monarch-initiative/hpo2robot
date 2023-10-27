@@ -1,4 +1,4 @@
-package org.monarchinitiative.controller;
+package org.monarchinitiative.hpo2robot.controller;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;

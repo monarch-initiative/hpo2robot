@@ -1,12 +1,12 @@
-package org.monarchinitiative.view;
+package org.monarchinitiative.hpo2robot.view;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import org.monarchinitiative.Launcher;
-import org.monarchinitiative.controller.ValidatingLabelPaneController;
+import org.monarchinitiative.hpo2robot.Launcher;
+import org.monarchinitiative.hpo2robot.controller.ValidatingLabelPaneController;
 
 public class ValidatingPane extends AnchorPane {
 

@@ -1,11 +1,11 @@
-package org.monarchinitiative;
+package org.monarchinitiative.hpo2robot;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.monarchinitiative.controller.persistence.PersistenceAccess;
-import org.monarchinitiative.controller.services.GetOptionsService;
-import org.monarchinitiative.model.Options;
-import org.monarchinitiative.view.ViewFactory;
+import org.monarchinitiative.hpo2robot.controller.persistence.PersistenceAccess;
+import org.monarchinitiative.hpo2robot.controller.services.GetOptionsService;
+import org.monarchinitiative.hpo2robot.model.Options;
+import org.monarchinitiative.hpo2robot.view.ViewFactory;
 
 import java.util.Optional;
 
@@ -54,7 +54,7 @@ public class Launcher extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         if (viewFactory != null) {
             PersistenceAccess persistenceAccess = new PersistenceAccess();
             persistenceAccess.saveToPersistence(viewFactory.getOptions());

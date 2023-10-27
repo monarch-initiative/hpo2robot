@@ -1,4 +1,4 @@
-package org.monarchinitiative.controller;
+package org.monarchinitiative.hpo2robot.controller;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -10,9 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.monarchinitiative.Launcher;
-import org.monarchinitiative.model.Options;
-import org.monarchinitiative.view.ViewFactory;
+import org.monarchinitiative.hpo2robot.Launcher;
+import org.monarchinitiative.hpo2robot.model.Options;
+import org.monarchinitiative.hpo2robot.view.ViewFactory;
 
 import java.io.File;
 import java.net.URL;

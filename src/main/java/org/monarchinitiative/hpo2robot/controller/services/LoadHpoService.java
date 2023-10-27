@@ -1,4 +1,4 @@
-package org.monarchinitiative.controller.services;
+package org.monarchinitiative.hpo2robot.controller.services;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -10,7 +10,7 @@ import java.io.File;
 public class LoadHpoService extends Service<Ontology> {
 
 
-    private String hpoJsonFilePath;
+    private final String hpoJsonFilePath;
     private Ontology hpoOntology;
     public LoadHpoService(String hpJsonFile) {
         this.hpoJsonFilePath = hpJsonFile;
