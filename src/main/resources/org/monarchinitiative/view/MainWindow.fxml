@@ -52,16 +52,15 @@
               AnchorPane.bottomAnchor="0.0"
               AnchorPane.rightAnchor="0.0"
               AnchorPane.topAnchor="27.0">
-            <TableView fx:id="emailsTableview" layoutX="197.0" layoutY="28.0" prefHeight="179.0" prefWidth="1004.0"
+            <TableView fx:id="robotTableView" layoutX="197.0" layoutY="28.0" prefHeight="179.0" prefWidth="1004.0"
                        AnchorPane.leftAnchor="196.0"
                        AnchorPane.rightAnchor="0.0"
                        AnchorPane.topAnchor="207.0">
                 <columns>
-                    <TableColumn prefWidth="75.0" text="Sender"/>
-                    <TableColumn prefWidth="75.0" text="Subject"/>
-                    <TableColumn prefWidth="75.0" text="Size"/>
-                    <TableColumn prefWidth="75.0" text="Date"/>
-                    <TableColumn prefWidth="75.0" text="Recipient"/>
+                    <TableColumn prefWidth="75.0" text="Parent Term"/>
+                    <TableColumn prefWidth="75.0" text="Definition"/>
+                    <TableColumn prefWidth="75.0" text="PMIDs"/>
+                    <TableColumn prefWidth="75.0" text="Issue"/>
                 </columns>
             </TableView>
 

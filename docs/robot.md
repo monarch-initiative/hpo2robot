@@ -10,7 +10,11 @@
 
 
 
-
+Note that not all of these items will be shown in the table. The HPO id of the parent term will be shown
+as a mouse-over hover, and the ORCID id is constant. The comment, synony, crossreferences will not be shown in the table,
+and only the first 30 characters of the definition will be shown, followed by ellipsis.
+To see all the data for any given row, the user will need to mark the row and then the entire
+set of new data will be shown in the bottom left part of the GUI in a WebView.
 
 |  HPO_ID | Term  | Synonyms  |Parents|Definition| PMIDs  | ORCID  | Crossreference  | Comments  |  Issue |
 |:---|---|---|---|---|---|---|---|---|---|

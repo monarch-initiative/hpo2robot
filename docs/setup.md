@@ -7,3 +7,10 @@ We will generate a standalone exectuable with GraalVM once the app is mature. Fo
 mvn clean package
 mvn javafx:run
 ```
+
+
+To run the app from IntelliJ,
+add the following to the VM options (Edit Configurations of run button)
+```agsl
+--add-exports javafx.base/com.sun.javafx.event=org.controlsfx.controls
+```

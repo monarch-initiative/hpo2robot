@@ -47,7 +47,7 @@ public class MainWindowController extends BaseController implements Initializabl
     public ValidatingTextEntryPane commentPane;
 
     @FXML
-    private TableView<?> emailsTableview;
+    private TableView<?> robotTableView;
 
     @FXML
     private StackPane ontologyTreeViewPane;
