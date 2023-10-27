@@ -20,6 +20,7 @@ import org.monarchinitiative.controller.services.LoadHpoService;
 import org.monarchinitiative.model.Options;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.view.ParentTermAdder;
 import org.monarchinitiative.view.ValidatingPane;
 import org.monarchinitiative.view.ValidatingTextEntryPane;
 import org.monarchinitiative.view.ViewFactory;
@@ -51,6 +52,9 @@ public class MainWindowController extends BaseController implements Initializabl
 
     @FXML
     private StackPane ontologyTreeViewPane;
+
+    @FXML
+    private ParentTermAdder parentTermAdder;
 
     @FXML
     private VBox statusBar;
@@ -96,6 +100,9 @@ public class MainWindowController extends BaseController implements Initializabl
      */
     private void loadHpoAndSetupOntologyTree() {
         LOGGER.trace("loading hp.json");
+        long start = System.currentTimeMillis();
+        SimpleDoubleProperty progress = new SimpleDoubleProperty(0.0);
+       // progress.addListener((obj, oldvalue, newvalue) -> updateProgress(newvalue.doubleValue(), 100) );
         LoadHpoService service = new LoadHpoService(options.getHpJsonFile());
         service.setOnSucceeded(e -> {
             this.hpOntology = service.getValue();
@@ -104,8 +111,9 @@ public class MainWindowController extends BaseController implements Initializabl
             LOGGER.info("Loaded HPO, version {}", version);
             ontologyLoadedProperty.set(true);
             if (checkOptionsReadiness()) {
-                setupGuiOntologyTree();
+                setupGuiOntologyTree(progress);
             }
+            this.parentTermAdder.setOntology(this.hpOntology);
         });
         service.setOnFailed(e -> {
             LOGGER.error("Could not load hp.jsdon");
@@ -176,18 +184,17 @@ public class MainWindowController extends BaseController implements Initializabl
     }
 
 
-    private void setupGuiOntologyTree() {
+    private void setupGuiOntologyTree(SimpleDoubleProperty progress) {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                SimpleDoubleProperty progress = new SimpleDoubleProperty(0.0);
                 progress.addListener((obj, oldvalue, newvalue) -> updateProgress(newvalue.doubleValue(), 100) );
-                initResources(progress);
+                //setupGuiOntologyTree(progress);
                 updateProgress(100, 100);
                 return null;
             }
         };
-        new Thread(task).start();
+
 
         ProgressIndicator progressIndicator = new ProgressIndicator();
         progressIndicator.progressProperty().bind(task.progressProperty());
@@ -210,18 +217,18 @@ public class MainWindowController extends BaseController implements Initializabl
             setupOntologyTreeView();
         });
 
+        new Thread(task).start();
     }
 
+
    /**
-     * Uses the @link WidthAwareTextFields} class to set up autocompletion for the disease name and the HPO name
+     * Uses the @link WidthAwareTextFields} class to set up autocompletion for the parent HPO name
      */
     private void setupAutocomplete() {
+
         /*
-        if (hpoSynonym2LabelMap != null) {
-            WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoNameTextField, hpoSynonym2LabelMap.keySet());
-        }
-        if (hpoModifer2idMap != null) {
-            WidthAwareTextFields.bindWidthAwareAutoCompletion(modifiertextField, hpoModifer2idMap.keySet());
+        if (labelMap != null) {
+            WidthAwareTextFields.bindWidthAwareAutoCompletion(parentTermTextField, labelMap.keySet());
         }
 
          */
@@ -248,53 +255,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
 
 
-    /**
-     * Called by the initialize method. Serves to set up the
-     * Maps with HPO and Disease name information for the autocompletes.
-     */
-    private void initResources(DoubleProperty progress) {
-        long start = System.currentTimeMillis();
-        this.labelMap = ResourceInitializer.initializeLabelMap(hpOntology);
-        long end = System.currentTimeMillis();
-        String seconds = String.format("%.2f seconds", (end-start)/1000.0 );
-        LOGGER.info("initResources in {}", seconds);
-        // Set up ontology tree
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() {
-                SimpleDoubleProperty progress = new SimpleDoubleProperty(0.0);
-                progress.addListener((obj, oldvalue, newvalue) -> updateProgress(newvalue.doubleValue(), 100) );
-                initResources(progress);
-                updateProgress(100, 100);
-                return null;
-            }
-        };
-        new Thread(task).start();
 
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        progressIndicator.progressProperty().bind(task.progressProperty());
-        progressIndicator.setMinHeight(70);
-        progressIndicator.setMinWidth(70);
-        progressIndicator.setMaxHeight(70);
-        progressIndicator.setMaxWidth(70);
-        ontologyTreeViewPane.setMinWidth(250);
-        Label initOntoLabel=new Label("initializing HPO browser");
-
-        task.setOnRunning(event -> {
-            ontologyTreeViewPane.getChildren().addAll(progressIndicator,initOntoLabel);
-            StackPane.setAlignment(progressIndicator, Pos.CENTER);
-        });
-
-        task.setOnSucceeded(event -> {
-            ontologyTreeViewPane.getChildren().clear();
-            ontologyTreeViewPane.getChildren().remove(initOntoLabel);
-            setupAutocomplete();
-            setupOntologyTreeView();
-            ontologyLoadedProperty.set(true);
-            statusBarOptions();
-        });
-
-    }
     /**
      * Write the settings from the current session to file and exit.
      */

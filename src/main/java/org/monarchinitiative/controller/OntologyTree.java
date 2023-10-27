@@ -116,7 +116,8 @@ public class OntologyTree {
     private void goButtonAction() {
         TermId id = labels.get(searchTextField.getText());
         if (id != null) {
-            expandUntilTerm(ontology.getTermMap().get(id));
+            ontology.termForTermId(id).ifPresent(this::expandUntilTerm);
+           // expandUntilTerm(ontology.getTermMap().get(id));
             searchTextField.clear();
         }
     }
@@ -182,7 +183,8 @@ public class OntologyTree {
             });
 
             // create Map for lookup of the terms in the ontology based on their Name
-            ontology.getTermMap().values().forEach(term -> labels.putIfAbsent(term.getName(), term.id()));
+            //ontology.getTermMap().values().forEach(term -> labels.putIfAbsent(term.getName(), term.id()));
+            ontology.getTerms().forEach(term ->  labels.putIfAbsent(term.getName(), term.id()));
             WidthAwareTextFields.bindWidthAwareAutoCompletion(searchTextField, labels.keySet());
 
             // show intro message in the infoWebView
@@ -220,25 +222,26 @@ public class OntologyTree {
      * @param term {@link Term} to be displayed
      */
     private void expandUntilTerm(Term term) {
-        if (OntologyAlgorithm.existsPath(ontology, term.id(), ontology.getRootTermId())) {
-            // find root -> term path through the tree
-            Stack<Term> termStack = new Stack<>();
-            termStack.add(term);
-            Set<TermId> parents = ontology.getParentTermIds(term.id()); //getTermParents(term);
-            while (parents.size() != 0) {
-                TermId parent = parents.iterator().next();
-                termStack.add(ontology.getTermMap().get(parent));
-                parents = ontology.getParentTermIds(parent);
+        LOGGER.trace("Expand until term argument = {}", term.getName());
+        if (ontology.graph().existsPath(term.id(), ontology.getRootTermId())) {
+            Stack<TermId> termStack = new Stack<>();
+            termStack.add(term.id());
+            Optional<TermId> parentOpt = ontology.graph()
+                    .getParentsStream(term.id(), false)
+                    .findFirst();
+            while (parentOpt.isPresent()) {
+                parentOpt = ontology.graph()
+                        .getParentsStream(parentOpt.get(), false)
+                        .findFirst();
+                parentOpt.ifPresent(termStack::add);
             }
-
-            // expand tree nodes in top -> down direction
             List<TreeItem<Term>> children = ontologyTreeView.getRoot().getChildren();
-            termStack.pop(); // get rid of 'All' node which is hidden
+            termStack.pop(); // get rid of 'ALl'
             TreeItem<Term> target = ontologyTreeView.getRoot();
-            while (!termStack.empty()) {
-                Term current = termStack.pop();
-                for (TreeItem<Term> child : children) {
-                    if (child.getValue().equals(current)) {
+            while (! termStack.empty()) {
+                TermId current = termStack.pop();
+                for (TreeItem<Term> child: children) {
+                    if (child.getValue().id().equals(current)) {
                         child.setExpanded(true);
                         target = child;
                         children = child.getChildren();
@@ -351,6 +354,7 @@ public class OntologyTree {
                         .forEach(childrenList::add);
                 super.getChildren().setAll(childrenList);
             }
+            LOGGER.debug("Got {} children", super.getChildren().size());
             return super.getChildren();
         }
 
