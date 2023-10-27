@@ -10,7 +10,6 @@ import org.monarchinitiative.controller.BaseController;
 import org.monarchinitiative.controller.MainWindowController;
 import org.monarchinitiative.controller.OptionsWindowController;
 import org.monarchinitiative.model.Options;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 import java.io.File;
 import java.io.IOException;

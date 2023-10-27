@@ -94,14 +94,14 @@ public class Options implements Serializable {
     }
 
     public String getErrorMessage() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         File f = new File(hpJsonFile);
         if (f.isFile()) {
            // no op
         } else if (hpJsonFile.equals(N_A)) {
             sb.append("hp.json not set. ");
         } else {
-            sb.append("could not find hp.json at " + hpJsonFile);
+            sb.append("could not find hp.json at ").append(hpJsonFile);
         }
         if (robotFile.equals(N_A)) {
             sb.append("ROBOT file not set. ");

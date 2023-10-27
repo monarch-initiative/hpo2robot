@@ -4,9 +4,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.monarchinitiative.controller.persistence.PersistenceAccess;
 import org.monarchinitiative.controller.services.GetOptionsService;
-import org.monarchinitiative.controller.services.LoadHpoService;
 import org.monarchinitiative.model.Options;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.view.ViewFactory;
 
 import java.util.Optional;
@@ -37,12 +35,8 @@ public class Launcher extends Application {
 
     private Options getOptions() {
         GetOptionsService service = new GetOptionsService();
-        service.setOnSucceeded(e -> {
-            System.out.println("[INFO] Got Options");
-        });
-        service.setOnFailed(e -> {
-            System.err.println("[ERROR] Could not get valid options.");
-        });
+        service.setOnSucceeded(e -> System.out.println("[INFO] Got Options"));
+        service.setOnFailed(e -> System.err.println("[ERROR] Could not get valid options."));
 
         service.start();
 

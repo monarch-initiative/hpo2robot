@@ -71,7 +71,7 @@ public class ValidatingLabelPaneController implements Initializable {
     }
 
     private String checkNonASCII(String originalLine, String decodedLine) {
-        StringBuffer sb = new StringBuffer(originalLine.length());
+        StringBuilder sb = new StringBuilder(originalLine.length());
         for (int i = 0; i < originalLine.length(); i++) {
             if (originalLine.charAt(i) > 0x7F) {
                 return String.format("Offering character: %c", originalLine.charAt(i));

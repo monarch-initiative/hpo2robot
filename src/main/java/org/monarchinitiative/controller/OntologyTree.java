@@ -1,15 +1,10 @@
 package org.monarchinitiative.controller;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
@@ -169,10 +164,10 @@ public class OntologyTree {
             ontologyTreeView.getSelectionModel().selectedItemProperty()
                     .addListener((observable, oldValue, newValue) -> updateDescription(newValue));
 
-            ontologyTreeView.setCellFactory(new Callback<TreeView<Term>, TreeCell<Term>>() {
+            ontologyTreeView.setCellFactory(new Callback<>() {
                 @Override
                 public TreeCell<Term> call(TreeView<Term> param) {
-                    return new TreeCell<Term>() {
+                    return new TreeCell<>() {
                         @Override
                         public void updateItem(Term term, boolean empty) {
                             super.updateItem(term, empty);
@@ -187,7 +182,7 @@ public class OntologyTree {
             });
 
             // create Map for lookup of the terms in the ontology based on their Name
-            ontology.getTermMap().values().forEach(term -> labels.putIfAbsent(term.getName(), term.getId()));
+            ontology.getTermMap().values().forEach(term -> labels.putIfAbsent(term.getName(), term.id()));
             WidthAwareTextFields.bindWidthAwareAutoCompletion(searchTextField, labels.keySet());
 
             // show intro message in the infoWebView
@@ -225,11 +220,11 @@ public class OntologyTree {
      * @param term {@link Term} to be displayed
      */
     private void expandUntilTerm(Term term) {
-        if (OntologyAlgorithm.existsPath(ontology, term.getId(), ontology.getRootTermId())) {
+        if (OntologyAlgorithm.existsPath(ontology, term.id(), ontology.getRootTermId())) {
             // find root -> term path through the tree
             Stack<Term> termStack = new Stack<>();
             termStack.add(term);
-            Set<TermId> parents = ontology.getParentTermIds(term.getId()); //getTermParents(term);
+            Set<TermId> parents = ontology.getParentTermIds(term.id()); //getTermParents(term);
             while (parents.size() != 0) {
                 TermId parent = parents.iterator().next();
                 termStack.add(ontology.getTermMap().get(parent));
@@ -255,7 +250,7 @@ public class OntologyTree {
             ontologyTreeView.getSelectionModel().select(target);
             ontologyTreeView.scrollTo(ontologyTreeView.getSelectionModel().getSelectedIndex());
         } else {
-            LOGGER.warn("Unable to find the path from {} to {}", ontology.getRootTermId(), term.getId());
+            LOGGER.warn("Unable to find the path from {} to {}", ontology.getRootTermId(), term.id());
         }
     }
 
@@ -289,7 +284,7 @@ public class OntologyTree {
                 "<p><b>Definition:</b> %s</p>" +
                 "</body></html>";
 
-        String termID = term.getId().getValue();
+        String termID = term.id().getValue();
         String synonyms = (term.getSynonyms() == null) ? "" : term.getSynonyms().stream()
                 .map(TermSynonym::getValue)
                 .collect(Collectors.joining(", ")); // Synonyms
@@ -332,7 +327,7 @@ public class OntologyTree {
          */
         @Override
         public boolean isLeaf() {
-            return OntologyAlgorithm.getChildTerms(ontology, getValue().getId(), false).size() == 0;
+            return OntologyAlgorithm.getChildTerms(ontology, getValue().id(), false).size() == 0;
         }
 
 
