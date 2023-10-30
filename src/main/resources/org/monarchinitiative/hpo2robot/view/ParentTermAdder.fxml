@@ -4,11 +4,9 @@
 <?import javafx.scene.layout.*?>
 
 <HBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.monarchinitiative.hpo2robot.controller.ParentTermAdderController"
-            prefHeight="60.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+      xmlns:fx="http://javafx.com/fxml"
+      prefHeight="60.0" prefWidth="1000.0">
     <Label fx:id="parentTermLabel" prefHeight="30.0" prefWidth="200.0" text="Parert term"/>
     <TextField fx:id="textField" prefHeight="30.0" prefWidth="600.0"/>
-    <Button fx:id="addButton" onAction="#addParentTerm" text="Add"   prefWidth="150"/>
-
+    <Button fx:id="addButton" text="Add"   prefWidth="150"/>
 </HBox>

@@ -29,7 +29,7 @@ public class ParentTermAdder extends HBox {
         rosettaStone = new HpoRosettaStone(ontology);
     }
 
-    ParentTermAdder() {
+    public ParentTermAdder() {
         super();
         try {
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/ParentTermAdder.fxml"));
@@ -46,7 +46,7 @@ public class ParentTermAdder extends HBox {
 
 
     List<Term> getParentTermList() {
-        if (rosettaStone == null ) {
+       /* if (rosettaStone == null ) {
             System.err.println("TODO ERROR MESSAGE LOGGING");
             return List.of();
         }
@@ -57,8 +57,14 @@ public class ParentTermAdder extends HBox {
             termOpt.ifPresent(parentTermList::add);
         }
         return parentTermList;
+
+        */
+        return List.of();
     }
 
 
 
 }
+/*
+
+ */

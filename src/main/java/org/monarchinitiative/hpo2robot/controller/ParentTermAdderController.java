@@ -26,7 +26,7 @@ public class ParentTermAdderController implements Initializable {
     @FXML
     private Button addButton;
 
-    private ObservableList<String> parentTerms;
+  //  private ObservableList<String> parentTerms;
 
     public ParentTermAdderController() {
 
@@ -34,18 +34,19 @@ public class ParentTermAdderController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        parentTerms = FXCollections.observableList(new ArrayList<>());
-        parentTerms.addListener(new ListChangeListener() {
-            @Override
-            public void onChanged(ListChangeListener.Change change) {
-                System.out.println("Detected a change! ");
-            }
-        });
+//        parentTerms = FXCollections.observableList(new ArrayList<>());
+//        parentTerms.addListener(new ListChangeListener() {
+//            @Override
+//            public void onChanged(ListChangeListener.Change change) {
+//                System.out.println("Detected a change! ");
+//            }
+//        });
     }
 
 
     public void addParentTerm(ActionEvent actionEvent) {
-        parentTerms.add(textField.getText());
+
+        //parentTerms.add(textField.getText());
     }
 
     public StringProperty parentTermProperty() {
@@ -53,7 +54,8 @@ public class ParentTermAdderController implements Initializable {
     }
 
     public ObservableList<String> getParentList() {
-        return this.parentTerms;
+
+        return null;//this.parentTerms;
     }
 
 

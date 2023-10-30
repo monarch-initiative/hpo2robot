@@ -60,8 +60,11 @@
                   AnchorPane.rightAnchor="0"
                   AnchorPane.topAnchor="350"
                   AnchorPane.bottomAnchor="0.0">
-                <Label text="ajhjh"/>
+                <padding>
+                    <Insets topRightBottomLeft="20" />
+                </padding>
                 <ValidatingPane fx:id="termLabelValidator"/>
+                <ParentTermAdder fx:id="parentTermAdder"/>
                 <ValidatingTextEntryPane fx:id="definitionPane"/>
                 <ValidatingTextEntryPane fx:id="commentPane"/>
 

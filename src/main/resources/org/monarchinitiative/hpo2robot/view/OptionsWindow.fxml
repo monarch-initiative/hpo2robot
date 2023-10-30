@@ -7,7 +7,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="200.0" prefWidth="800.0" stylesheets="@../css/options.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo2robot.controller.OptionsWindowController">
+<AnchorPane prefHeight="200.0" prefWidth="800.0" stylesheets="@../css/options.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.monarchinitiative.hpo2robot.controller.OptionsWindowController">
     <Button layoutX="325.0" layoutY="339.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="120.0" />
     <Button layoutX="455.0" layoutY="340.0" mnemonicParsing="false" onAction="#okButtonAction" text="OK" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
     <GridPane layoutX="70.0" layoutY="219.0" prefHeight="90.0" prefWidth="428.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
