@@ -8,7 +8,8 @@
 <?import org.monarchinitiative.hpo2robot.view.ValidatingTextEntryPane?>
 <?import org.monarchinitiative.hpo2robot.view.ParentTermAdder?>
 
-<BorderPane prefHeight="1000.0" prefWidth="1200.0"
+<?import javafx.scene.web.WebView?>
+<BorderPane prefHeight="1000.0" prefWidth="1400.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.monarchinitiative.hpo2robot.controller.MainWindowController">
@@ -42,16 +43,19 @@
               AnchorPane.bottomAnchor="0.0"
               AnchorPane.rightAnchor="0.0"
               AnchorPane.topAnchor="27.0">
-            <TableView fx:id="robotTableView" layoutX="197.0" layoutY="28.0" prefHeight="179.0" prefWidth="1004.0"
+            <TableView fx:id="robotTableView" layoutX="197.0" layoutY="28.0" prefHeight="300.0" minHeight="250"
+                       prefWidth="1004.0"
                        AnchorPane.leftAnchor="196.0"
                        AnchorPane.rightAnchor="0.0"
                        AnchorPane.topAnchor="207.0">
                 <columns>
-                    <TableColumn prefWidth="75.0" text="Parent Term"/>
-                    <TableColumn prefWidth="75.0" text="Definition"/>
-                    <TableColumn prefWidth="75.0" text="PMIDs"/>
-                    <TableColumn prefWidth="75.0" text="Issue"/>
+                    <TableColumn fx:id="newTermLabelCol" prefWidth="75.0" text="New Term"/>
+                    <TableColumn fx:id="definitionCol" prefWidth="75.0" text="Definition"/>
+                    <TableColumn fx:id="parentTermCol" prefWidth="75.0" text="Parent Term (s)"/>
+                    <TableColumn fx:id="pmidsCol" prefWidth="75.0" text="PMID(s)"/>
+                    <TableColumn fx:id="issueCol" prefWidth="75.0" text="Issue"/>
                 </columns>
+
             </TableView>
 
             <VBox prefHeight="600" prefWidth="1400" xmlns="http://javafx.com/javafx/21"
@@ -67,8 +71,13 @@
                 <ParentTermAdder fx:id="parentTermAdder"/>
                 <ValidatingTextEntryPane fx:id="definitionPane"/>
                 <ValidatingTextEntryPane fx:id="commentPane"/>
-
+                <HBox>
+                    <Button fx:id="addRobotItemButton" onAction="#addRobotItem"/>
+                </HBox>
             </VBox>
+            <ScrollPane>
+                <WebView fx:id="currentRobotView"/>
+            </ScrollPane>
         </VBox>
     </center>
     <bottom>

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.monarchinitiative</groupId>
     <artifactId>hpo2robot</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.12</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
@@ -134,6 +134,7 @@
                 <configuration>
                     <mainClass>org.monarchinitiative.hpo2robot.Launcher</mainClass>
                     <options>
+                        <option>-XX:+UseG1GC</option>
                         <option>--add-exports</option>
                         <option>javafx.base/com.sun.javafx.event=org.controlsfx.controls</option>
                     </options>

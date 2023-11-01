@@ -3,12 +3,16 @@ package org.monarchinitiative.hpo2robot.model;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class HpoRosettaStone {
+    Logger LOGGER = LoggerFactory.getLogger(HpoRosettaStone.class);
 
     private final Ontology hpo;
 
@@ -17,12 +21,16 @@ public class HpoRosettaStone {
     private final Map<TermId, String> idToLabelMap;
 
     public HpoRosettaStone(Ontology ontology) {
-        this.hpo = ontology;
         Map<String, Term> labelMap = new HashMap<>();
-        hpo.getTerms().forEach(term ->  labelMap.putIfAbsent(term.getName(), term));
-        this.labelToTermMap = Map.copyOf(labelMap);
         Map<TermId, String> idMap = new HashMap<>();
-        hpo.getTerms().forEach(term ->  idMap.putIfAbsent(term.id(), term.getName()));
+        this.hpo = ontology;
+        if (ontology == null) {
+            LOGGER.error("Attempt to initialize HpoRosettaStone but ontology argument was null");
+        } else {
+            hpo.getTerms().forEach(term ->  labelMap.putIfAbsent(term.getName(), term));
+            hpo.getTerms().forEach(term ->  idMap.putIfAbsent(term.id(), term.getName()));
+        }
+        this.labelToTermMap = Map.copyOf(labelMap);
         idToLabelMap = Map.copyOf(idMap);
     }
 
@@ -32,6 +40,10 @@ public class HpoRosettaStone {
 
     public Optional<String> primaryLabelFromId(TermId tid) {
         return Optional.ofNullable(idToLabelMap.get(tid));
+    }
+
+    public Set<String> allLabels() {
+        return this.labelToTermMap.keySet();
     }
 
 

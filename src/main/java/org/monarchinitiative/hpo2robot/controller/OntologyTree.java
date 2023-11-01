@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
+import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -189,7 +190,8 @@ public class OntologyTree {
             // create Map for lookup of the terms in the ontology based on their Name
             //ontology.getTermMap().values().forEach(term -> labels.putIfAbsent(term.getName(), term.id()));
             ontology.getTerms().forEach(term ->  labels.putIfAbsent(term.getName(), term.id()));
-            WidthAwareTextFields.bindWidthAwareAutoCompletion(searchTextField, labels.keySet());
+            TextFields.bindAutoCompletion(searchTextField, labels.keySet());
+           // WidthAwareTextFields.bindWidthAwareAutoCompletion(searchTextField, labels.keySet());
 
             // show intro message in the infoWebView
             introHtmlMessage = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title>HPO tree browser</title></head>" +
@@ -372,5 +374,13 @@ public class OntologyTree {
             return super.getChildren();
         }
 
+    }
+
+    public Button getAddButton() {
+        return addButton;
+    }
+
+    public TextField getSearchTextField() {
+        return searchTextField;
     }
 }

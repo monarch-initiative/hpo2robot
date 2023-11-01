@@ -1,12 +1,15 @@
 package org.monarchinitiative.hpo2robot.controller;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -15,8 +18,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.web.WebView;
+import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
+import org.monarchinitiative.hpo2robot.model.RobotItem;
 import org.monarchinitiative.hpo2robot.view.ParentTermAdder;
 import org.monarchinitiative.hpo2robot.view.ValidatingPane;
 import org.monarchinitiative.hpo2robot.view.ValidatingTextEntryPane;
@@ -29,7 +35,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +45,15 @@ import org.slf4j.LoggerFactory;
 public class MainWindowController extends BaseController implements Initializable {
     public MenuItem newMenuItem;
     public MenuItem exitMenuItem;
+    public WebView currentRobotView;
+
+    @FXML
+    private TableView<RobotItem> robotTableView;
+    public TableColumn<RobotItem, String> parentTermCol;
+    public TableColumn<RobotItem, String> definitionCol;
+    public TableColumn<RobotItem, String> pmidsCol;
+    public TableColumn<RobotItem, String> issueCol;
+    public TableColumn<RobotItem, String> newTermLabelCol;
     Logger LOGGER = LoggerFactory.getLogger(MainWindowController.class);
 
     @FXML
@@ -47,8 +64,7 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public ValidatingTextEntryPane commentPane;
 
-    @FXML
-    private TableView<?> robotTableView;
+
 
     @FXML
     private StackPane ontologyTreeViewPane;
@@ -113,7 +129,7 @@ public class MainWindowController extends BaseController implements Initializabl
             if (checkOptionsReadiness()) {
                 setupGuiOntologyTree(progress);
             }
-            this.parentTermAdder.setOntology(this.hpOntology);
+
         });
         service.setOnFailed(e -> {
             LOGGER.error("Could not load hp.jsdon");
@@ -130,6 +146,8 @@ public class MainWindowController extends BaseController implements Initializabl
         definitionPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_DEFINITION);
         commentPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_COMMENT);
 
+
+
         setUpStatusBar();
         readinessProperty = new SimpleBooleanProperty(false);
         setUpKeyAccelerators();
@@ -137,6 +155,104 @@ public class MainWindowController extends BaseController implements Initializabl
         if (ready) {
             loadHpoAndSetupOntologyTree();
         }
+        setUpTableView();
+    }
+
+
+    private void setUpTableView() {
+        robotTableView.setEditable(false);
+        newTermLabelCol.setCellValueFactory(new PropertyValueFactory<>("newTermLabelCol"));
+        newTermLabelCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        newTermLabelCol.setEditable(true);
+
+        definitionCol.setCellValueFactory(new PropertyValueFactory<>("definitionCol"));
+        definitionCol.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<RobotItem, String> call(TableColumn<RobotItem, String> p) {
+                return new TableCell<>() {
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null) {
+                            setTooltip(null);
+                            setText(null);
+                        } else {
+                            // show just the first 50 chars of the definition
+                            Tooltip tooltip = new Tooltip();
+                            RobotItem robotItem = getTableView().getItems().get(getTableRow().getIndex());
+                            tooltip.setText(robotItem.getNewTermDefinition());
+                            setTooltip(tooltip);
+                            String displayText = item.length() < 50 ? item : item.substring(0,45) + "...";
+                            setText(displayText);
+                        }
+                    }
+                };
+            }
+        });
+        parentTermCol.setCellValueFactory(new PropertyValueFactory<>("parentTermCol"));
+        parentTermCol.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<RobotItem, String> call(TableColumn<RobotItem, String> p) {
+                return new TableCell<>() {
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null) {
+                            setTooltip(null);
+                            setText(null);
+                        } else {
+                            // show just the first 50 chars of the definition
+                            Tooltip tooltip = new Tooltip();
+                            RobotItem robotItem = getTableView().getItems().get(getTableRow().getIndex());
+                            Set<Term> parents = robotItem.getParentTerms();
+                            String displayText = parents.stream().map(Term::getName).collect(Collectors.joining("; "));
+                            tooltip.setText(displayText);
+                            setTooltip(tooltip);
+                            if (parents.isEmpty()) {
+                                // should never happen
+                                displayText = "error - no parent term";
+                            } else {
+                                Term parent = parents.iterator().next();
+                                String name = parent.getName();
+                                displayText = name.length() < 40 ? name : name.substring(0,35) + "...";
+                                if (parents.size() > 1) {
+                                    displayText = String.format("%s (%d)", displayText, parents.size());
+                                }
+                            }
+                            setText(displayText);
+                        }
+                    }
+                };
+            }
+        });
+       pmidsCol.setCellValueFactory(new PropertyValueFactory<>("pmids"));
+       pmidsCol.setCellFactory(new Callback<>() {
+           @Override
+           public TableCell<RobotItem, String> call(TableColumn<RobotItem, String> p) {
+               return new TableCell<>() {
+                   @Override
+                   public void updateItem(String item, boolean empty) {
+                       super.updateItem(item, empty);
+                       if (item == null) {
+                           setTooltip(null);
+                           setText(null);
+                       } else {
+                           // assume we have 1 or 2 PMIDs and should fit. Consider more customization later
+                           Tooltip tooltip = new Tooltip();
+                           RobotItem robotItem = getTableView().getItems().get(getTableRow().getIndex());
+                           Set<String> pmids = robotItem.getPmids();
+                           String displayText = String.join(":", pmids);
+                           tooltip.setText(displayText);
+                           setTooltip(tooltip);
+                           setText(displayText);
+                       }
+                   }
+               };
+           }
+       });
+        issueCol.setCellValueFactory(new PropertyValueFactory<>("issue"));
+        issueCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        this.robotTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // do not show "extra column"
 
     }
 
@@ -215,6 +331,8 @@ public class MainWindowController extends BaseController implements Initializabl
             ontologyTreeViewPane.getChildren().remove(initOntoLabel);
             setupAutocomplete();
             setupOntologyTreeView();
+            this.parentTermAdder.setOntology(this.hpOntology);
+            parentTermAdder.linkOntologyTreeAddButton(ontologyTree);
         });
 
         new Thread(task).start();
@@ -225,6 +343,7 @@ public class MainWindowController extends BaseController implements Initializabl
      * Uses the @link WidthAwareTextFields} class to set up autocompletion for the parent HPO name
      */
     private void setupAutocomplete() {
+
 
         /*
         if (labelMap != null) {
@@ -269,4 +388,9 @@ public class MainWindowController extends BaseController implements Initializabl
 
     }
 
+    public void addRobotItem(ActionEvent actionEvent) {
+        // TODO -- assemble and validate the information from the widgets and create a new RobotItem
+        String newTermLabel = termLabelValidator.getLabel().toString();
+        System.out.println(newTermLabel);
+    }
 }

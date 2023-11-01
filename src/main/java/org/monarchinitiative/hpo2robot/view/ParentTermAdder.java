@@ -2,22 +2,32 @@ package org.monarchinitiative.hpo2robot.view;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo2robot.Launcher;
+import org.monarchinitiative.hpo2robot.controller.OntologyTree;
 import org.monarchinitiative.hpo2robot.controller.ParentTermAdderController;
 import org.monarchinitiative.hpo2robot.model.HpoRosettaStone;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+/**]
+ * Widget for adding parent terms to the current ROBOT entry
+ * @author Peter N Robinson
+ */
 public class ParentTermAdder extends HBox {
-
+    Logger LOGGER = LoggerFactory.getLogger(ParentTermAdder.class);
     private ParentTermAdderController controller;
 
     private StringProperty parentTermLabelStringProperty;
@@ -25,9 +35,7 @@ public class ParentTermAdder extends HBox {
 
     private HpoRosettaStone rosettaStone = null;
 
-    public void setOntology(Ontology ontology) {
-        rosettaStone = new HpoRosettaStone(ontology);
-    }
+
 
     public ParentTermAdder() {
         super();
@@ -39,32 +47,45 @@ public class ParentTermAdder extends HBox {
             this.getChildren().add(node);
             parentTermLabelStringProperty = new SimpleStringProperty("");
             parentTermLabelStringProperty.bindBidirectional(controller.parentTermProperty());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    List<Term> getParentTermList() {
-       /* if (rosettaStone == null ) {
-            System.err.println("TODO ERROR MESSAGE LOGGING");
-            return List.of();
+    public void setOntology(Ontology ontology) {
+        if (ontology == null) {
+            LOGGER.error("Attempt to set Ontology with null pointer.");
+            return;
         }
-        List<Term> parentTermList  = new ArrayList<>();;
-        ObservableList<String> parentTermLabelss = controller.getParentList();
-        for (String label : parentTermLabelss) {
-            Optional<Term> termOpt = rosettaStone.termFromPrimaryLabel(label);
-            termOpt.ifPresent(parentTermList::add);
-        }
-        return parentTermList;
-
-        */
-        return List.of();
+        rosettaStone = new HpoRosettaStone(ontology);
+        TextFields.bindAutoCompletion(controller.getTextField(), rosettaStone.allLabels());
+       // WidthAwareTextFields.bindWidthAwareAutoCompletion(controller.getTextField(),rosettaStone.allLabels());
     }
 
 
+    List<Term> getParentTermList() {
+        Set<String> parentTermLabelSet = controller.getParentSet();
+        List<Term> parentList = new ArrayList<>();
+        for (String parentLabel : parentTermLabelSet) {
+            Optional<Term> opt = rosettaStone.termFromPrimaryLabel(parentLabel);
+            opt.ifPresent(parentList::add);
+        }
+        return parentList;
+    }
 
+
+    /**
+     * Links this widget to the OntologyTree widget such that if the user presses "Add", the
+     * current term gets added to the parent term text field.
+     * @param ontologyTree reference to the OntologyTree widget on the left side of the GUI
+     */
+    public void linkOntologyTreeAddButton(OntologyTree ontologyTree) {
+        Button button = ontologyTree.getAddButton();
+        TextField textField = ontologyTree.getSearchTextField();
+        button.setOnAction(e -> {
+            String text = textField.getText();
+            parentTermLabelStringProperty.set(text);
+        });
+    }
 }
-/*
-
- */

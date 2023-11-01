@@ -1,10 +1,6 @@
 package org.monarchinitiative.hpo2robot.controller;
 
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,9 +8,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for a widget that allows the user to select parent terms by autocomplete or
+ * by connecting to the OntologyTree widget.
+ */
 public class ParentTermAdderController implements Initializable {
 
     @FXML
@@ -26,39 +27,36 @@ public class ParentTermAdderController implements Initializable {
     @FXML
     private Button addButton;
 
-  //  private ObservableList<String> parentTerms;
+
+    private final Set<String> parentTermLabels;
 
     public ParentTermAdderController() {
-
+        parentTermLabels = new HashSet<>();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        parentTerms = FXCollections.observableList(new ArrayList<>());
-//        parentTerms.addListener(new ListChangeListener() {
-//            @Override
-//            public void onChanged(ListChangeListener.Change change) {
-//                System.out.println("Detected a change! ");
-//            }
-//        });
-    }
-
-
-    public void addParentTerm(ActionEvent actionEvent) {
-
-        //parentTerms.add(textField.getText());
+        addButton.setOnAction(e ->{
+            String parentTermText = textField.getText();
+            parentTermLabels.add(parentTermText);
+        });
     }
 
     public StringProperty parentTermProperty() {
         return textField.textProperty();
     }
 
-    public ObservableList<String> getParentList() {
-
-        return null;//this.parentTerms;
+    /**
+     *
+     * @return a set of Labels representing the parent or parents of the current term.
+     */
+    public Set<String> getParentSet() {
+        return parentTermLabels;
     }
 
-
+    public TextField getTextField() {
+        return textField;
+    }
 
 
 }
