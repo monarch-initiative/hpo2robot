@@ -54,7 +54,7 @@ public class MainWindowController extends BaseController implements Initializabl
     public TableColumn<RobotItem, String> pmidsCol;
     public TableColumn<RobotItem, String> issueCol;
     public TableColumn<RobotItem, String> newTermLabelCol;
-    Logger LOGGER = LoggerFactory.getLogger(MainWindowController.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(MainWindowController.class);
 
     @FXML
     public ValidatingPane termLabelValidator;
@@ -90,7 +90,7 @@ public class MainWindowController extends BaseController implements Initializabl
      * we can check to make sure the user does not try to open a disease before the Ontology is
      * done loading.
      */
-    private BooleanProperty ontologyLoadedProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty ontologyLoadedProperty = new SimpleBooleanProperty(false);
     /** key - label, synonym, or term id of each non-obsolete HP term; value: primary label */
     private Map<String, String> labelMap;
 
@@ -252,7 +252,7 @@ public class MainWindowController extends BaseController implements Initializabl
        });
         issueCol.setCellValueFactory(new PropertyValueFactory<>("issue"));
         issueCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        this.robotTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // do not show "extra column"
+        this.robotTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN); // do not show "extra column"
 
     }
 

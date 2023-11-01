@@ -12,9 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class HpoRosettaStone {
-    Logger LOGGER = LoggerFactory.getLogger(HpoRosettaStone.class);
-
-    private final Ontology hpo;
+    private final Logger LOGGER = LoggerFactory.getLogger(HpoRosettaStone.class);
 
     private final Map<String, Term> labelToTermMap;
 
@@ -23,12 +21,11 @@ public class HpoRosettaStone {
     public HpoRosettaStone(Ontology ontology) {
         Map<String, Term> labelMap = new HashMap<>();
         Map<TermId, String> idMap = new HashMap<>();
-        this.hpo = ontology;
         if (ontology == null) {
             LOGGER.error("Attempt to initialize HpoRosettaStone but ontology argument was null");
         } else {
-            hpo.getTerms().forEach(term ->  labelMap.putIfAbsent(term.getName(), term));
-            hpo.getTerms().forEach(term ->  idMap.putIfAbsent(term.id(), term.getName()));
+            ontology.getTerms().forEach(term ->  labelMap.putIfAbsent(term.getName(), term));
+            ontology.getTerms().forEach(term ->  idMap.putIfAbsent(term.id(), term.getName()));
         }
         this.labelToTermMap = Map.copyOf(labelMap);
         idToLabelMap = Map.copyOf(idMap);

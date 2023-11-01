@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Peter N Robinson
  */
 public class ParentTermAdder extends HBox {
-    Logger LOGGER = LoggerFactory.getLogger(ParentTermAdder.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ParentTermAdder.class);
     private ParentTermAdderController controller;
 
     private StringProperty parentTermLabelStringProperty;

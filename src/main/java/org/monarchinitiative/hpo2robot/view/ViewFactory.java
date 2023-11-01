@@ -115,8 +115,7 @@ public class ViewFactory {
 
     public URL getLocation(String dir, String fxmlName) {
         String path = dir + File.separator + fxmlName;
-        URL location = Launcher.class.getResource(path);
-        return location;
+        return Launcher.class.getResource(path);
     }
 
     public void closeStage(Stage stage) {

@@ -11,8 +11,6 @@ import org.monarchinitiative.hpo2robot.controller.ValidatingLabelPaneController;
 public class ValidatingPane extends AnchorPane {
 
 
-    private ValidatingLabelPaneController controller;
-
     StringProperty fieldNameProperty;
 
     StringProperty textFieldProperty;
@@ -23,7 +21,7 @@ public class ValidatingPane extends AnchorPane {
         super();
         try {
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/ValidatingPane.fxml"));
-            controller = new ValidatingLabelPaneController();
+            ValidatingLabelPaneController controller = new ValidatingLabelPaneController();
             loader.setController(controller);
             Node node = loader.load();
             this.getChildren().add(node);

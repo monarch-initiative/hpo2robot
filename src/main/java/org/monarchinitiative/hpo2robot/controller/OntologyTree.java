@@ -55,7 +55,7 @@ public class OntologyTree {
     /**
      * Map of term names to term IDs.
      */
-    private Map<String, TermId> labels = new HashMap<>();
+    private final Map<String, TermId> labels = new HashMap<>();
 
     /**
      * Text field with autocompletion for jumping to a particular HPO term in the tree view.
@@ -354,9 +354,7 @@ public class OntologyTree {
                 childrenList = FXCollections.observableArrayList();
                 Iterable<TermId> iterable = ontology.graph().getChildren(getValue().id(), false);
                 Set<Term> children = new HashSet<>();
-                Iterator<TermId> it = iterable.iterator();
-                while (it.hasNext()) {
-                    var iter = it.next();
+                for (TermId iter : iterable) {
                     Optional<Term> opt = ontology.termForTermId(iter);
                     opt.ifPresent(children::add);
                 }

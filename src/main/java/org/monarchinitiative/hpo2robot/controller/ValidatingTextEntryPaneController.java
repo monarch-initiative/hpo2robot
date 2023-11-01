@@ -41,10 +41,10 @@ public class ValidatingTextEntryPaneController implements Initializable {
 
     private BooleanProperty isValidProperty;
 
-    public static String CREATE_DEFINITION = "Create definition";
-    public static String EDIT_DEFINITION = "Edit definition";
-    public static String CREATE_COMMENT = "Create comment";
-    public static String EDIT_COMMENT = "Edit comment";
+    public static final String CREATE_DEFINITION = "Create definition";
+    public static final String EDIT_DEFINITION = "Edit definition";
+    public static final String CREATE_COMMENT = "Create comment";
+    public static final String EDIT_COMMENT = "Edit comment";
 
 
 
