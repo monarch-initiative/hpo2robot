@@ -18,8 +18,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
+import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
@@ -33,6 +35,7 @@ import org.monarchinitiative.hpo2robot.view.ViewFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -160,12 +163,13 @@ public class MainWindowController extends BaseController implements Initializabl
 
 
     private void setUpTableView() {
+        robotTableView.setPlaceholder(new Text("No ROBOT items in table"));
         robotTableView.setEditable(false);
-        newTermLabelCol.setCellValueFactory(new PropertyValueFactory<>("newTermLabelCol"));
+        newTermLabelCol.setCellValueFactory(new PropertyValueFactory<>("newTermLabel"));
         newTermLabelCol.setCellFactory(TextFieldTableCell.forTableColumn());
         newTermLabelCol.setEditable(true);
 
-        definitionCol.setCellValueFactory(new PropertyValueFactory<>("definitionCol"));
+        definitionCol.setCellValueFactory(new PropertyValueFactory<>("newTermDefinition"));
         definitionCol.setCellFactory(new Callback<>() {
             @Override
             public TableCell<RobotItem, String> call(TableColumn<RobotItem, String> p) {
@@ -180,7 +184,7 @@ public class MainWindowController extends BaseController implements Initializabl
                             // show just the first 50 chars of the definition
                             Tooltip tooltip = new Tooltip();
                             RobotItem robotItem = getTableView().getItems().get(getTableRow().getIndex());
-                            tooltip.setText(robotItem.getNewTermDefinition());
+                            tooltip.setText(robotItem.getNewTermDefinitionProperty().get());
                             setTooltip(tooltip);
                             String displayText = item.length() < 50 ? item : item.substring(0,45) + "...";
                             setText(displayText);
@@ -189,7 +193,7 @@ public class MainWindowController extends BaseController implements Initializabl
                 };
             }
         });
-        parentTermCol.setCellValueFactory(new PropertyValueFactory<>("parentTermCol"));
+        parentTermCol.setCellValueFactory(new PropertyValueFactory<>("parentTermLabel"));
         parentTermCol.setCellFactory(new Callback<>() {
             @Override
             public TableCell<RobotItem, String> call(TableColumn<RobotItem, String> p) {
@@ -204,7 +208,7 @@ public class MainWindowController extends BaseController implements Initializabl
                             // show just the first 50 chars of the definition
                             Tooltip tooltip = new Tooltip();
                             RobotItem robotItem = getTableView().getItems().get(getTableRow().getIndex());
-                            Set<Term> parents = robotItem.getParentTerms();
+                            List<Term> parents = robotItem.getParentTerms();
                             String displayText = parents.stream().map(Term::getName).collect(Collectors.joining("; "));
                             tooltip.setText(displayText);
                             setTooltip(tooltip);
@@ -225,7 +229,7 @@ public class MainWindowController extends BaseController implements Initializabl
                 };
             }
         });
-       pmidsCol.setCellValueFactory(new PropertyValueFactory<>("pmids"));
+       pmidsCol.setCellValueFactory(new PropertyValueFactory<>("pmidString"));
        pmidsCol.setCellFactory(new Callback<>() {
            @Override
            public TableCell<RobotItem, String> call(TableColumn<RobotItem, String> p) {
@@ -343,7 +347,7 @@ public class MainWindowController extends BaseController implements Initializabl
      * Uses the @link WidthAwareTextFields} class to set up autocompletion for the parent HPO name
      */
     private void setupAutocomplete() {
-
+        //TextFields.bindAutoCompletion(pare)
 
         /*
         if (labelMap != null) {
@@ -391,6 +395,11 @@ public class MainWindowController extends BaseController implements Initializabl
     public void addRobotItem(ActionEvent actionEvent) {
         // TODO -- assemble and validate the information from the widgets and create a new RobotItem
         String newTermLabel = termLabelValidator.getLabel().toString();
-        System.out.println(newTermLabel);
+        List<Term> parentTerms = parentTermAdder.getParentTermList();
+        String definition = this.definitionPane.getUserText();
+        String comment = this.commentPane.getUserText();
+        RobotItem item = new RobotItem(newTermLabel, parentTerms, definition, comment);
+        System.out.println("Adding" + newTermLabel);
+        this.robotTableView.getItems().add(item);
     }
 }

@@ -72,7 +72,7 @@
                 <ValidatingTextEntryPane fx:id="definitionPane"/>
                 <ValidatingTextEntryPane fx:id="commentPane"/>
                 <HBox>
-                    <Button fx:id="addRobotItemButton" onAction="#addRobotItem"/>
+                    <Button onAction="#addRobotItem" text="Add new term"/>
                 </HBox>
             </VBox>
             <ScrollPane>

@@ -64,7 +64,7 @@ public class ParentTermAdder extends HBox {
     }
 
 
-    List<Term> getParentTermList() {
+    public List<Term> getParentTermList() {
         Set<String> parentTermLabelSet = controller.getParentSet();
         List<Term> parentList = new ArrayList<>();
         for (String parentLabel : parentTermLabelSet) {

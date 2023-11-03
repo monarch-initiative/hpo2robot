@@ -1,30 +1,60 @@
 package org.monarchinitiative.hpo2robot.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class RobotItem {
 
     private TermId newTermId;
 
-    private String newTermLabel;
+    private final StringProperty newTermLabelProperty;
 
-    private String newTermDefinition;
+    private final StringProperty issueProperty;
 
-    private String newTermComment;
+    private final StringProperty parentTermLabelProperty;
 
-    private final Set<Term> parentTerms;
+    private final StringProperty newTermDefinitionProperty;
+
+    private final StringProperty newTermCommentProperty;
+
+    private final StringProperty pmidStringProperty;
+
+    private final List<Term> parentTerms;
 
     private final Set<String> pmids;
 
 
-    public RobotItem() {
-        parentTerms = new HashSet<>();
+    public RobotItem(String newTermLabel, List<Term> parentTerms, String definition, String comment) {
+        this.newTermLabelProperty = new SimpleStringProperty(newTermLabel);
+        this.newTermDefinitionProperty = new SimpleStringProperty(definition);
+        this.newTermCommentProperty = new SimpleStringProperty(comment);
+        this.parentTerms = parentTerms;
+        issueProperty = new SimpleStringProperty("42");
+        if (parentTerms.isEmpty()) {
+            parentTermLabelProperty = new SimpleStringProperty("Error - no term found");
+        } else {
+            String firstParentTermLabel = parentTerms.get(0).getName();
+            firstParentTermLabel = firstParentTermLabel.length() < 45
+                    ? firstParentTermLabel
+                    : firstParentTermLabel.substring(0,45) + "...";
+            parentTermLabelProperty = new SimpleStringProperty(firstParentTermLabel);
+        }
         pmids = new HashSet<>();
+        pmidStringProperty = new SimpleStringProperty("n/a");
 
+    }
+
+    public StringProperty parentTermLabelPropertyProperty() {
+        return parentTermLabelProperty;
+    }
+    public String parentTermLabelProperty() {
+        return parentTermLabelProperty.get();
     }
 
     public TermId getNewTermId() {
@@ -35,37 +65,34 @@ public class RobotItem {
         this.newTermId = newTermId;
     }
 
-    public String getNewTermLabel() {
-        return newTermLabel;
+    public StringProperty getNewTermLabelProperty() {
+        return newTermLabelProperty;
     }
 
-    public void setNewTermLabel(String newTermLabel) {
-        this.newTermLabel = newTermLabel;
+    public String getNewTermLabel() {
+        return newTermLabelProperty.get();
+    }
+
+
+
+    public StringProperty getNewTermDefinitionProperty() {
+        return newTermDefinitionProperty;
     }
 
     public String getNewTermDefinition() {
-        return newTermDefinition;
+        return newTermDefinitionProperty.get();
     }
 
-    public void setNewTermDefinition(String newTermDefinition) {
-        this.newTermDefinition = newTermDefinition;
+    public StringProperty getNewTermCommentProperty() {
+        return newTermCommentProperty;
     }
 
     public String getNewTermComment() {
-        return newTermComment;
+        return newTermCommentProperty.get();
     }
 
-    public void setNewTermComment(String newTermComment) {
-        this.newTermComment = newTermComment;
-    }
-
-    public Set<Term> getParentTerms() {
+    public List<Term> getParentTerms() {
         return parentTerms;
-    }
-
-
-    public void addParentTerm(Term term) {
-        this.parentTerms.add(term);
     }
 
     public Set<String> getPmids() {
@@ -73,8 +100,24 @@ public class RobotItem {
     }
 
 
+    public StringProperty getIssueProperty() {
+        return issueProperty;
+    }
+
+    public String getIssue() {
+        return issueProperty.get();
+    }
+
 
     public void addPmid(String pmid) {
         this.pmids.add(pmid);
+    }
+
+    public StringProperty getPmidStringProperty() {
+        return this.pmidStringProperty;
+    }
+
+    public String getPmidString() {
+        return this.pmidStringProperty.get();
     }
 }

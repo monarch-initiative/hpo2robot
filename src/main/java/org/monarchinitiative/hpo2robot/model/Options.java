@@ -74,10 +74,6 @@ public class Options implements Serializable {
         if (robotFile.equals(N_A)) {
             return false;
         }
-        /*f = new File(robotFile);
-        if (! f.isFile()) {
-            return false;
-        }*/
         // the last thing to check is if the ORCID matches
         final Matcher matcher = ORCID_PATTERN.matcher(orcid);
         return  matcher.matches();

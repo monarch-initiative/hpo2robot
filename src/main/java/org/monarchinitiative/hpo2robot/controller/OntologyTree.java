@@ -160,7 +160,7 @@ public class OntologyTree {
         String introHtmlMessage;
         TermId rootId = ontology.getRootTermId();
         Optional<Term> rootOpt = ontology.termForTermId(rootId); // should always be present
-        if (ontology != null && rootOpt.isPresent()) {
+        if (rootOpt.isPresent()) {
             Term rootTerm = rootOpt.get();
             // populate the TreeView with top-level elements from ontology hierarchy
             TreeItem<Term> root = new OntologyTree.TermTreeItem(rootTerm);

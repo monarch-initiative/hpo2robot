@@ -11,4 +11,5 @@ module org.monarchinitiative.hpo2robot {
     exports org.monarchinitiative.hpo2robot;
     //exports com.sun.javafx.event to org.controlsfx.controls;
     opens org.monarchinitiative.hpo2robot.controller to javafx.fxml, javafx.web;
+    opens org.monarchinitiative.hpo2robot.model to javafx.base;
 }
