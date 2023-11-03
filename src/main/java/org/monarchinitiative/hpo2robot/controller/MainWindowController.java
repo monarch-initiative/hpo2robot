@@ -19,19 +19,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
-import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
-import org.monarchinitiative.hpo2robot.view.ParentTermAdder;
-import org.monarchinitiative.hpo2robot.view.ValidatingPane;
-import org.monarchinitiative.hpo2robot.view.ValidatingTextEntryPane;
+import org.monarchinitiative.hpo2robot.view.*;
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
-import org.monarchinitiative.hpo2robot.view.ViewFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,35 +43,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MainWindowController extends BaseController implements Initializable {
+    private final Logger LOGGER = LoggerFactory.getLogger(MainWindowController.class);
+
+    @FXML
     public MenuItem newMenuItem;
+    @FXML
     public MenuItem exitMenuItem;
+    @FXML
     public WebView currentRobotView;
 
     @FXML
     private TableView<RobotItem> robotTableView;
+    @FXML
     public TableColumn<RobotItem, String> parentTermCol;
+    @FXML
     public TableColumn<RobotItem, String> definitionCol;
+    @FXML
     public TableColumn<RobotItem, String> pmidsCol;
+    @FXML
     public TableColumn<RobotItem, String> issueCol;
+    @FXML
     public TableColumn<RobotItem, String> newTermLabelCol;
-    private final Logger LOGGER = LoggerFactory.getLogger(MainWindowController.class);
-
     @FXML
     public ValidatingPane termLabelValidator;
-
     @FXML
     public ValidatingTextEntryPane definitionPane;
     @FXML
     public ValidatingTextEntryPane commentPane;
-
-
-
     @FXML
     private StackPane ontologyTreeViewPane;
-
     @FXML
     private ParentTermAdder parentTermAdder;
-
     @FXML
     private VBox statusBar;
     @FXML
@@ -94,8 +93,6 @@ public class MainWindowController extends BaseController implements Initializabl
      * done loading.
      */
     private final BooleanProperty ontologyLoadedProperty = new SimpleBooleanProperty(false);
-    /** key - label, synonym, or term id of each non-obsolete HP term; value: primary label */
-    private Map<String, String> labelMap;
 
     public MainWindowController(ViewFactory viewFactory, String fxmlName) {
         super(viewFactory, fxmlName);
@@ -119,7 +116,6 @@ public class MainWindowController extends BaseController implements Initializabl
      */
     private void loadHpoAndSetupOntologyTree() {
         LOGGER.trace("loading hp.json");
-        long start = System.currentTimeMillis();
         SimpleDoubleProperty progress = new SimpleDoubleProperty(0.0);
        // progress.addListener((obj, oldvalue, newvalue) -> updateProgress(newvalue.doubleValue(), 100) );
         LoadHpoService service = new LoadHpoService(options.getHpJsonFile());
@@ -132,7 +128,6 @@ public class MainWindowController extends BaseController implements Initializabl
             if (checkOptionsReadiness()) {
                 setupGuiOntologyTree(progress);
             }
-
         });
         service.setOnFailed(e -> {
             LOGGER.error("Could not load hp.jsdon");
@@ -148,9 +143,6 @@ public class MainWindowController extends BaseController implements Initializabl
         termLabelValidator.setFieldLabel("New Term Label");
         definitionPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_DEFINITION);
         commentPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_COMMENT);
-
-
-
         setUpStatusBar();
         readinessProperty = new SimpleBooleanProperty(false);
         setUpKeyAccelerators();
@@ -168,7 +160,6 @@ public class MainWindowController extends BaseController implements Initializabl
         newTermLabelCol.setCellValueFactory(new PropertyValueFactory<>("newTermLabel"));
         newTermLabelCol.setCellFactory(TextFieldTableCell.forTableColumn());
         newTermLabelCol.setEditable(true);
-
         definitionCol.setCellValueFactory(new PropertyValueFactory<>("newTermDefinition"));
         definitionCol.setCellFactory(new Callback<>() {
             @Override
@@ -257,7 +248,22 @@ public class MainWindowController extends BaseController implements Initializabl
         issueCol.setCellValueFactory(new PropertyValueFactory<>("issue"));
         issueCol.setCellFactory(TextFieldTableCell.forTableColumn());
         this.robotTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN); // do not show "extra column"
+        robotTableView.setOnMouseClicked(e -> {
+            RobotItem item = robotTableView.getSelectionModel().getSelectedItems().get(0);
+            showItemInTable(item);
+        });
+    }
 
+    /**
+     * This method is called if the user clicks on a row of the ROBOT item table, and causes details from
+     * that row to be shown in the bottom part of the GUI in a WebView widget.
+     * @param item The ROBOT item (table row) that the user has clicked on and thereby marked/brought into focus
+     */
+    private void showItemInTable(RobotItem item) {
+        WebEngine engine = this.currentRobotView.getEngine();
+        CurrentRobotItemVisualizer visualizer = new CurrentRobotItemVisualizer();
+        String html = visualizer.toHTML(item);
+        engine.loadContent(html);
     }
 
     private boolean checkOptionsReadiness() {
@@ -392,7 +398,10 @@ public class MainWindowController extends BaseController implements Initializabl
 
     }
 
-    public void addRobotItem(ActionEvent actionEvent) {
+    /**
+     * This method uses to the data entered by the user to add another ROBOT item to the table
+     */
+    public void addRobotItem() {
         // TODO -- assemble and validate the information from the widgets and create a new RobotItem
         String newTermLabel = termLabelValidator.getLabel().toString();
         List<Term> parentTerms = parentTermAdder.getParentTermList();

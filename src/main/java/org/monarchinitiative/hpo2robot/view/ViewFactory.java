@@ -14,25 +14,18 @@ import org.monarchinitiative.hpo2robot.controller.BaseController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class ViewFactory {
-
-
-    private final List<Stage> activeStageList;
 
     private Options options;
 
     public ViewFactory(Options options) {
         this.options = options;
-        activeStageList = new ArrayList<>();
     }
 
     public ViewFactory() {
-        this.options = new Options(); // initialize to default (empty)
-        activeStageList = new ArrayList<>();
+        this(new Options()); // initialize to default options (empty)
     }
 
 
@@ -81,7 +74,6 @@ public class ViewFactory {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
-        activeStageList.add(stage);
     }
 
 
@@ -120,7 +112,6 @@ public class ViewFactory {
 
     public void closeStage(Stage stage) {
         stage.close();
-        activeStageList.remove(stage);
     }
 
 
