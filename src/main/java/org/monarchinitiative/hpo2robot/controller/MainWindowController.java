@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo2robot.controller;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,7 +34,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -51,6 +49,8 @@ public class MainWindowController extends BaseController implements Initializabl
     public MenuItem exitMenuItem;
     @FXML
     public WebView currentRobotView;
+    @FXML
+    public PmidXrefAdder pmidXrefAdderBox;
 
     @FXML
     private TableView<RobotItem> robotTableView;
@@ -235,7 +235,7 @@ public class MainWindowController extends BaseController implements Initializabl
                            // assume we have 1 or 2 PMIDs and should fit. Consider more customization later
                            Tooltip tooltip = new Tooltip();
                            RobotItem robotItem = getTableView().getItems().get(getTableRow().getIndex());
-                           Set<String> pmids = robotItem.getPmids();
+                           List<String> pmids = robotItem.getPmids();
                            String displayText = String.join(":", pmids);
                            tooltip.setText(displayText);
                            setTooltip(tooltip);
@@ -371,7 +371,10 @@ public class MainWindowController extends BaseController implements Initializabl
         try {
             ontologyTreeViewPane.getChildren().add(ontologyTreeLoader.load());
         } catch (IOException e) {
-            e.printStackTrace();
+            PopUps.showException("Error",
+                    "Could not setup up ontology tree",
+                    e.getMessage(),
+                    e);
         }
     }
 
@@ -407,7 +410,8 @@ public class MainWindowController extends BaseController implements Initializabl
         List<Term> parentTerms = parentTermAdder.getParentTermList();
         String definition = this.definitionPane.getUserText();
         String comment = this.commentPane.getUserText();
-        RobotItem item = new RobotItem(newTermLabel, parentTerms, definition, comment);
+        List<String> pmids = pmidXrefAdderBox.getPmidList();
+        RobotItem item = new RobotItem(newTermLabel, parentTerms, definition, comment, pmids);
         System.out.println("Adding" + newTermLabel);
         this.robotTableView.getItems().add(item);
     }

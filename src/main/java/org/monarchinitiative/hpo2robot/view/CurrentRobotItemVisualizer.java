@@ -413,6 +413,8 @@ public class CurrentRobotItemVisualizer {
        builder.append(HTML_HEADER);
        builder.append(row("Label", item.getNewTermLabel()));
        builder.append(row("Definition", item.getNewTermDefinition()));
+       String pmids = String.join("; ", item.getPmids());
+       builder.append(row("PMIDs", pmids));
        builder.append(HTML_FOOT);
         return builder.toString();
     }

@@ -9,6 +9,7 @@
 <?import org.monarchinitiative.hpo2robot.view.ParentTermAdder?>
 
 <?import javafx.scene.web.WebView?>
+<?import org.monarchinitiative.hpo2robot.view.PmidXrefAdder?>
 <BorderPane prefHeight="1000.0" prefWidth="1400.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -71,6 +72,7 @@
                 <ParentTermAdder fx:id="parentTermAdder"/>
                 <ValidatingTextEntryPane fx:id="definitionPane"/>
                 <ValidatingTextEntryPane fx:id="commentPane"/>
+                <PmidXrefAdder fx:id="pmidXrefAdderBox"/>
                 <HBox>
                     <Button onAction="#addRobotItem" text="Add new term"/>
                 </HBox>

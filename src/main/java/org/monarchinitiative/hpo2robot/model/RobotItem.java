@@ -5,9 +5,7 @@ import javafx.beans.property.StringProperty;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class RobotItem {
 
@@ -27,10 +25,10 @@ public class RobotItem {
 
     private final List<Term> parentTerms;
 
-    private final Set<String> pmids;
+    private final List<String> pmids;
 
 
-    public RobotItem(String newTermLabel, List<Term> parentTerms, String definition, String comment) {
+    public RobotItem(String newTermLabel, List<Term> parentTerms, String definition, String comment, List<String> pmids) {
         this.newTermLabelProperty = new SimpleStringProperty(newTermLabel);
         this.newTermDefinitionProperty = new SimpleStringProperty(definition);
         this.newTermCommentProperty = new SimpleStringProperty(comment);
@@ -45,7 +43,7 @@ public class RobotItem {
                     : firstParentTermLabel.substring(0,45) + "...";
             parentTermLabelProperty = new SimpleStringProperty(firstParentTermLabel);
         }
-        pmids = new HashSet<>();
+        this.pmids = pmids;
         pmidStringProperty = new SimpleStringProperty("n/a");
 
     }
@@ -53,7 +51,7 @@ public class RobotItem {
     public StringProperty parentTermLabelPropertyProperty() {
         return parentTermLabelProperty;
     }
-    public String parentTermLabelProperty() {
+    public String parentTermLabel() {
         return parentTermLabelProperty.get();
     }
 
@@ -95,7 +93,7 @@ public class RobotItem {
         return parentTerms;
     }
 
-    public Set<String> getPmids() {
+    public List<String> getPmids() {
         return pmids;
     }
 

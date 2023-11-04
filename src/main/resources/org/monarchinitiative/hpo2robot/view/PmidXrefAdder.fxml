@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      prefHeight="60.0" prefWidth="1000.0">
+    <Button fx:id="pmidButton" text="Add PMID" prefHeight="30.0" prefWidth="200.0" />
+    <Label fx:id="pmidLabel" prefHeight="30.0" prefWidth="200.0" text="(0)"/>
+    <Button fx:id="xrefButton" text="Add XRef" prefHeight="30.0" prefWidth="200.0" />
+    <Label fx:id="xrefLabel" prefHeight="30.0" prefWidth="200.0" text="(0)"/>
+</HBox>
