@@ -142,6 +142,7 @@ public class MainWindowController extends BaseController implements Initializabl
         termLabelValidator.setFieldLabel("New Term Label");
         definitionPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_DEFINITION);
         commentPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_COMMENT);
+        commentPane.commentMode();
         setUpStatusBar();
         readinessProperty = new SimpleBooleanProperty(false);
         setUpKeyAccelerators();
@@ -183,7 +184,7 @@ public class MainWindowController extends BaseController implements Initializabl
                 };
             }
         });
-        parentTermCol.setCellValueFactory(new PropertyValueFactory<>("parentTermLabel"));
+        parentTermCol.setCellValueFactory(new PropertyValueFactory<>("parentTermDisplay"));
         parentTermCol.setCellFactory(new Callback<>() {
             @Override
             public TableCell<RobotItem, String> call(TableColumn<RobotItem, String> p) {
@@ -260,7 +261,7 @@ public class MainWindowController extends BaseController implements Initializabl
      */
     private void showItemInTable(RobotItem item) {
         WebEngine engine = this.currentRobotView.getEngine();
-        CurrentRobotItemVisualizer visualizer = new CurrentRobotItemVisualizer();
+        CurrentRobotItemVisualizer visualizer = new CurrentRobotItemVisualizer(this.options);
         String html = visualizer.toHTML(item);
         engine.loadContent(html);
     }
@@ -379,7 +380,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
     /**
      * This gets called as the "hook" for the OntologyTree widget
-     * @param phenotypeTerm
+     * @param phenotypeTerm The term that is shown in the OntologyTree widget
      */
     private void addPhenotypeTerm(Term phenotypeTerm) {
         LOGGER.trace("Adding parent term from ontology tree: {}", phenotypeTerm);
@@ -406,14 +407,13 @@ public class MainWindowController extends BaseController implements Initializabl
      * This method uses to the data entered by the user to add another ROBOT item to the table
      */
     public void addRobotItem() {
-        // TODO -- assemble and validate the information from the widgets and create a new RobotItem
-        String newTermLabel = termLabelValidator.getLabel().toString();
+        String newTermLabel = termLabelValidator.getLabel().get();
         List<Term> parentTerms = parentTermAdder.getParentTermList();
         String definition = this.definitionPane.getUserText();
         String comment = this.commentPane.getUserText();
         List<String> pmids = pmidXrefAdderBox.getPmidList();
         RobotItem item = new RobotItem(newTermLabel, parentTerms, definition, comment, pmids);
-        System.out.println("Adding" + newTermLabel);
+        LOGGER.info("Adding new term: {}", newTermLabel);
         this.robotTableView.getItems().add(item);
     }
 }

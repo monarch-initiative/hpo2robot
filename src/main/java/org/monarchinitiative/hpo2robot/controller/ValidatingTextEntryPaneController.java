@@ -47,6 +47,9 @@ public class ValidatingTextEntryPaneController implements Initializable {
     public static final String EDIT_COMMENT = "Edit comment";
 
 
+    private boolean definitionMode = true;
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -59,12 +62,17 @@ public class ValidatingTextEntryPaneController implements Initializable {
             int N = Math.min(50, text.length());
             textSummary.setText(text.substring(0,N) + (text.length() > N ? "..." : ""));
             validateText(text);
-            validatingButton.setText("Edit Definition");
+            if (definitionMode) {
+                validatingButton.setText(EDIT_DEFINITION);
+            } else {
+                validatingButton.setText(EDIT_COMMENT);
+            }
         });
-        validatingButton.setText("Create Definition");
+        validatingButton.setText(CREATE_DEFINITION);
         // red text for error messages
         errorLabel.setTextFill(Color.color(1, 0, 0));
     }
+
 
     private void validateText(String text) {
         byte[] bytes = text.getBytes(StandardCharsets.US_ASCII);
@@ -118,12 +126,9 @@ public class ValidatingTextEntryPaneController implements Initializable {
                 (observable, oldValue, newValue) -> {
                     String txt = newValue.replaceAll("\\n", " ");
                     txt = txt.replaceAll("  ", " ");
-                    txt = txt.trim();
                     userTextField.setText(txt);
                 });
         userTextField.setText(this.userText.get());
-
-        //Node okButton = dialog.getDialogPane().lookupButton(okButtonType);
         vbox.getChildren().add(userTextField);
         dialog.getDialogPane().setContent(vbox);
         Platform.runLater(userTextField::requestFocus);
@@ -182,5 +187,10 @@ public class ValidatingTextEntryPaneController implements Initializable {
 
     public void initButtonLabel(String label) {
         validatingButton.setText(label);
+    }
+
+
+    public void commentMode() {
+        definitionMode = false;
     }
 }

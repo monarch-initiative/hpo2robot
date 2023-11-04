@@ -1,12 +1,20 @@
 package org.monarchinitiative.hpo2robot.view;
 
+import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
+import org.monarchinitiative.phenol.ontology.data.Term;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CurrentRobotItemVisualizer {
 
 
+    private final Options options;
+
+
     private static final String CSS = """
-            
+                        
             /*//////////////////////////////////////////////////////////////////
             [ FONT ]*/
             @font-face {
@@ -107,8 +115,12 @@ public class CurrentRobotItemVisualizer {
             padding-left: 5px;
             }
             .column100.column1 {
-            width: 265px;
-            padding-left: 5px;
+               width: 90px;
+               padding-left: 5px;
+               }
+            .column100.column2 {
+               width: 500px;
+               padding-left: 5px;
             }
             .row100.head th {
             padding-top: 5px;
@@ -404,21 +416,33 @@ public class CurrentRobotItemVisualizer {
             </html>\s
             """;
 
-    public CurrentRobotItemVisualizer(){
-
+    public CurrentRobotItemVisualizer(Options options) {
+        this.options = options;
     }
 
     public String toHTML(RobotItem item) {
-       StringBuilder builder = new StringBuilder();
-       builder.append(HTML_HEADER);
-       builder.append(row("Label", item.getNewTermLabel()));
-       builder.append(row("Definition", item.getNewTermDefinition()));
-       String pmids = String.join("; ", item.getPmids());
-       builder.append(row("PMIDs", pmids));
-       builder.append(HTML_FOOT);
+        StringBuilder builder = new StringBuilder();
+        builder.append(HTML_HEADER);
+        builder.append(row("Label", item.getNewTermLabel()));
+        builder.append(row("Definition", item.getNewTermDefinition()));
+        builder.append(row("Comment", item.getNewTermComment()));
+        builder.append(row("Parent term(s):", getParentTermString(item.getParentTerms())));
+        String pmids = String.join("; ", item.getPmids());
+        builder.append(row("PMIDs", pmids));
+        builder.append(orcidRow());
+        builder.append(HTML_FOOT);
         return builder.toString();
     }
 
+
+    private String getParentTermString(List<Term> terms) {
+        List<String> termStrings = new ArrayList<>();
+        for (Term term : terms) {
+            String display = String.format("%s (%s)", term.getName(), term.id().getValue());
+            termStrings.add(display);
+        }
+        return String.join("; ", termStrings);
+    }
 
 
     private String row(String key, String value) {
@@ -427,11 +451,16 @@ public class CurrentRobotItemVisualizer {
         builder.append("<td class=\"column100 column1\" data-column=\"column1\">");
         builder.append(key);
         builder.append("</td>");
-        builder.append("<td class=\"column100 column1\" data-column=\"column1\">");
+        builder.append("<td class=\"column100 column2\" data-column=\"column1\">");
         builder.append(value);
         builder.append("</td>");
         builder.append("</tr>");
         return builder.toString();
+    }
+
+
+    private String orcidRow() {
+        return row("ORCID", options.getOrcid());
     }
 
 

@@ -20,7 +20,7 @@ public class PmidXrefAdder extends AnchorPane {
         LOGGER.error("PmdXrefAdder");
         try {
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/PmidXrefAdder.fxml"));
-            PmidXrefAdderController controller = new PmidXrefAdderController();
+            this.controller = new PmidXrefAdderController();
             loader.setController(controller);
             Node node = loader.load();
             this.getChildren().add(node);
@@ -32,6 +32,8 @@ public class PmidXrefAdder extends AnchorPane {
 
 
     public List<String> getPmidList() {
+        int x = 42;
+        System.out.println(x);
         if (this.controller == null ) {
             LOGGER.error("Controller is null");
             return List.of();

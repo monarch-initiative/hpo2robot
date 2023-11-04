@@ -77,9 +77,8 @@
                     <Button onAction="#addRobotItem" text="Add new term"/>
                 </HBox>
             </VBox>
-            <ScrollPane>
+
                 <WebView fx:id="currentRobotView"/>
-            </ScrollPane>
         </VBox>
     </center>
     <bottom>

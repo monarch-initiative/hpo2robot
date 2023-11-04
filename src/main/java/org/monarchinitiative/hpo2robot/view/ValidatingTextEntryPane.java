@@ -20,14 +20,14 @@ public class ValidatingTextEntryPane extends AnchorPane {
 
     BooleanProperty isValid;
 
-
+    ValidatingTextEntryPaneController controller;
 
 
     public ValidatingTextEntryPane() {
         super();
         try {
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/ValidatingTextEntryPane.fxml"));
-            ValidatingTextEntryPaneController controller = new ValidatingTextEntryPaneController();
+            this.controller = new ValidatingTextEntryPaneController();
             loader.setController(controller);
             Node node = loader.load();
             this.getChildren().add(node);
@@ -56,5 +56,10 @@ public class ValidatingTextEntryPane extends AnchorPane {
 
     public void initializeButtonText(String label) {
         buttonNameProperty.set(label);
+    }
+
+
+    public void commentMode() {
+        controller.commentMode();
     }
 }

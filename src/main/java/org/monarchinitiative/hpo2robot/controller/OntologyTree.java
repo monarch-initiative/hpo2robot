@@ -357,9 +357,6 @@ public class OntologyTree {
                     Optional<Term> opt = ontology.termForTermId(iter);
                     opt.ifPresent(children::add);
                 }
-//                Set<Term> children = OntologyAlgorithm.getChildTerms(ontology, getValue().id(), false).stream()
-//                        .map(ontology.getTermMap()::get)
-//                        .collect(Collectors.toSet());
 
                 children.stream()
                         .sorted(Comparator.comparing(Term::getName))

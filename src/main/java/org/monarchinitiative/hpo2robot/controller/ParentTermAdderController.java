@@ -39,6 +39,7 @@ public class ParentTermAdderController implements Initializable {
         addButton.setOnAction(e ->{
             String parentTermText = textField.getText();
             parentTermLabels.add(parentTermText);
+            textField.clear();
         });
     }
 

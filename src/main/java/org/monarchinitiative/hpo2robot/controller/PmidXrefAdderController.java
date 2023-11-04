@@ -41,7 +41,7 @@ public class PmidXrefAdderController implements Initializable  {
                 LOGGER.trace("Adding {}", opt.get());
                 pmidLabel.setText(String.format("(%d)", pmidList.size()));
             } else {
-                LOGGER.warn("Could not retried PMID");
+                LOGGER.warn("Could not retrieve PMID");
             }
         });
 

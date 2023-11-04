@@ -6,6 +6,7 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RobotItem {
 
@@ -44,7 +45,11 @@ public class RobotItem {
             parentTermLabelProperty = new SimpleStringProperty(firstParentTermLabel);
         }
         this.pmids = pmids;
-        pmidStringProperty = new SimpleStringProperty("n/a");
+        if (pmids.isEmpty()) {
+            pmidStringProperty = new SimpleStringProperty("n/a");
+        } else {
+            pmidStringProperty = new SimpleStringProperty(String.join(";", pmids));
+        }
 
     }
 
@@ -71,7 +76,13 @@ public class RobotItem {
         return newTermLabelProperty.get();
     }
 
+    public String getParentTermDisplay() {
+        String displayText = this.parentTerms
+                .stream().map(Term::getName)
+                .collect(Collectors.joining("; "));
+        return displayText;
 
+    }
 
     public StringProperty getNewTermDefinitionProperty() {
         return newTermDefinitionProperty;
