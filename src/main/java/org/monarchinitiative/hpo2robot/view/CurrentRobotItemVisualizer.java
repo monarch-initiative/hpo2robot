@@ -87,7 +87,7 @@ public class CurrentRobotItemVisualizer {
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            padding: 33px 30px;
+            padding: 3px 3px;
             }
             .wrap-table100 {
             width: 1300px;
@@ -104,19 +104,19 @@ public class CurrentRobotItemVisualizer {
             }
             .column100 {
             width: 130px;
-            padding-left: 25px;
+            padding-left: 5px;
             }
             .column100.column1 {
             width: 265px;
-            padding-left: 42px;
+            padding-left: 5px;
             }
             .row100.head th {
-            padding-top: 24px;
-            padding-bottom: 20px;
+            padding-top: 5px;
+            padding-bottom: 5px;
             }
             .row100 td {
-            padding-top: 18px;
-            padding-bottom: 14px;
+            padding-top: 5px;
+            padding-bottom: 5px;
             }
             /*==================================================================
             [ Ver1 ]*/

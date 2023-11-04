@@ -102,7 +102,6 @@ public class MainWindowController extends BaseController implements Initializabl
     void optionsAction() {
         this.viewFactory.showOptionsWindow();
         options = viewFactory.getOptions();
-        System.out.println("After get options");
         if (checkOptionsReadiness()) {
             loadHpoAndSetupOntologyTree();
         }
@@ -130,7 +129,7 @@ public class MainWindowController extends BaseController implements Initializabl
             }
         });
         service.setOnFailed(e -> {
-            LOGGER.error("Could not load hp.jsdon");
+            LOGGER.error("Could not load hp.json");
             ontologyLoadedProperty.set(false);
         });
         service.start();
@@ -378,11 +377,13 @@ public class MainWindowController extends BaseController implements Initializabl
         }
     }
 
-
+    /**
+     * This gets called as the "hook" for the OntologyTree widget
+     * @param phenotypeTerm
+     */
     private void addPhenotypeTerm(Term phenotypeTerm) {
-       // pa.setText(phenotypeTerm.getName());
-        System.out.println("addPhenotypeTerm: adding " + phenotypeTerm);
-        // automaticPmidUpdateBox.setSelected(!phenotypeTerm.isPresent());
+        LOGGER.trace("Adding parent term from ontology tree: {}", phenotypeTerm);
+        parentTermAdder.setParentTermLabel(phenotypeTerm.getName());
     }
 
 

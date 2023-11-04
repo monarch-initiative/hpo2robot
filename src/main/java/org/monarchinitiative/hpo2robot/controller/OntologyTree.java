@@ -141,7 +141,6 @@ public class OntologyTree {
     private void addButtonAction() {
         TreeItem<Term> selected = ontologyTreeView.getSelectionModel().getSelectedItem();
         if (selected != null && addHook != null) {
-            //Term phenotypeTerm = new Term(selected.getValue(), !notPresentCheckBox.isSelected());
             Term phenotypeTerm = selected.getValue();
             addHook.accept(phenotypeTerm);
         }

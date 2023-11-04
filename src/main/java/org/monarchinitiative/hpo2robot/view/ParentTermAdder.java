@@ -88,4 +88,9 @@ public class ParentTermAdder extends HBox {
             parentTermLabelStringProperty.set(text);
         });
     }
+
+
+    public void setParentTermLabel(String label) {
+        this.parentTermLabelStringProperty.set(label);
+    }
 }
