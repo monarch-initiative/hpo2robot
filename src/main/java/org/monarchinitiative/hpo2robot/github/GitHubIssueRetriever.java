@@ -33,7 +33,7 @@ public class GitHubIssueRetriever {
 
     private final List<GitHubIssue> issues = new ArrayList<>();
 
-    private HttpURLConnection httpconnection=null;
+   // private HttpURLConnection httpconnection=null;
 
     private final String username;
     private final String token;
@@ -111,10 +111,6 @@ public class GitHubIssueRetriever {
             e.printStackTrace();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (httpconnection!=null) {
-                httpconnection.disconnect();
-            }
         }
         return -1; // we should never get here with a good response.
     }

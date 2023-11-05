@@ -58,7 +58,8 @@ public class MainWindowController extends BaseController implements Initializabl
     public WebView currentRobotView;
     @FXML
     public PmidXrefAdder pmidXrefAdderBox;
-
+    @FXML
+    public GitHubIssueBox gitHubIssueBox;
 
 
     @FXML
@@ -448,7 +449,10 @@ public class MainWindowController extends BaseController implements Initializabl
             PopUps.alertDialog("Warning", "No open GitHub issues, retrieve more");
         } else {
             Map.Entry<GitHubIssue, Boolean> nextPendingIssue = opt.get();
-            PopUps.nextGitHubIssue(nextPendingIssue.getKey());
+            boolean result = PopUps.nextGitHubIssue(nextPendingIssue.getKey());
+            if (result) {
+                gitHubIssueBox.setGitHubLabelProperty(nextPendingIssue.getKey().getIssueNumber());
+            }
         }
     }
 }

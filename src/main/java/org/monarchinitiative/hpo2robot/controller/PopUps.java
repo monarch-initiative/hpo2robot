@@ -295,9 +295,57 @@ public class PopUps {
         al.setHeaderText(issue.getTitle());
         al.setContentText(issue.getBody());
 
+        ButtonType buttonTypeOne = new ButtonType("Yes");
+        ButtonType buttonTypeTwo = new ButtonType("No");
+        ButtonType buttonTypeThree = new ButtonType("Cancel");
+
+        al.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeThree);
+
+        // Show the dialog and wait for the user's choice
+//        al.showAndWait().ifPresent(response -> {
+//            if (response == buttonTypeOne) {
+//                return tr
+//            } else if (response == buttonTypeTwo) {
+//                System.out.println("Option Two chosen");
+//            } else if (response == buttonTypeThree) {
+//                System.out.println("Option Three chosen");
+//            } else {
+//                System.out.println("Dialog closed without making a choice");
+//            }
+//        });
+
+
         Optional<ButtonType> result = al.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
+        if (result.isPresent()) {
+            var response = result.get();
+            if (response == buttonTypeOne) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
+
+/*
+    public static Optional<Boolean> gitHubIssueDialog(GitHubIssue issue) {
+        ButtonType yesButtonType = new ButtonType("Yes", ButtonData.YES);
+        ButtonType noButtonType = new ButtonType("No", ButtonData.NO);
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+        //Dialog<Boolean> dialog = new Dialog<>();
+        Dialog<String> dialog = new Dialog<>();
+        //TextInputDialog dialog = new TextInputDialog("Process this GitHub issue?");
+        dialog.getDialogPane().getButtonTypes().addAll(yesButtonType, noButtonType, cancelButtonType);
+
+        dialog.setTitle(issue.getIssueNumber());
+        dialog.setHeaderText(issue.getTitle());
+        dialog.setContentText(issue.getBody());
+
+        Optional<ButtonType> opt =  dialog.showAndWait();
+    }
+
+ */
 
 
 }

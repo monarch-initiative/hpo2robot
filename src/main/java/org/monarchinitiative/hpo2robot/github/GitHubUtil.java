@@ -13,7 +13,7 @@ public class GitHubUtil {
 
 
     public static String escape(String string) {
-        if (string == null || string.length() == 0) {
+        if (string == null || string.isEmpty()) {
             return "\"\"";
         }
 
