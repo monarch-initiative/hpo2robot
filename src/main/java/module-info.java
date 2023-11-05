@@ -6,10 +6,11 @@ module org.monarchinitiative.hpo2robot {
     requires org.monarchinitiative.phenol.io;
     requires org.controlsfx.controls;
     requires org.slf4j;
+    requires json.simple;
 
     opens org.monarchinitiative.hpo2robot.view to javafx.fxml, javafx.web;
-    exports org.monarchinitiative.hpo2robot;
-    //exports com.sun.javafx.event to org.controlsfx.controls;
     opens org.monarchinitiative.hpo2robot.controller to javafx.fxml, javafx.web;
     opens org.monarchinitiative.hpo2robot.model to javafx.base;
+
+    exports org.monarchinitiative.hpo2robot;
 }

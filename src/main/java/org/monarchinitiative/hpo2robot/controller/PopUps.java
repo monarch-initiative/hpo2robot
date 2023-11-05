@@ -286,4 +286,10 @@ public class PopUps {
         }
     }
 
+
+    public static Optional<String> nextGitHubIssue() {
+
+    }
+
+
 }

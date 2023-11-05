@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo2robot.controller;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,6 +24,8 @@ import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
+import org.monarchinitiative.hpo2robot.github.GitHubIssue;
+import org.monarchinitiative.hpo2robot.github.GitHubIssueRetriever;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
 import org.monarchinitiative.hpo2robot.view.*;
 import org.monarchinitiative.hpo2robot.model.Options;
@@ -31,9 +34,7 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -50,9 +51,12 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public MenuItem optionsMenuItem;
     @FXML
+    public MenuItem nextGithubMenuItem;
+    @FXML
     public WebView currentRobotView;
     @FXML
     public PmidXrefAdder pmidXrefAdderBox;
+
 
     @FXML
     private TableView<RobotItem> robotTableView;
@@ -89,6 +93,8 @@ public class MainWindowController extends BaseController implements Initializabl
     private Ontology hpOntology;
 
     private  OntologyTree ontologyTree;
+
+    private Map<GitHubIssue, Boolean> gitHubIssueMap;
 
     /** This gets set to true once the Ontology tree has finished initiatializing. Before that
      * we can check to make sure the user does not try to open a disease before the Ontology is
@@ -141,6 +147,7 @@ public class MainWindowController extends BaseController implements Initializabl
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         LOGGER.trace("Initializing MainWindowController");
+        gitHubIssueMap = new HashMap<>();
         termLabelValidator.setFieldLabel("New Term Label");
         definitionPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_DEFINITION);
         commentPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_COMMENT);
@@ -309,6 +316,7 @@ public class MainWindowController extends BaseController implements Initializabl
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.META_DOWN));
         exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.META_DOWN));
         optionsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.META_DOWN));
+        nextGithubMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.G, KeyCombination.META_DOWN));
     }
 
 
@@ -417,5 +425,12 @@ public class MainWindowController extends BaseController implements Initializabl
         RobotItem item = new RobotItem(newTermLabel, parentTerms, definition, comment, pmids);
         LOGGER.info("Adding new term: {}", newTermLabel);
         this.robotTableView.getItems().add(item);
+    }
+
+    public void nextGithubIssueAction(ActionEvent actionEvent) {
+        GitHubIssueRetriever retriever = new GitHubIssueRetriever();
+        gitHubIssueMap.clear();
+        retriever.getIssues().stream().forEach(i -> gitHubIssueMap.put(i, false));
+        LOGGER.info("Retrieved {} issues from GitHub", gitHubIssueMap.size());
     }
 }
