@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * This control let's us add PMID and XREFs.
+ */
 public class PmidXrefAdder extends AnchorPane {
     Logger LOGGER = LoggerFactory.getLogger(PmidXrefAdder.class);
 
@@ -17,7 +20,7 @@ public class PmidXrefAdder extends AnchorPane {
 
     public PmidXrefAdder() {
         super();
-        LOGGER.error("PmdXrefAdder");
+
         try {
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/PmidXrefAdder.fxml"));
             this.controller = new PmidXrefAdderController();
@@ -32,13 +35,21 @@ public class PmidXrefAdder extends AnchorPane {
 
 
     public List<String> getPmidList() {
-        int x = 42;
-        System.out.println(x);
         if (this.controller == null ) {
-            LOGGER.error("Controller is null");
+            LOGGER.error("Attempt to get PMID list but Controller is null");
             return List.of();
         } else {
             return controller.getPmidList();
         }
+    }
+
+
+    private final String STYLE_SHEET="AnchorPane {\n" +
+            "    -fx-spacing: 8;\n" +
+            "}\n";
+
+    @Override
+    public String getUserAgentStylesheet() {
+        return STYLE_SHEET;
     }
 }

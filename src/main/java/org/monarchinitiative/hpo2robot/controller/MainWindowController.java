@@ -48,6 +48,8 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public MenuItem exitMenuItem;
     @FXML
+    public MenuItem optionsMenuItem;
+    @FXML
     public WebView currentRobotView;
     @FXML
     public PmidXrefAdder pmidXrefAdderBox;
@@ -306,7 +308,7 @@ public class MainWindowController extends BaseController implements Initializabl
     private void setUpKeyAccelerators() {
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.META_DOWN));
         exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.META_DOWN));
-        // TODO  -- Other menu entries
+        optionsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.META_DOWN));
     }
 
 
@@ -384,7 +386,7 @@ public class MainWindowController extends BaseController implements Initializabl
      */
     private void addPhenotypeTerm(Term phenotypeTerm) {
         LOGGER.trace("Adding parent term from ontology tree: {}", phenotypeTerm);
-        parentTermAdder.setParentTermLabel(phenotypeTerm.getName());
+        parentTermAdder.setParentTerm(phenotypeTerm.getName());
     }
 
 

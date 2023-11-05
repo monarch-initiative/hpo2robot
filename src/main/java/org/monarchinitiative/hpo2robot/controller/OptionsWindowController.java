@@ -80,7 +80,7 @@ public class OptionsWindowController extends BaseController implements Initializ
         robotFileProperty.bindBidirectional(robotFileLabel.textProperty());
         orcidProperty = new SimpleStringProperty(NOT_INITIALIZED);
         orcidProperty.bindBidirectional(orcidLabel.textProperty());
-        setupCss();
+        //setupCss();
     }
 
     private void setupCss() {

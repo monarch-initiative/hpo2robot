@@ -90,7 +90,7 @@ public class ParentTermAdder extends HBox {
     }
 
 
-    public void setParentTermLabel(String label) {
-        this.parentTermLabelStringProperty.set(label);
+    public void setParentTerm(String label) {
+        this.controller.getTextField().setText(label);
     }
 }

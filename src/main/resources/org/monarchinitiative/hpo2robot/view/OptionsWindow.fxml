@@ -31,9 +31,9 @@
         <Button mnemonicParsing="false" onAction="#openRobotFile" text="Open" GridPane.columnIndex="2" GridPane.rowIndex="1" />
         <Button mnemonicParsing="false" onAction="#setORCID" text="Set" GridPane.columnIndex="2" GridPane.rowIndex="2" />
         <Label fx:id="orcidLabel" text="not initialized" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-      <Label text="hp.jdson" />
+      <Label text="hp.json" />
       <Label text="ROBOT file" GridPane.rowIndex="1" />
-      <Label text="ORICD ID" GridPane.rowIndex="2" />
+      <Label text="ORCID ID" GridPane.rowIndex="2" />
       <Button mnemonicParsing="false" onAction="#hpJsonDownload" text="Download" GridPane.columnIndex="1" />
       <Button mnemonicParsing="false" onAction="#createRobotFile" text="Create" GridPane.columnIndex="1" GridPane.rowIndex="1" />
     </GridPane>

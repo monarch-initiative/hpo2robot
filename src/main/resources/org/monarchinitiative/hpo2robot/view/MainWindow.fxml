@@ -22,7 +22,7 @@
                 <MenuItem mnemonicParsing="false" text="Exit" onAction="#exitGui" fx:id="exitMenuItem"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
-                <MenuItem mnemonicParsing="false" onAction="#optionsAction" text="Options"/>
+                <MenuItem mnemonicParsing="false" onAction="#optionsAction" fx:id="optionsMenuItem" text="Options"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <MenuItem mnemonicParsing="false" text="About"/>

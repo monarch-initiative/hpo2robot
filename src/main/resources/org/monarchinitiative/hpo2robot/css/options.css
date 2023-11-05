@@ -1,5 +1,7 @@
 .button {
     -fx-pref-width: 120px;
+    -fx-spacing: 10;
+    -fx-fill: red;
 }
 .anchorpane {
     -fx-padding: 10;

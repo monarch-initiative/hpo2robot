@@ -6,11 +6,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
 import java.net.URL;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Controller for a widget that allows the user to select parent terms by autocomplete or
@@ -27,6 +28,9 @@ public class ParentTermAdderController implements Initializable {
     @FXML
     private Button addButton;
 
+    @FXML
+    private Label parentTermErrorLabel;
+
 
     private final Set<String> parentTermLabels;
 
@@ -40,7 +44,25 @@ public class ParentTermAdderController implements Initializable {
             String parentTermText = textField.getText();
             parentTermLabels.add(parentTermText);
             textField.clear();
+            parentTermErrorLabel.setText(getErrorLabel());
         });
+        addButton.setStyle("-fx-spacing: 10;");
+        Font largeFont = Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 18);
+        parentTermLabel.setFont(largeFont);
+    }
+
+
+    private String getErrorLabel() {
+        if (parentTermLabels.isEmpty()) {
+            return "";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            List<String> shortLabels = new ArrayList<>();
+            for (String ptl : parentTermLabels) {
+                shortLabels.add(ptl.length() < 30 ? ptl : String.format("%s...", ptl.substring(0,27)));
+            }
+            return String.join("; ", shortLabels);
+        }
     }
 
     public StringProperty parentTermProperty() {
