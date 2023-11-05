@@ -7,14 +7,19 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Optional;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+
+
+import java.net.http.HttpClient;
 
 
 /**
@@ -30,15 +35,25 @@ public class GitHubIssueRetriever {
 
     private HttpURLConnection httpconnection=null;
 
-    private final String issue;
+    private final String username;
+    private final String token;
 
 
 
 
     public GitHubIssueRetriever() {
-        issue="myIssue";
+        Optional<List<String>> opt = GitHubUtil.githubCredentialToken();
+        if (opt.isPresent()) {
+            List<String> userInfoList = opt.get();
+            username = userInfoList.get(0);
+            token = userInfoList.get(1);
+            System.out.println(username + " -- " + token);
+        } else {
+            username = null;
+            token = null;
+        }
         int responsecode = retrieveIssues();
-        logger.error(String.format("We retrieved %d issues for %s with response code %d", issues.size(),issue,responsecode));
+        logger.error(String.format("We retrieved %d issues with response code %d", issues.size() ,responsecode));
     }
 
 
@@ -47,62 +62,13 @@ public class GitHubIssueRetriever {
 
 
 
-    private List<String> getComments(String urlstring) {
-        List<String> comments = new ArrayList<>();
-        if (urlstring == null || urlstring.isEmpty()) {
-           return comments;
-        }
-        try {
-            URL url = new URL(urlstring);
-            if (httpconnection==null) {
-                httpconnection = (HttpURLConnection) url.openConnection();
-                httpconnection.setRequestMethod("GET");
-                httpconnection.connect();
-            }
-            Scanner scanner = new Scanner(url.openStream());
-            String response = scanner.useDelimiter("\\Z").next();
-            scanner.close();
-
-            Object obj = JSONValue.parse(response);
-            JSONArray jarray = (JSONArray)obj;
-            for (Object ob : jarray) {
-                String c = parseCommentElement(ob);
-                comments.add(c);
-            }
-            int code = httpconnection.getResponseCode();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (httpconnection!=null) {
-                httpconnection.disconnect();
-            }
-        }
-        return comments;
-    }
-
-
-
-    private String parseCommentElement(Object obj) {
-
-        JSONObject jo = (JSONObject) obj;
-        if (jo != null) {
-            String body = (String) jo.get("body");
-            if (body != null) {
-                return body;
-            }
-        }
-        return "";// the comment had no body of text
-    }
-
 
 
 
     private void decodeJSON(String s) {
-
         Object obj= JSONValue.parse(s);
         JSONArray jsonArray = (JSONArray) obj;
         jsonArray.forEach(this::parseLabelElement);
-
     }
 
     private void parseLabelElement(Object obj) {
@@ -111,29 +77,40 @@ public class GitHubIssueRetriever {
         String body = jsonObject.get("body").toString();
         String label = jsonObject.get("label")==null?"none":jsonObject.get("label").toString();
         String number = jsonObject.get("number")==null?"?":jsonObject.get("number").toString();
-        String comments_url = (String) jsonObject.get("comments_url");
-        List<String> comments = new ArrayList<>();
-        if (comments_url != null) {
-            comments = getComments(comments_url);
-        }
-        GitHubIssue.Builder builder = new GitHubIssue.Builder(title).body(body).label(label).number(number).comments(comments);
+        GitHubIssue.Builder builder = new GitHubIssue.Builder(title).body(body).label(label).number(number);
         issues.add(builder.build());
     }
 
+
     private int retrieveIssues()  {
         try {
-            URL url = new URL(String.format("https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues"));
-            if (httpconnection==null) {
-                httpconnection = (HttpURLConnection) url.openConnection();
-                httpconnection.setRequestMethod("GET");
-                httpconnection.connect();
+            final String hpo_github_url ="https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues";
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request;
+            if (token != null) {
+                 request = HttpRequest.newBuilder()
+                        .version(HttpClient.Version.HTTP_2)
+                        .uri(URI.create(hpo_github_url))
+                        .header("Authorization", " " + token)
+                        .GET()
+                        .build();
+            } else {
+                request = HttpRequest.newBuilder()
+                        .version(HttpClient.Version.HTTP_2)
+                        .uri(URI.create(hpo_github_url))
+                        .GET()
+                        .build();
             }
-            Scanner scanner = new Scanner(url.openStream());String response = scanner.useDelimiter("\\Z").next();
-            scanner.close();
-            decodeJSON(response);
-            return httpconnection.getResponseCode();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String responseBody = response.body();
+            //System.out.println();
+            decodeJSON(responseBody);
+            return response.statusCode();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } finally {
             if (httpconnection!=null) {
                 httpconnection.disconnect();

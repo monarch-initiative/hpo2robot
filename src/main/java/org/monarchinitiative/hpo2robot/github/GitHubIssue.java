@@ -7,7 +7,7 @@ import java.util.List;
  * This class encapsulates information about an issue and will be used to create a summary of the issue for
  * output on the command line or in a dialog.
  */
-public class GitHubIssue {
+public class GitHubIssue implements Comparable<GitHubIssue> {
     private final String title;
     private final String body;
     private final String label;
@@ -60,20 +60,23 @@ public class GitHubIssue {
 
     @Override
     public boolean equals(Object obj) {
-        if (! (obj instanceof GitHubIssue)) return false;
-        GitHubIssue other = (GitHubIssue) obj;
+        if (! (obj instanceof GitHubIssue other)) return false;
         return other.title.equals(title) &&
                 other.body.equals(body) &&
                 other.label.equals(label) &&
                 other.comments.equals(comments) &&
-                other.issueNumber == issueNumber;
+                other.issueNumber.equals(issueNumber);
     }
+
 
     public String toString() {
         return String.format("%s: %s [%s] %s",title,body,label, String.join(";", comments));
     }
 
-
+    @Override
+    public int compareTo(GitHubIssue o) {
+        return  issueNumber.compareTo(o.issueNumber);
+    }
 
 
     public static class Builder {

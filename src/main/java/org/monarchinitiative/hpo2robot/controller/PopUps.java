@@ -30,6 +30,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.*;
+import org.monarchinitiative.hpo2robot.github.GitHubIssue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -287,8 +288,15 @@ public class PopUps {
     }
 
 
-    public static Optional<String> nextGitHubIssue() {
+    public static boolean nextGitHubIssue(GitHubIssue issue) {
 
+        Alert al = new Alert(AlertType.CONFIRMATION);
+        al.setTitle(String.format("Issue: %s", issue.getIssueNumber()));
+        al.setHeaderText(issue.getTitle());
+        al.setContentText(issue.getBody());
+
+        Optional<ButtonType> result = al.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
 

@@ -1,5 +1,14 @@
 package org.monarchinitiative.hpo2robot.github;
 
+import org.monarchinitiative.hpo2robot.controller.PopUps;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+
 public class GitHubUtil {
 
 
@@ -56,4 +65,37 @@ public class GitHubUtil {
         sb.append('"');
         return sb.toString();
     }
+
+    /**
+     * Extract the github token from the crednetials file
+     * https://<username>:<token>@github.com
+     * @return a list with the username and token
+     */
+
+    public static Optional<List<String>> githubCredentialToken() {
+        String userHome = System.getProperty("user.home");
+        File credFile = new File(userHome + File.separator + ".git-credentials");
+        if (! credFile.isFile()) {
+            PopUps.alertDialog("Error", "Cannot connect to git unless we find a .git-credentials file!");
+            return Optional.empty();
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader(credFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("https://") && line.contains(":") && line.contains("@github.com")) {
+                    String [] fields = line.substring(8).split(":");
+                    String username = fields[0];
+                    String token = fields[1];
+                    int i = token.indexOf("@github.com");
+                    token = token.substring(0, i);
+                    return Optional.of(List.of(username, token));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
 }

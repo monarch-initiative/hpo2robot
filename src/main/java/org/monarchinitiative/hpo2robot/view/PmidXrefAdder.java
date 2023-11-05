@@ -44,9 +44,11 @@ public class PmidXrefAdder extends AnchorPane {
     }
 
 
-    private final String STYLE_SHEET="AnchorPane {\n" +
-            "    -fx-spacing: 8;\n" +
-            "}\n";
+    private final String STYLE_SHEET= """
+            AnchorPane {
+                -fx-spacing: 8;
+            }
+            """;
 
     @Override
     public String getUserAgentStylesheet() {

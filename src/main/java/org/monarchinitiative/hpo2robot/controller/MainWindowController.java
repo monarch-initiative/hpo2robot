@@ -51,11 +51,14 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public MenuItem optionsMenuItem;
     @FXML
+    public MenuItem getGithubMenuItem;
+    @FXML
     public MenuItem nextGithubMenuItem;
     @FXML
     public WebView currentRobotView;
     @FXML
     public PmidXrefAdder pmidXrefAdderBox;
+
 
 
     @FXML
@@ -147,7 +150,7 @@ public class MainWindowController extends BaseController implements Initializabl
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         LOGGER.trace("Initializing MainWindowController");
-        gitHubIssueMap = new HashMap<>();
+        gitHubIssueMap = new TreeMap<>();
         termLabelValidator.setFieldLabel("New Term Label");
         definitionPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_DEFINITION);
         commentPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_COMMENT);
@@ -316,7 +319,8 @@ public class MainWindowController extends BaseController implements Initializabl
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.META_DOWN));
         exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.META_DOWN));
         optionsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.META_DOWN));
-        nextGithubMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.G, KeyCombination.META_DOWN));
+        getGithubMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.G, KeyCombination.META_DOWN));
+        nextGithubMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.META_DOWN));
     }
 
 
@@ -427,10 +431,24 @@ public class MainWindowController extends BaseController implements Initializabl
         this.robotTableView.getItems().add(item);
     }
 
-    public void nextGithubIssueAction(ActionEvent actionEvent) {
+    public void getGithubIssuesAction(ActionEvent actionEvent) {
         GitHubIssueRetriever retriever = new GitHubIssueRetriever();
         gitHubIssueMap.clear();
-        retriever.getIssues().stream().forEach(i -> gitHubIssueMap.put(i, false));
+        retriever.getIssues().stream().forEach(i -> gitHubIssueMap.put(i, true));
         LOGGER.info("Retrieved {} issues from GitHub", gitHubIssueMap.size());
+    }
+
+    public void nextGithubIssueAction(ActionEvent actionEvent) {
+        Optional<Map.Entry<GitHubIssue, Boolean> > opt =
+                gitHubIssueMap.entrySet()
+                        .stream()
+                        .filter(Map.Entry::getValue)
+                        .findFirst();
+        if (opt.isEmpty()) {
+            PopUps.alertDialog("Warning", "No open GitHub issues, retrieve more");
+        } else {
+            Map.Entry<GitHubIssue, Boolean> nextPendingIssue = opt.get();
+            PopUps.nextGitHubIssue(nextPendingIssue.getKey());
+        }
     }
 }
