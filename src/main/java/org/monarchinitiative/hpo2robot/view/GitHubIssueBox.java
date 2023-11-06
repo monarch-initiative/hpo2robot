@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo2robot.view;
 
+import javafx.application.HostServices;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
@@ -8,11 +9,14 @@ import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.GitHubIssueBoxController;
 
+import java.util.Optional;
+
 public class GitHubIssueBox extends HBox  {
 
     private GitHubIssueBoxController controller;
 
     private final StringProperty gitHubLabelProperty;
+
 
     public GitHubIssueBox() {
         super();
@@ -34,4 +38,7 @@ public class GitHubIssueBox extends HBox  {
         this.gitHubLabelProperty.set(text);
     }
 
+    public void setHostServices(Optional<HostServices> hostServicesOpt) {
+        this.controller.setHostServices(hostServicesOpt);
+    }
 }

@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo2robot.view;
 
+import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,13 +21,24 @@ public class ViewFactory {
 
     private Options options;
 
-    public ViewFactory(Options options) {
+    private final HostServices hostServices;
+
+    public ViewFactory(Options options, HostServices services) {
         this.options = options;
+        this.hostServices = services;
     }
 
+    /**
+     * This constructor is used to initialize the Options the very first time, and
+     * is not used by the main app (it is used by
+     * {@link org.monarchinitiative.hpo2robot.controller.services.GetOptionsService} ).
+     * This is a little ugly, TODO - refactor.
+     */
     public ViewFactory() {
-        this(new Options()); // initialize to default options (empty)
+        this(new Options(), null); // initialize to default options (empty)
     }
+
+
 
 
     private Optional<Parent>  initializeBaseStage(BaseController controller) {
@@ -105,6 +117,8 @@ public class ViewFactory {
         System.out.println("ShowOptionsWindow: " + options);
     }
 
+
+
     public URL getLocation(String dir, String fxmlName) {
         String path = dir + File.separator + fxmlName;
         return Launcher.class.getResource(path);
@@ -118,5 +132,9 @@ public class ViewFactory {
 
     public Options getOptions() {
         return this.options;
+    }
+
+    public Optional<HostServices> getHostervicesOpt() {
+        return Optional.ofNullable(this.hostServices);
     }
 }

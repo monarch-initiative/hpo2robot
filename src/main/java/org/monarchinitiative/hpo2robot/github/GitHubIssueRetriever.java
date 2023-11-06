@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -68,6 +67,7 @@ public class GitHubIssueRetriever {
     private void decodeJSON(String s) {
         Object obj= JSONValue.parse(s);
         JSONArray jsonArray = (JSONArray) obj;
+        //noinspection unchecked
         jsonArray.forEach(this::parseLabelElement);
     }
 

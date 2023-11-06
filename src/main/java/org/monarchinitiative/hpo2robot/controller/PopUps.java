@@ -318,11 +318,7 @@ public class PopUps {
         Optional<ButtonType> result = al.showAndWait();
         if (result.isPresent()) {
             var response = result.get();
-            if (response == buttonTypeOne) {
-                return true;
-            } else {
-                return false;
-            }
+            return response == buttonTypeOne;
         } else {
             return false;
         }

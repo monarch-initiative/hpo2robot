@@ -1,12 +1,20 @@
 package org.monarchinitiative.hpo2robot.github;
 
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.hpo2robot.controller.services.HpoIdService;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 public class GitHubIssueRetrieverTest {
 
     @Test
     public void testit() {
-        GitHubIssueRetriever retriever = new GitHubIssueRetriever();
+        String path = "/Users/robinp/GIT/human-phenotype-ontology/src/ontology/hp-edit.owl";
+        HpoIdService service = new HpoIdService(Paths.get(path));
+
 
 
     }

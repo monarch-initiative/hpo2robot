@@ -23,7 +23,7 @@ public class GitHubPoster {
     /** GitHub username. */
     private final String username;
     /** GitHub password. */
-    private String password;
+    private final String password;
     /** The contents of the GitHub issue we want to create.. */
     private String payload;
     /** The HTML response code of the GitHub server. */
@@ -31,9 +31,9 @@ public class GitHubPoster {
     /** THe response message of the GitHub server. */
     private String response=null;
 
-    private String githubLabel=null;
+    private final String githubLabel=null;
 
-    private List<String> githubLabels = null;
+    private final List<String> githubLabels = null;
 
     private final String githubTitle;
 

@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo2robot;
 
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo2robot.controller.persistence.PersistenceAccess;
 import org.monarchinitiative.hpo2robot.controller.services.GetOptionsService;
@@ -29,7 +30,8 @@ public class Launcher extends Application {
         PersistenceAccess persistenceAccess = new PersistenceAccess();
         Optional<Options> opt = persistenceAccess.loadFromPersistence();
         Options options = opt.orElse(new Options());
-        viewFactory = new ViewFactory(options);
+        HostServices hostServices = getHostServices();
+        viewFactory = new ViewFactory(options, hostServices);
         viewFactory.showMainWindow();
     }
 

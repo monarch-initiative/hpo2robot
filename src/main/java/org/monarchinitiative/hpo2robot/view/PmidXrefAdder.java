@@ -14,7 +14,7 @@ import java.util.List;
  * This control let's us add PMID and XREFs.
  */
 public class PmidXrefAdder extends AnchorPane {
-    Logger LOGGER = LoggerFactory.getLogger(PmidXrefAdder.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(PmidXrefAdder.class);
 
     PmidXrefAdderController controller = null;
 
@@ -43,15 +43,4 @@ public class PmidXrefAdder extends AnchorPane {
         }
     }
 
-
-    private final String STYLE_SHEET= """
-            AnchorPane {
-                -fx-spacing: 8;
-            }
-            """;
-
-    @Override
-    public String getUserAgentStylesheet() {
-        return STYLE_SHEET;
-    }
 }
