@@ -56,4 +56,9 @@ public class PmidXrefAdderController implements Initializable  {
     public List<String> getPmidList() {
         return pmidList;
     }
+
+    public void clearFields() {
+        pmidList = new ArrayList<>();
+        pmidLabel.setText("(0)");
+    }
 }

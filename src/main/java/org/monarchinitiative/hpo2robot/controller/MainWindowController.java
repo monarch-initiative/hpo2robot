@@ -2,6 +2,8 @@ package org.monarchinitiative.hpo2robot.controller;
 import javafx.application.HostServices;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,6 +25,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.Launcher;
+import org.monarchinitiative.hpo2robot.controller.services.HpoIdService;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
 import org.monarchinitiative.hpo2robot.view.*;
@@ -32,6 +35,7 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -54,6 +58,11 @@ public class MainWindowController extends BaseController implements Initializabl
     public PmidXrefAdder pmidXrefAdderBox;
     @FXML
     public GitHubIssueBox gitHubIssueBox;
+    public Label robotStatusLabel;
+    public Button addRobotItemButton;
+    public VBox robotVbox;
+    @FXML
+    public AddNewHpoTerm addNewHpoTermBox;
     @FXML
     private TableView<RobotItem> robotTableView;
     @FXML
@@ -92,6 +101,8 @@ public class MainWindowController extends BaseController implements Initializabl
 
     private Optional<HostServices> hostServicesOpt;
 
+    private HpoIdService hpoIdService;
+
 
 
     /** This gets set to true once the Ontology tree has finished initiatializing. Before that
@@ -110,7 +121,16 @@ public class MainWindowController extends BaseController implements Initializabl
         options = viewFactory.getOptions();
         if (checkOptionsReadiness()) {
             loadHpoAndSetupOntologyTree();
+            setUpHpoIdService();
         }
+    }
+
+    private void setUpHpoIdService() {
+        String hpoEditOwl = options.getHpEditOwlFile();
+        if (hpoEditOwl == null) {
+            PopUps.alertDialog("Error", "Attempt to set up HPO ID service with invalid path");
+        }
+        hpoIdService = new HpoIdService(Path.of(hpoEditOwl));
     }
 
     /**
@@ -159,6 +179,50 @@ public class MainWindowController extends BaseController implements Initializabl
             loadHpoAndSetupOntologyTree();
         }
         setUpTableView();
+        setupRobotItemHandler();
+
+    }
+
+
+
+    private void setupRobotItemHandler() {
+        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                RobotItem item = createNewRobotItem();
+                robotTableView.getItems().add(item);
+                clearFields();
+                fetchNextHpoTermId();
+                System.out.println("NEWNEWNEW");
+            }
+        };
+    }
+
+    private void fetchNextHpoTermId() {
+
+    }
+
+    private void clearFields() {
+        this.termLabelValidator.clearFields();
+        this.parentTermAdder.clearFields();
+        this.definitionPane.clearFields();
+        this.commentPane.clearFields();
+        this.pmidXrefAdderBox.clearFields();
+        this.addNewHpoTermBox.clearFields();
+        this.gitHubIssueBox.clearFields();
+    }
+
+    /**
+     * This method uses to the data entered by the user to add another ROBOT item to the table
+     */
+    private RobotItem createNewRobotItem() {
+        String newTermLabel = termLabelValidator.getLabel().get();
+        List<Term> parentTerms = parentTermAdder.getParentTermList();
+        String definition = this.definitionPane.getUserText();
+        String comment = this.commentPane.getUserText();
+        List<String> pmids = pmidXrefAdderBox.getPmidList();
+        RobotItem item = new RobotItem(newTermLabel, parentTerms, definition, comment, pmids);
+        return item;
     }
 
 
@@ -410,22 +474,6 @@ public class MainWindowController extends BaseController implements Initializabl
         }
 
     }
-
-    /**
-     * This method uses to the data entered by the user to add another ROBOT item to the table
-     */
-    public void addRobotItem() {
-        String newTermLabel = termLabelValidator.getLabel().get();
-        List<Term> parentTerms = parentTermAdder.getParentTermList();
-        String definition = this.definitionPane.getUserText();
-        String comment = this.commentPane.getUserText();
-        List<String> pmids = pmidXrefAdderBox.getPmidList();
-        RobotItem item = new RobotItem(newTermLabel, parentTerms, definition, comment, pmids);
-        LOGGER.info("Adding new term: {}", newTermLabel);
-        this.robotTableView.getItems().add(item);
-    }
-
-
 
 
 

@@ -43,4 +43,7 @@ public class PmidXrefAdder extends AnchorPane {
         }
     }
 
+    public void clearFields() {
+        controller.clearFields();
+    }
 }

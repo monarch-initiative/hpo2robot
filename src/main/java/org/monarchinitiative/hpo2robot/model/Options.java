@@ -22,6 +22,8 @@ public class Options implements Serializable {
 
     private String hpJsonFile;
 
+    private String hpEditOwlFile;
+
     private String robotFile;
 
     private String orcid;
@@ -44,6 +46,14 @@ public class Options implements Serializable {
 
     public void setHpJsonFile(String hpJsonFile) {
         this.hpJsonFile = hpJsonFile;
+    }
+
+    public String getHpEditOwlFile() {
+        return hpEditOwlFile;
+    }
+
+    public void setHpEditOwlFile(String hpEditOwlFile) {
+        this.hpEditOwlFile = hpEditOwlFile;
     }
 
     public String getRobotFile() {

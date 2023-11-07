@@ -1,10 +1,14 @@
 package org.monarchinitiative.hpo2robot.controller.services;
 
+import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,16 +26,16 @@ import java.util.regex.Pattern;
  * @author Peter N Robinson
  */
 public class HpoIdService {
+    private final Logger LOGGER = LoggerFactory.getLogger(HpoIdService.class);
     /** List of identifiers that we can use for new terms */
     private final List<TermId> availableHpoIdList;
     private final Pattern hpIdPattern = Pattern.compile("http://purl.obolibrary.org/obo/HP_(\\d{7,7})");
 
 
-    private final Integer lowValue = 5_000_000;
-    private final Integer highValue = 5_500_000;
+    private final Integer lowValue = 6_000_000;
+    private final Integer highValue = 6_500_000;
 
     public HpoIdService(Path hpoEditOwl) {
-
         Set<Integer> hpoIdSet = new HashSet<>();
         availableHpoIdList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(hpoEditOwl.toFile()))){
@@ -55,14 +59,10 @@ public class HpoIdService {
                 }
             }
             availableHpoIdList.sort(TermId::compareTo);
-            for (var i : availableHpoIdList) {
-                System.out.println(i);
-            }
-            System.out.printf("Existing HPO ids: n=%d.\n", hpoIdSet.size());
-            System.out.printf("Available HPO ids: n=%d.\n", availableHpoIdList.size());
-
+            LOGGER.info("Existing HPO ids: n={}.", hpoIdSet.size());
+            LOGGER.info("Available HPO ids: n={}.", availableHpoIdList.size());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not open hp-edit.owl: {}", e.getMessage());
         }
     }
 
@@ -73,5 +73,7 @@ public class HpoIdService {
         return TermId.of(s);
     }
 
-
+    public List<TermId> getAvailableHpoIdList() {
+        return availableHpoIdList;
+    }
 }

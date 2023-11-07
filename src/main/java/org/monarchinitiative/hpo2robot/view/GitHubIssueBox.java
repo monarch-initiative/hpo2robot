@@ -41,4 +41,8 @@ public class GitHubIssueBox extends HBox  {
     public void setHostServices(Optional<HostServices> hostServicesOpt) {
         this.controller.setHostServices(hostServicesOpt);
     }
+
+    public void clearFields() {
+        this.controller.clearFields();
+    }
 }

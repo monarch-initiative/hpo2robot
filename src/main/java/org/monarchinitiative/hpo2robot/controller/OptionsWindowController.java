@@ -24,6 +24,8 @@ public class OptionsWindowController extends BaseController implements Initializ
 
     private static final String NOT_INITIALIZED = "not initialized";
     @FXML
+    public Label hpEditOwlLabel;
+    @FXML
     private Label hpJsonLabel;
 
     @FXML
@@ -34,6 +36,8 @@ public class OptionsWindowController extends BaseController implements Initializ
 
 
     private StringProperty hpJsonProperty;
+
+    private StringProperty hpEditOwlProperty;
 
     private StringProperty robotFileProperty;
 
@@ -76,6 +80,8 @@ public class OptionsWindowController extends BaseController implements Initializ
         this.options = new Options();
         hpJsonProperty = new SimpleStringProperty(NOT_INITIALIZED);
         hpJsonProperty.bindBidirectional(hpJsonLabel.textProperty());
+        hpEditOwlProperty = new SimpleStringProperty(NOT_INITIALIZED);
+        hpEditOwlProperty.bindBidirectional(hpEditOwlLabel.textProperty());
         robotFileProperty = new SimpleStringProperty(NOT_INITIALIZED);
         robotFileProperty.bindBidirectional(robotFileLabel.textProperty());
         orcidProperty = new SimpleStringProperty(NOT_INITIALIZED);
@@ -93,13 +99,11 @@ public class OptionsWindowController extends BaseController implements Initializ
     }
 
 
-    public void setHpJsonFile(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select hp.json File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON files", "*.json"));
-        Stage stage = (Stage) this.hpJsonLabel.getScene().getWindow();
-        File f = fileChooser.showOpenDialog(stage);
-        if (f != null) {
+    public void setHpJsonFile(ActionEvent e) {
+        e.consume();
+        Optional<File> opt = setFile("Select hp.json File", "JSON file", "*.json");
+        if (opt.isPresent()) {
+            File f = opt.get();
             this.options.setHpJsonFile(f.getAbsolutePath());
             this.hpJsonProperty.set(f.getAbsolutePath());
         }
@@ -167,6 +171,28 @@ public class OptionsWindowController extends BaseController implements Initializ
 
     public void hpJsonDownload(ActionEvent actionEvent) {
     }
+
+
+    public void setHpEditOwl(ActionEvent e) {
+        e.consume();
+        Optional<File> opt = setFile("Choose hp-edit.owl file", "OWL file", "*.owl");
+        if (opt.isPresent()) {
+            File f = opt.get();
+            this.options.setHpEditOwlFile(f.getAbsolutePath());
+            this.hpEditOwlProperty.set(f.getAbsolutePath());
+        }
+    }
+
+
+    private Optional<File> setFile(String title, String extensionFileDisplay, String suffix) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(extensionFileDisplay, suffix));
+        Stage stage = (Stage) this.hpJsonLabel.getScene().getWindow();
+        File f = fileChooser.showOpenDialog(stage);
+        return Optional.ofNullable(f);
+    }
+
 
 
 }

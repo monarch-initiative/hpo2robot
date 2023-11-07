@@ -62,4 +62,8 @@ public class ValidatingTextEntryPane extends AnchorPane {
     public void commentMode() {
         controller.commentMode();
     }
+
+    public void clearFields() {
+        this.textProperty.set("");
+    }
 }

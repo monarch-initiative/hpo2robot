@@ -44,4 +44,8 @@ public class ValidatingPane extends AnchorPane {
     public StringProperty getLabel() {
         return this.textFieldProperty;
     }
+
+    public void clearFields() {
+        this.textFieldProperty.set("");
+    }
 }

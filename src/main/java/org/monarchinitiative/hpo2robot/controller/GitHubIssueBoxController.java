@@ -135,4 +135,13 @@ public class GitHubIssueBoxController implements Initializable  {
         this.hostServicesOpt = hostServicesOpt;
     }
 
+    public void clearFields() {
+        gitHubStatusLabel.setTextFill(Color.BLACK);
+        gitHubStatusLabel.setFont(SMALL_FONT);
+        gitHubStatusLabel.setText("");
+        this.currentIssueOpt = Optional.empty();
+    }
+
+
+
 }

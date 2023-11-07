@@ -11,6 +11,7 @@
 <?import javafx.scene.web.WebView?>
 <?import org.monarchinitiative.hpo2robot.view.PmidXrefAdder?>
 <?import org.monarchinitiative.hpo2robot.view.GitHubIssueBox?>
+<?import org.monarchinitiative.hpo2robot.view.AddNewHpoTerm?>
 <BorderPane prefHeight="1000.0" prefWidth="1400.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -74,9 +75,7 @@
                 <ValidatingTextEntryPane fx:id="definitionPane"/>
                 <ValidatingTextEntryPane fx:id="commentPane"/>
                 <PmidXrefAdder fx:id="pmidXrefAdderBox"/>
-                <HBox>
-                    <Button onAction="#addRobotItem" text="Add new term"/>
-                </HBox>
+                <AddNewHpoTerm fx:id="addNewHpoTermBox"/>
                 <GitHubIssueBox fx:id="gitHubIssueBox"/>
             </VBox>
 
