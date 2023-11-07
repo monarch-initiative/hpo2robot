@@ -22,22 +22,17 @@ import java.net.http.HttpClient;
 
 
 /**
- * Note: Apparently there is no way to retrieve more than 30 labels at a time, and so we cannot reliably
- * retrieve all of the open issues for some label. This may be useful for labels with less than 30 issues
- * to create a word doc, but this will not yet be reliable in general. Keep this class at the experimental/
- * command-line only stage for now.
+ * This retrieves up to 30 open issues. It relies on there being a .git-credentials file in the
+ * users home directory and uses the GitHub token to authenticate.
+ * @author Peter Robinson
  */
 public class GitHubIssueRetriever {
     private static final Logger logger = LoggerFactory.getLogger(GitHubIssueRetriever.class);
 
     private final List<GitHubIssue> issues = new ArrayList<>();
 
-   // private HttpURLConnection httpconnection=null;
-
     private final String username;
     private final String token;
-
-
 
 
     public GitHubIssueRetriever() {
@@ -46,7 +41,7 @@ public class GitHubIssueRetriever {
             List<String> userInfoList = opt.get();
             username = userInfoList.get(0);
             token = userInfoList.get(1);
-            System.out.println(username + " -- " + token);
+            //System.out.println(username + " -- " + token);
         } else {
             username = null;
             token = null;
@@ -57,11 +52,6 @@ public class GitHubIssueRetriever {
 
 
     public List<GitHubIssue> getIssues(){ return issues; }
-
-
-
-
-
 
 
     private void decodeJSON(String s) {
@@ -104,7 +94,6 @@ public class GitHubIssueRetriever {
             }
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
-            //System.out.println();
             decodeJSON(responseBody);
             return response.statusCode();
         } catch (IOException e) {

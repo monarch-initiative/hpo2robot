@@ -166,7 +166,8 @@ public class OptionsWindowController extends BaseController implements Initializ
     }
 
     public Options getOptions() {
-        return new Options(hpJsonProperty.get(), robotFileProperty.get(), orcidProperty.get());
+        return new Options(hpJsonProperty.get(), robotFileProperty.get(), orcidProperty.get(),
+                hpEditOwlProperty.get());
     }
 
     public void hpJsonDownload(ActionEvent actionEvent) {

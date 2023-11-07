@@ -28,14 +28,16 @@ public class Options implements Serializable {
 
     private String orcid;
 
-    public Options(String hpJsonFile, String robotFile, String orcid) {
+    public Options(String hpJsonFile, String robotFile, String orcid, String hpEdit) {
         this.hpJsonFile = hpJsonFile;
         this.robotFile = robotFile;
         this.orcid = orcid;
+        this.hpEditOwlFile = hpEdit;
     }
 
     public Options(){
         this.hpJsonFile = N_A;
+        this.hpEditOwlFile = N_A;
         this.robotFile = N_A;
         this.orcid = N_A;
     }
@@ -84,6 +86,10 @@ public class Options implements Serializable {
         if (robotFile.equals(N_A)) {
             return false;
         }
+
+        if (hpEditOwlFile.equals(N_A)) {
+            return false;
+        }
         // the last thing to check is if the ORCID matches
         final Matcher matcher = ORCID_PATTERN.matcher(orcid);
         return  matcher.matches();
@@ -111,6 +117,9 @@ public class Options implements Serializable {
         }
         if (robotFile.equals(N_A)) {
             sb.append("ROBOT file not set. ");
+        }
+        if (hpEditOwlFile.equals(N_A)) {
+            sb.append("hp-edit.owl not set. ");
         }
         final Matcher matcher = ORCID_PATTERN.matcher(orcid);
         boolean ORCID_OK = matcher.matches();

@@ -115,20 +115,22 @@ public class GitHubIssueBoxController implements Initializable  {
             gitHubStatusLabel.setTextFill(Color.RED);
             gitHubStatusLabel.setFont(LARGE_FONT);
         } else {
-            Map.Entry<GitHubIssue, Boolean> nextPendingIssue = opt.get();
-            boolean result = PopUps.nextGitHubIssue(nextPendingIssue.getKey());
+            Map.Entry<GitHubIssue, Boolean> nextPendingIssueEntry = opt.get();
+            GitHubIssue nextPendingIssue = nextPendingIssueEntry.getKey();
+            boolean result = PopUps.nextGitHubIssue(nextPendingIssue);
             if (result) {
-                String message = String.format("HPO Issue #%s", nextPendingIssue.getKey().getIssueNumber());
+                String message = String.format("HPO Issue #%s", nextPendingIssue.getIssueNumber());
                 gitHubStatusLabel.setTextFill(Color.BLACK);
                 gitHubStatusLabel.setFont(SMALL_FONT);
                 gitHubStatusLabel.setText(message);
-                this.currentIssueOpt = Optional.of(nextPendingIssue.getKey());
+                this.currentIssueOpt = Optional.of(nextPendingIssue);
             } else {
                 gitHubStatusLabel.setTextFill(Color.RED);
                 gitHubStatusLabel.setFont(LARGE_FONT);
                 gitHubStatusLabel.setText("Could not retrieve next GitHub Issue");
                 this.currentIssueOpt = Optional.empty();
             }
+            gitHubIssueMap.put(nextPendingIssue, false);
         }
     }
     public void setHostServices(Optional<HostServices> hostServicesOpt) {

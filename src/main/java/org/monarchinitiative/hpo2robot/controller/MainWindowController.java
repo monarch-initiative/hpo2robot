@@ -1,4 +1,5 @@
 package org.monarchinitiative.hpo2robot.controller;
+
 import javafx.application.HostServices;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
@@ -27,6 +28,7 @@ import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.services.HpoIdService;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
+import org.monarchinitiative.hpo2robot.model.Model;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
 import org.monarchinitiative.hpo2robot.view.*;
 import org.monarchinitiative.hpo2robot.model.Options;
@@ -40,6 +42,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,9 +61,9 @@ public class MainWindowController extends BaseController implements Initializabl
     public PmidXrefAdder pmidXrefAdderBox;
     @FXML
     public GitHubIssueBox gitHubIssueBox;
-    public Label robotStatusLabel;
-    public Button addRobotItemButton;
-    public VBox robotVbox;
+//    public Label robotStatusLabel;
+//    public Button addRobotItemButton;
+//    public VBox robotVbox;
     @FXML
     public AddNewHpoTerm addNewHpoTermBox;
     @FXML
@@ -90,20 +93,17 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public Label statusBarLabel;
     private StringProperty statusBarTextProperty;
-
     private BooleanProperty readinessProperty;
-
     private Options options;
-
     private Ontology hpOntology;
-
     private  OntologyTree ontologyTree;
-
     private Optional<HostServices> hostServicesOpt;
 
-    private HpoIdService hpoIdService;
+    private HpoIdService hpoIdService = null;
 
+    private Optional<TermId> nextHpoTermIdOpt = Optional.empty();
 
+    private final Model model;
 
     /** This gets set to true once the Ontology tree has finished initiatializing. Before that
      * we can check to make sure the user does not try to open a disease before the Ontology is
@@ -113,6 +113,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
     public MainWindowController(ViewFactory viewFactory, String fxmlName) {
         super(viewFactory, fxmlName);
+        model = new Model();
     }
 
     @FXML
@@ -121,17 +122,15 @@ public class MainWindowController extends BaseController implements Initializabl
         options = viewFactory.getOptions();
         if (checkOptionsReadiness()) {
             loadHpoAndSetupOntologyTree();
-            setUpHpoIdService();
+            model.setOptions(options);
+            nextHpoTermIdOpt = Optional.ofNullable(model.getNextHpoId());
+        }
+        if (nextHpoTermIdOpt.isPresent()) {
+            addNewHpoTermBox.setRobotLabel(String.format("Next ID: %s", nextHpoTermIdOpt.get().getValue()));
         }
     }
 
-    private void setUpHpoIdService() {
-        String hpoEditOwl = options.getHpEditOwlFile();
-        if (hpoEditOwl == null) {
-            PopUps.alertDialog("Error", "Attempt to set up HPO ID service with invalid path");
-        }
-        hpoIdService = new HpoIdService(Path.of(hpoEditOwl));
-    }
+
 
     /**
      * This method should be called after we have validated that the three
@@ -387,12 +386,10 @@ public class MainWindowController extends BaseController implements Initializabl
             @Override
             protected Void call() {
                 progress.addListener((obj, oldvalue, newvalue) -> updateProgress(newvalue.doubleValue(), 100) );
-                //setupGuiOntologyTree(progress);
                 updateProgress(100, 100);
                 return null;
             }
         };
-
 
         ProgressIndicator progressIndicator = new ProgressIndicator();
         progressIndicator.progressProperty().bind(task.progressProperty());
@@ -411,7 +408,6 @@ public class MainWindowController extends BaseController implements Initializabl
         task.setOnSucceeded(event -> {
             ontologyTreeViewPane.getChildren().clear();
             ontologyTreeViewPane.getChildren().remove(initOntoLabel);
-            setupAutocomplete();
             setupOntologyTreeView();
             this.parentTermAdder.setOntology(this.hpOntology);
             parentTermAdder.linkOntologyTreeAddButton(ontologyTree);
@@ -421,22 +417,8 @@ public class MainWindowController extends BaseController implements Initializabl
     }
 
 
-   /**
-     * Uses the @link WidthAwareTextFields} class to set up autocompletion for the parent HPO name
-     */
-    private void setupAutocomplete() {
-        //TextFields.bindAutoCompletion(pare)
-
-        /*
-        if (labelMap != null) {
-            WidthAwareTextFields.bindWidthAwareAutoCompletion(parentTermTextField, labelMap.keySet());
-        }
-
-         */
-    }
-
     private void setupOntologyTreeView() {
-        Consumer<Term> addHook = (this::addPhenotypeTerm);
+        Consumer<Term> addHook = this::addPhenotypeTerm;
         this.ontologyTree = new OntologyTree(hpOntology, addHook);
         FXMLLoader ontologyTreeLoader = new FXMLLoader(Launcher.class.getResource("view/OntologyTreeViewPane.fxml"));
         ontologyTreeLoader.setControllerFactory(clazz -> this.ontologyTree);
@@ -460,8 +442,6 @@ public class MainWindowController extends BaseController implements Initializabl
     }
 
 
-
-
     /**
      * Write the settings from the current session to file and exit.
      */
@@ -472,10 +452,7 @@ public class MainWindowController extends BaseController implements Initializabl
         if (clean) {
             javafx.application.Platform.exit();
         }
-
     }
-
-
 
 
 }
