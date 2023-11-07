@@ -23,12 +23,14 @@ package org.monarchinitiative.hpo2robot.controller;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.*;
@@ -329,17 +331,31 @@ public class PopUps {
 
 
     public static boolean nextGitHubIssue(GitHubIssue issue) {
-
-        Alert al = new Alert(AlertType.CONFIRMATION);
-        al.setTitle(String.format("Issue: %s", issue.getIssueNumber()));
-        al.setHeaderText(issue.getTitle());
-        al.setContentText(issue.getBody());
-
+        Stage toolStage = new Stage();
         final WebView browser = new WebView();
         final WebEngine webEngine = browser.getEngine();
         webEngine.loadContent(String.format(getGithubIssueHtml(issue)));
         ScrollPane scrollPane = new ScrollPane();
+        VBox vbox = new VBox();
+        vbox.getChildren().add(new Label("Git Hub Issue"));
         scrollPane.setContent(browser);
+        vbox.getChildren().add(scrollPane);
+        Button OK = new Button("Close");
+        OK.setOnAction(e -> toolStage.close());
+        vbox.getChildren().add(OK);
+        Scene toolScene = new Scene(vbox, 700, 500);
+        toolStage.setScene(toolScene);
+        //toolStage.initOwner(stage);
+        toolStage.setAlwaysOnTop(true);
+        toolStage.show();
+
+//        Alert al = new Alert(AlertType.CONFIRMATION);
+//        al.setTitle();
+        /*
+        al.setHeaderText(issue.getTitle());
+        al.setContentText(issue.getBody());
+
+
         al.getDialogPane().setContent(scrollPane );
 
         ButtonType buttonTypeOne = new ButtonType("Yes");
@@ -348,7 +364,15 @@ public class PopUps {
 
         al.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeThree);
         al.show();
-        return true;
+
+
+        toolStage.setScene(toolScene);
+        toolStage.initOwner(stage);
+        toolStage.setAlwaysOnTop(true);
+        toolStage.show();
+
+
+         */return true;
     }
 
 

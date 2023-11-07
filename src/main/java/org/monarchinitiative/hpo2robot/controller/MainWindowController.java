@@ -26,7 +26,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.Launcher;
-import org.monarchinitiative.hpo2robot.controller.services.HpoIdService;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
 import org.monarchinitiative.hpo2robot.model.Model;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
