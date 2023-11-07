@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="270.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo2robot.view.SynonymPane">
+   <children>
+      <HBox maxHeight="100.0" prefHeight="100.0" prefWidth="600.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <Label minWidth="150.0" text="Synonym" />
+            <TextField fx:id="synonymTextField" minWidth="400.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="-2.0" layoutY="108.0" maxHeight="150.0" prefHeight="125.0" prefWidth="580.0" AnchorPane.bottomAnchor="165.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="110.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <RadioButton fx:id="abbreviationRadioButton" minWidth="250.0" mnemonicParsing="false" text="abbreviation" />
+                  <RadioButton fx:id="laypersonRadioButton" minWidth="250.0" mnemonicParsing="false" text="layperson term" />
+                  <RadioButton fx:id="pluralRadioButton" minWidth="250.0" mnemonicParsing="false" text="plural form" />
+                  <RadioButton fx:id="ukRadioButton" minWidth="250.0" mnemonicParsing="false" text="UK spelling" />
+                  <RadioButton fx:id="noSynonymTypeRadioButton" minWidth="250.0" mnemonicParsing="false" text="UK spelling" />
+
+               </children>
+            </VBox>
+            <Button mnemonicParsing="false" stylesheets="@../css/options.css" text="Cancel" />
+            <Button mnemonicParsing="false" stylesheets="@../css/options.css" text="OK" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

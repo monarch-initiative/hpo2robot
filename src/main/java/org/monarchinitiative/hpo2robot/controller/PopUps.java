@@ -334,7 +334,7 @@ public class PopUps {
         Stage toolStage = new Stage();
         final WebView browser = new WebView();
         final WebEngine webEngine = browser.getEngine();
-        webEngine.loadContent(String.format(getGithubIssueHtml(issue)));
+        webEngine.loadContent(getGithubIssueHtml(issue));
         ScrollPane scrollPane = new ScrollPane();
         VBox vbox = new VBox();
         vbox.getChildren().add(new Label("Git Hub Issue"));

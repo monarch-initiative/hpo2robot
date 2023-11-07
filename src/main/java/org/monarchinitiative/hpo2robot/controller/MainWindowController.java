@@ -118,9 +118,8 @@ public class MainWindowController extends BaseController implements Initializabl
             model.setOptions(options);
             nextHpoTermIdOpt = Optional.ofNullable(model.getNextHpoId());
         }
-        if (nextHpoTermIdOpt.isPresent()) {
-            addNewHpoTermBox.setRobotLabel(String.format("Next ID: %s", nextHpoTermIdOpt.get().getValue()));
-        }
+        nextHpoTermIdOpt.ifPresent(termId ->
+                addNewHpoTermBox.setRobotLabel(String.format("Next ID: %s", termId.getValue())));
     }
 
 

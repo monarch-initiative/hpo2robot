@@ -96,7 +96,7 @@ public class GitHubIssueBoxController implements Initializable  {
     private void getGitHubIssues() {
         GitHubIssueRetriever retriever = new GitHubIssueRetriever();
         gitHubIssueMap.clear();
-        retriever.getIssues().stream().forEach(i -> gitHubIssueMap.put(i, true));
+        retriever.getIssues().forEach(i -> gitHubIssueMap.put(i, true));
         String message = String.format("Retrieved %d issues from GitHub", gitHubIssueMap.size());
         gitHubStatusLabel.setTextFill(Color.BLACK);
         gitHubStatusLabel.setFont(SMALL_FONT);
@@ -146,10 +146,6 @@ public class GitHubIssueBoxController implements Initializable  {
 
 
     public Optional<String> getGitHubIssueNumber() {
-        if (currentIssueOpt.isPresent()) {
-            return Optional.of(currentIssueOpt.get().getIssueNumber());
-        } else {
-            return Optional.empty();
-        }
+        return currentIssueOpt.map(GitHubIssue::getIssueNumber);
     }
 }

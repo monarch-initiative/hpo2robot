@@ -3,9 +3,6 @@ package org.monarchinitiative.hpo2robot.github;
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.hpo2robot.controller.services.HpoIdService;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Paths;
 
 public class GitHubIssueRetrieverTest {
