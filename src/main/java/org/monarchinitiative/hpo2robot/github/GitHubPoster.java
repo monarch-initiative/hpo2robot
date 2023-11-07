@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo2robot.github;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -127,7 +128,8 @@ public class GitHubPoster {
 
 
     public void postHpoIssue() throws Exception {
-        URL url = new URL("https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues");
+        URI uri = new URI("https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues");
+        URL url = uri.toURL();
         URLConnection con = url.openConnection();
         String userpass = String.format("%s:%s",username,password);
         //String token = replace with GitHub AUTH token;

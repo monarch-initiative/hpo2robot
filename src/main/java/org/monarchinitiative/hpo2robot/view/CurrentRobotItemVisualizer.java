@@ -423,6 +423,7 @@ public class CurrentRobotItemVisualizer {
     public String toHTML(RobotItem item) {
         StringBuilder builder = new StringBuilder();
         builder.append(HTML_HEADER);
+        builder.append(row("HPO ID", item.getNewTermId().getValue()));
         builder.append(row("Label", item.getNewTermLabel()));
         builder.append(row("Definition", item.getNewTermDefinition()));
         builder.append(row("Comment", item.getNewTermComment()));

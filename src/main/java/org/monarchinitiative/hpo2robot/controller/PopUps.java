@@ -29,6 +29,8 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.*;
 import org.monarchinitiative.hpo2robot.github.GitHubIssue;
 import org.slf4j.Logger;
@@ -288,6 +290,44 @@ public class PopUps {
     }
 
 
+
+
+    private static String getGithubIssueHtml(GitHubIssue issue) {
+        final String CSS = """
+                p { font-size: 120%; color: dimgray; }
+                p.important { border-style: solid; border-width: 0.5px; border-color: blue; }
+                """;
+
+        String title = String.format("%s (issue # %s)", issue.getTitle(), issue.getIssueNumber());
+        final String HEADER = String.format("""
+                <html lang="en">
+                                
+                <head>
+                    <title>%s</title>
+                                
+                    <style>
+                        p { color: dimgray; }
+                        p.important { border-style: solid; border-width: 0.5px; border-color: blue; }
+                    </style>
+                                
+                                
+                </head>
+                                
+                <body>""", title);
+
+        final String FOOTER = """
+                </body>
+                                
+                </html>
+                """;
+        StringBuilder sb = new StringBuilder();
+        sb.append(HEADER);
+        sb.append("<p class=\"important\">").append(issue.getBody()).append("</p>");
+        sb.append(FOOTER);
+        return sb.toString();
+    }
+
+
     public static boolean nextGitHubIssue(GitHubIssue issue) {
 
         Alert al = new Alert(AlertType.CONFIRMATION);
@@ -295,53 +335,22 @@ public class PopUps {
         al.setHeaderText(issue.getTitle());
         al.setContentText(issue.getBody());
 
+        final WebView browser = new WebView();
+        final WebEngine webEngine = browser.getEngine();
+        webEngine.loadContent(String.format(getGithubIssueHtml(issue)));
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(browser);
+        al.getDialogPane().setContent(scrollPane );
+
         ButtonType buttonTypeOne = new ButtonType("Yes");
         ButtonType buttonTypeTwo = new ButtonType("No");
         ButtonType buttonTypeThree = new ButtonType("Cancel");
 
         al.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeThree);
-
-        // Show the dialog and wait for the user's choice
-//        al.showAndWait().ifPresent(response -> {
-//            if (response == buttonTypeOne) {
-//                return tr
-//            } else if (response == buttonTypeTwo) {
-//                System.out.println("Option Two chosen");
-//            } else if (response == buttonTypeThree) {
-//                System.out.println("Option Three chosen");
-//            } else {
-//                System.out.println("Dialog closed without making a choice");
-//            }
-//        });
-
-
-        Optional<ButtonType> result = al.showAndWait();
-        if (result.isPresent()) {
-            var response = result.get();
-            return response == buttonTypeOne;
-        } else {
-            return false;
-        }
+        al.show();
+        return true;
     }
 
-/*
-    public static Optional<Boolean> gitHubIssueDialog(GitHubIssue issue) {
-        ButtonType yesButtonType = new ButtonType("Yes", ButtonData.YES);
-        ButtonType noButtonType = new ButtonType("No", ButtonData.NO);
-        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-        //Dialog<Boolean> dialog = new Dialog<>();
-        Dialog<String> dialog = new Dialog<>();
-        //TextInputDialog dialog = new TextInputDialog("Process this GitHub issue?");
-        dialog.getDialogPane().getButtonTypes().addAll(yesButtonType, noButtonType, cancelButtonType);
-
-        dialog.setTitle(issue.getIssueNumber());
-        dialog.setHeaderText(issue.getTitle());
-        dialog.setContentText(issue.getBody());
-
-        Optional<ButtonType> opt =  dialog.showAndWait();
-    }
-
- */
 
 
 }

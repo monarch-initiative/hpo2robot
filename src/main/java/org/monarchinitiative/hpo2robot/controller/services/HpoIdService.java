@@ -1,6 +1,5 @@
 package org.monarchinitiative.hpo2robot.controller.services;
 
-import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;

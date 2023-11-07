@@ -37,7 +37,6 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -61,9 +60,7 @@ public class MainWindowController extends BaseController implements Initializabl
     public PmidXrefAdder pmidXrefAdderBox;
     @FXML
     public GitHubIssueBox gitHubIssueBox;
-//    public Label robotStatusLabel;
-//    public Button addRobotItemButton;
-//    public VBox robotVbox;
+
     @FXML
     public AddNewHpoTerm addNewHpoTermBox;
     @FXML
@@ -98,9 +95,6 @@ public class MainWindowController extends BaseController implements Initializabl
     private Ontology hpOntology;
     private  OntologyTree ontologyTree;
     private Optional<HostServices> hostServicesOpt;
-
-    private HpoIdService hpoIdService = null;
-
     private Optional<TermId> nextHpoTermIdOpt = Optional.empty();
 
     private final Model model;
@@ -180,21 +174,19 @@ public class MainWindowController extends BaseController implements Initializabl
         setUpTableView();
         setupRobotItemHandler();
 
+
     }
 
 
 
     private void setupRobotItemHandler() {
-        EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                RobotItem item = createNewRobotItem();
-                robotTableView.getItems().add(item);
-                clearFields();
-                fetchNextHpoTermId();
-                System.out.println("NEWNEWNEW");
-            }
+        EventHandler<ActionEvent> handler = actionEvent -> {
+            RobotItem item = createNewRobotItem();
+            robotTableView.getItems().add(item);
+            clearFields();
+            fetchNextHpoTermId();
         };
+        this.addNewHpoTermBox.setAction(handler);
     }
 
     private void fetchNextHpoTermId() {
@@ -215,13 +207,29 @@ public class MainWindowController extends BaseController implements Initializabl
      * This method uses to the data entered by the user to add another ROBOT item to the table
      */
     private RobotItem createNewRobotItem() {
+        TermId newHpoTermId = model.getNextHpoId();
         String newTermLabel = termLabelValidator.getLabel().get();
         List<Term> parentTerms = parentTermAdder.getParentTermList();
         String definition = this.definitionPane.getUserText();
         String comment = this.commentPane.getUserText();
         List<String> pmids = pmidXrefAdderBox.getPmidList();
-        RobotItem item = new RobotItem(newTermLabel, parentTerms, definition, comment, pmids);
-        return item;
+        Optional<String> opt = gitHubIssueBox.getGitHubIssueNumber();
+        if (opt.isPresent()) {
+            return new RobotItem(newHpoTermId,
+                    newTermLabel,
+                    parentTerms,
+                    definition,
+                    comment,
+                    pmids,
+                    opt.get());
+        } else {
+            return new RobotItem(newHpoTermId,
+                    newTermLabel,
+                    parentTerms,
+                    definition,
+                    comment,
+                    pmids);
+        }
     }
 
 
@@ -341,6 +349,9 @@ public class MainWindowController extends BaseController implements Initializabl
        this.options = viewFactory.getOptions();
        readinessProperty.set(options.isValid());
        statusBarOptions();
+       if (options.isValid()) {
+           model.setOptions(options);
+       }
        return options.isValid();
     }
 

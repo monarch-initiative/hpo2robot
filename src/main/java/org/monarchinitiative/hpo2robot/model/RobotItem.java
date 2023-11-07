@@ -6,6 +6,7 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RobotItem {
@@ -28,8 +29,17 @@ public class RobotItem {
 
     private final List<String> pmids;
 
+    private final Optional<String> gitHubIssueOpt;
 
-    public RobotItem(String newTermLabel, List<Term> parentTerms, String definition, String comment, List<String> pmids) {
+
+    public RobotItem(TermId newHpoTermId,
+                     String newTermLabel,
+                     List<Term> parentTerms,
+                     String definition,
+                     String comment,
+                     List<String> pmids,
+                     String gitHubIssue) {
+        this.newTermId = newHpoTermId;
         this.newTermLabelProperty = new SimpleStringProperty(newTermLabel);
         this.newTermDefinitionProperty = new SimpleStringProperty(definition);
         this.newTermCommentProperty = new SimpleStringProperty(comment);
@@ -50,7 +60,25 @@ public class RobotItem {
         } else {
             pmidStringProperty = new SimpleStringProperty(String.join(";", pmids));
         }
+        gitHubIssueOpt = Optional.ofNullable(gitHubIssue);
+    }
 
+    /**
+     * Use this constructor for terms that do not have an associated GitHub issue.
+     * @param newHpoTermId The term ID for the new Term to be created
+     * @param newTermLabel Name of the term
+     * @param parentTerms one or more parent terms
+     * @param definition The term definition
+     * @param comment Comment - can be emptu
+     * @param pmids Zero or multiple PubMed identifiers
+     */
+    public RobotItem(TermId newHpoTermId,
+                     String newTermLabel,
+                     List<Term> parentTerms,
+                     String definition,
+                     String comment,
+                     List<String> pmids){
+        this(newHpoTermId, newTermLabel, parentTerms, definition, comment, pmids, null);
     }
 
     public StringProperty parentTermLabelPropertyProperty() {
@@ -128,5 +156,9 @@ public class RobotItem {
 
     public String getPmidString() {
         return this.pmidStringProperty.get();
+    }
+
+    public Optional<String> getGitHubIssueOpt() {
+        return gitHubIssueOpt;
     }
 }

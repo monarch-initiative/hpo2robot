@@ -45,4 +45,8 @@ public class GitHubIssueBox extends HBox  {
     public void clearFields() {
         this.controller.clearFields();
     }
+
+    public Optional<String> getGitHubIssueNumber() {
+        return controller.getGitHubIssueNumber();
+    }
 }

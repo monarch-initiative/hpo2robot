@@ -145,5 +145,11 @@ public class GitHubIssueBoxController implements Initializable  {
     }
 
 
-
+    public Optional<String> getGitHubIssueNumber() {
+        if (currentIssueOpt.isPresent()) {
+            return Optional.of(currentIssueOpt.get().getIssueNumber());
+        } else {
+            return Optional.empty();
+        }
+    }
 }
