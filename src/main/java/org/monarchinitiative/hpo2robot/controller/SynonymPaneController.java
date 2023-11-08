@@ -68,15 +68,12 @@ public class SynonymPaneController  extends BaseController implements Initializa
         laypersonRadioButton.setUserData(SynonymType.LAYPERSON_TERM);
         pluralRadioButton.setUserData(SynonymType.PLURAL_FORM);
         ukRadioButton.setUserData(SynonymType.UK_SPELLING);
-        radioButtonToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
-            public void changed(ObservableValue<? extends Toggle> ov,
-                                Toggle old_toggle, Toggle new_toggle) {
-                if (radioButtonToggleGroup.getSelectedToggle() != null) {
-                    final SynonymType userData = (SynonymType) radioButtonToggleGroup.getSelectedToggle().getUserData();
-                    setSelectedButton(userData);
-                } else {
-                    setSelectedButton(SynonymType.NONE);
-                }
+        radioButtonToggleGroup.selectedToggleProperty().addListener((ov, old_toggle, new_toggle) -> {
+            if (radioButtonToggleGroup.getSelectedToggle() != null) {
+                final SynonymType userData = (SynonymType) radioButtonToggleGroup.getSelectedToggle().getUserData();
+                setSelectedButton(userData);
+            } else {
+                setSelectedButton(SynonymType.NONE);
             }
         });
     }

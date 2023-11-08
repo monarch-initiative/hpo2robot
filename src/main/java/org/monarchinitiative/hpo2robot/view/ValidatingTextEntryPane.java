@@ -30,24 +30,25 @@ public class ValidatingTextEntryPane extends AnchorPane {
 
     public ValidatingTextEntryPane() {
         super();
+        this.definitionTextProperty = new SimpleStringProperty("");
+        this.commentTextProperty = new SimpleStringProperty("");
+        this.definitionErrorProperty = new SimpleStringProperty("");
+        this.commentErrorProperty = new SimpleStringProperty("");
+        this.isValid = new SimpleBooleanProperty(false);
+        this.buttonNameProperty = new SimpleStringProperty("Get text");
+
         try {
             FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/ValidatingTextEntryPane.fxml"));
             this.controller = new ValidatingTextEntryPaneController();
             loader.setController(controller);
             Node node = loader.load();
             this.getChildren().add(node);
-            this.definitionErrorProperty = new SimpleStringProperty("");
-            commentErrorProperty = new SimpleStringProperty("");
             definitionErrorProperty.bindBidirectional(controller.getDefinitionErrorLabel().textProperty());
             commentTextProperty.bindBidirectional(controller.getCommentErrorLabel().textProperty());
-            this.definitionTextProperty = new SimpleStringProperty("");
-            this.commentTextProperty = new SimpleStringProperty("");
             definitionTextProperty.bindBidirectional(controller.definitionStringProperty());
             commentTextProperty.bindBidirectional(controller.commentStringProperty());
-            isValid = new SimpleBooleanProperty(false);
-            isValid.bindBidirectional(controller.isValidPropertyProperty());
-            this.buttonNameProperty = new SimpleStringProperty("Get text");
-            this.buttonNameProperty.bindBidirectional(controller.getValidatingButton().textProperty());
+            isValid.bindBidirectional(controller.isValidDefinitionPropertyProperty());
+            this.buttonNameProperty.bindBidirectional(controller.getDefinmitionValidateButton().textProperty());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -24,13 +24,12 @@ public class Options implements Serializable {
 
     private String hpEditOwlFile;
 
-    private String robotFile;
+
 
     private String orcid;
 
-    public Options(String hpJsonFile, String robotFile, String orcid, String hpEdit) {
+    public Options(String hpJsonFile, String orcid, String hpEdit) {
         this.hpJsonFile = hpJsonFile;
-        this.robotFile = robotFile;
         this.orcid = orcid;
         this.hpEditOwlFile = hpEdit;
     }
@@ -38,7 +37,6 @@ public class Options implements Serializable {
     public Options(){
         this.hpJsonFile = N_A;
         this.hpEditOwlFile = N_A;
-        this.robotFile = N_A;
         this.orcid = N_A;
     }
 
@@ -58,14 +56,6 @@ public class Options implements Serializable {
         this.hpEditOwlFile = hpEditOwlFile;
     }
 
-    public String getRobotFile() {
-        return robotFile;
-    }
-
-    public void setRobotFile(String robotFile) {
-        this.robotFile = robotFile;
-    }
-
     public String getOrcid() {
         return orcid;
     }
@@ -83,10 +73,6 @@ public class Options implements Serializable {
         if (! f.isFile()) {
             return false;
         }
-        if (robotFile.equals(N_A)) {
-            return false;
-        }
-
         if (hpEditOwlFile.equals(N_A)) {
             return false;
         }
@@ -99,10 +85,10 @@ public class Options implements Serializable {
     public String toString() {
         return String.format("""
                                 HPO: %s
-                                ROBOT: %s
+                                hp-edit: %s
                                 biocurator: %s
                                 valid: %s""",
-                this.hpJsonFile, this.robotFile, orcid, isValid());
+                this.hpJsonFile, this.hpEditOwlFile, orcid, isValid());
     }
 
     public String getErrorMessage() {
@@ -114,9 +100,6 @@ public class Options implements Serializable {
             sb.append("hp.json not set. ");
         } else {
             sb.append("could not find hp.json at ").append(hpJsonFile);
-        }
-        if (robotFile.equals(N_A)) {
-            sb.append("ROBOT file not set. ");
         }
         if (hpEditOwlFile.equals(N_A)) {
             sb.append("hp-edit.owl not set. ");

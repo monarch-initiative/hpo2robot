@@ -24,6 +24,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Window;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
@@ -35,6 +36,7 @@ import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -456,12 +458,16 @@ public class MainWindowController extends BaseController implements Initializabl
             clearFields();
         };
         this.addNewHpoTermBox.setAction(handler);
-        EventHandler<ActionEvent> clearHandler = actionEvent -> {
-            this.robotTableView.getItems().clear();
-        };
+        EventHandler<ActionEvent> clearHandler = actionEvent -> this.robotTableView.getItems().clear();
         this.addNewHpoTermBox.setClearRobotAction(clearHandler);
         EventHandler<ActionEvent> exportHandler = actionEvent -> {
-            RobotItem.exportRobotItems(robotTableView.getItems(), this.options.getRobotFile());
+            Window window = this.statusBarLabel.getScene().getWindow();
+            Optional<File> opt = PopUps.selectRobotFileToSave(window);
+            if (opt.isPresent()) {
+                RobotItem.exportRobotItems(robotTableView.getItems(), opt.get());
+            } else {
+                PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
+            }
         };
         this.addNewHpoTermBox.setExportRobotAction(exportHandler);
 

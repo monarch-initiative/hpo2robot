@@ -376,5 +376,11 @@ public class PopUps {
     }
 
 
-
+    public static Optional<File> selectRobotFileToSave(Window window) {
+        final FileChooser filechooser = new FileChooser();
+        filechooser.setInitialFileName("hpo2robot.tsv");
+        filechooser.setTitle("Set path to save HPO2ROBOT file");
+        File f = filechooser.showSaveDialog(window);
+        return Optional.ofNullable(f);
+    }
 }

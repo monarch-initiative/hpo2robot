@@ -25,7 +25,7 @@
                   <RadioButton fx:id="laypersonRadioButton" minWidth="250.0" mnemonicParsing="false" text="layperson term" />
                   <RadioButton fx:id="pluralRadioButton" minWidth="250.0" mnemonicParsing="false" text="plural form" />
                   <RadioButton fx:id="ukRadioButton" minWidth="250.0" mnemonicParsing="false" text="UK spelling" />
-                  <RadioButton fx:id="noSynonymTypeRadioButton" minWidth="250.0" mnemonicParsing="false" text="UK spelling" />
+                  <RadioButton fx:id="noSynonymTypeRadioButton" minWidth="250.0" mnemonicParsing="false" text="None" />
 
                </children>
             </VBox>

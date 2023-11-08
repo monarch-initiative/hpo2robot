@@ -28,8 +28,6 @@ public class OptionsWindowController extends BaseController implements Initializ
     @FXML
     private Label hpJsonLabel;
 
-    @FXML
-    private Label robotFileLabel;
 
     @FXML
     private Label orcidLabel;
@@ -39,7 +37,7 @@ public class OptionsWindowController extends BaseController implements Initializ
 
     private StringProperty hpEditOwlProperty;
 
-    private StringProperty robotFileProperty;
+
 
     private StringProperty orcidProperty;
 
@@ -50,13 +48,9 @@ public class OptionsWindowController extends BaseController implements Initializ
     @FXML
     void okButtonAction() {
        String hp_json = this.hpJsonProperty.get();
-        String robot_file = robotFileProperty.get();
         String orcid = orcidProperty.get();
         if (! hp_json.equals(NOT_INITIALIZED)) {
             options.setHpJsonFile(hp_json);
-        }
-        if (! robot_file.equals(NOT_INITIALIZED)) {
-            options.setRobotFile(robot_file);
         }
         if (! orcid.equals(NOT_INITIALIZED)) {
             options.setOrcid(orcid);
@@ -82,8 +76,6 @@ public class OptionsWindowController extends BaseController implements Initializ
         hpJsonProperty.bindBidirectional(hpJsonLabel.textProperty());
         hpEditOwlProperty = new SimpleStringProperty(NOT_INITIALIZED);
         hpEditOwlProperty.bindBidirectional(hpEditOwlLabel.textProperty());
-        robotFileProperty = new SimpleStringProperty(NOT_INITIALIZED);
-        robotFileProperty.bindBidirectional(robotFileLabel.textProperty());
         orcidProperty = new SimpleStringProperty(NOT_INITIALIZED);
         orcidProperty.bindBidirectional(orcidLabel.textProperty());
         //setupCss();
@@ -109,30 +101,16 @@ public class OptionsWindowController extends BaseController implements Initializ
         }
     }
 
-    public void openRobotFile(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select robot (.tsv) File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Robot files", "*.tsv"));
-        Stage stage = (Stage) this.hpJsonLabel.getScene().getWindow();
-        //fileChooser.
-        File f = fileChooser.showOpenDialog(stage);
-        if (f != null) {
-            this.options.setRobotFile(f.getAbsolutePath());
-            this.robotFileProperty.set(f.getAbsolutePath());
-        }
-    }
 
-    public void createRobotFile(ActionEvent actionEvent) {
+
+    public Optional<File> createRobotFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Set location of new robot (.tsv) File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Robot files", "*.tsv"));
         Stage stage = (Stage) this.hpJsonLabel.getScene().getWindow();
         //fileChooser.
         File f = fileChooser.showSaveDialog(stage);
-        if (f != null) {
-            this.options.setRobotFile(f.getAbsolutePath());
-            this.robotFileProperty.set(f.getAbsolutePath());
-        }
+        return Optional.ofNullable(f);
     }
 
 
@@ -166,7 +144,7 @@ public class OptionsWindowController extends BaseController implements Initializ
     }
 
     public Options getOptions() {
-        return new Options(hpJsonProperty.get(), robotFileProperty.get(), orcidProperty.get(),
+        return new Options(hpJsonProperty.get(), orcidProperty.get(),
                 hpEditOwlProperty.get());
     }
 

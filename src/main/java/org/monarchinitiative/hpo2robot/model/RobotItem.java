@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class RobotItem {
         this(newHpoTermId, newTermLabel, parentTerms, synonyms, definition, comment, pmids, null);
     }
 
-    public static void exportRobotItems(ObservableList<RobotItem> items, String robotFile) {
+    public static void exportRobotItems(ObservableList<RobotItem> items, File robotFile) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(robotFile))) {
             bw.write(header() + "\n");
             for (var item: items) {

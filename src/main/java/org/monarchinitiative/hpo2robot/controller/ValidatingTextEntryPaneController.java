@@ -32,10 +32,10 @@ public class ValidatingTextEntryPaneController implements Initializable {
     private Label definitionErrorLabel;
 
     @FXML
-    private Button validatingButton;
+    private Button validatingButtonDefinition;
 
     @FXML
-    private Label textSummary;
+    private Label textSummaryDefinition;
 
     @FXML
     private Label textSummaryComment;
@@ -51,7 +51,9 @@ public class ValidatingTextEntryPaneController implements Initializable {
     private StringProperty commentStringProperty;
 
 
-    private BooleanProperty isValidProperty;
+    private BooleanProperty isValidDefinitionProperty;
+
+    private BooleanProperty isValidCommentProperty;
 
     public static final String CREATE_DEFINITION = "Create definition";
     public static final String EDIT_DEFINITION = "Edit definition";
@@ -60,56 +62,63 @@ public class ValidatingTextEntryPaneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        isValidProperty = new SimpleBooleanProperty(false);
+        isValidDefinitionProperty = new SimpleBooleanProperty(false);
+        isValidCommentProperty = new SimpleBooleanProperty(false);
         definitionStringProperty = new SimpleStringProperty("");
         commentStringProperty = new SimpleStringProperty("");
-        validatingButton.setOnAction(e -> {
+        validatingButtonDefinition.setOnAction(e -> {
             String text = getUserStringFromTextArea("Enter text", "Enter the text of the definition (comment) here. " +
-                    "Stray white space and newlines will be remove automatically.");
+                    "Stray white space and newlines will be remove automatically.",
+                    this.definitionStringProperty.get());
             definitionStringProperty.set(text);
             int N = Math.min(50, text.length());
-            textSummary.setText(text.substring(0,N) + (text.length() > N ? "..." : ""));
-            validateText(text);
-            validatingButton.setText(EDIT_DEFINITION);
+            textSummaryDefinition.setText(text.substring(0,N) + (text.length() > N ? "..." : ""));
+            validateDefinitionText(text);
+            validatingButtonDefinition.setText(EDIT_DEFINITION);
         });
-        validatingButton.setText(CREATE_DEFINITION);
+        validatingButtonDefinition.setText(CREATE_DEFINITION);
         // red text for error messages
         definitionErrorLabel.setTextFill(Color.color(1, 0, 0));
         validatingButtonComment.setText(CREATE_COMMENT);
         validatingButtonComment.setOnAction(e -> {
             String text = getUserStringFromTextArea("Enter text", "Enter the text of the definition (comment) here. " +
-                    "Stray white space and newlines will be remove automatically.");
+                    "Stray white space and newlines will be remove automatically.",
+                    this.commentStringProperty.get());
             commentStringProperty.set(text);
             int N = Math.min(50, text.length());
             textSummaryComment.setText(text.substring(0,N) + (text.length() > N ? "..." : ""));
-            validateText(text);
+            validateCommentText(text);
             validatingButtonComment.setText(EDIT_COMMENT);
         });
+        validatingButtonComment.setText(CREATE_COMMENT);
     }
 
 
-    private void validateText(String text) {
+    private void validateDefinitionText(String text) {
+       validate(text,validatingButtonDefinition, definitionErrorLabel, isValidDefinitionProperty);
+    }
+
+    private void validateCommentText(String text) {
+        validate(text,validatingButtonDefinition, definitionErrorLabel, isValidDefinitionProperty);
+    }
+
+    private void validate(String text, Button button, Label label, BooleanProperty bprop) {
         byte[] bytes = text.getBytes(StandardCharsets.US_ASCII);
         String decodedLine = new String(bytes);
         boolean nonStandardChar = !text.equals(decodedLine);
-
         if (text.isEmpty()) {
-            setInvalid("Enter new term label");
+            setInvalid("No text entered.",
+                    button, label, bprop);
         } else if (text.contains("  ")) {
-            setInvalid("Label must not contain multiple consecutive spaces.");
+            setInvalid("Text must not contain multiple consecutive spaces.", button, label, bprop);
         } else if (text.startsWith(" ")) {
-            setInvalid("Label must not start with space.");
+            setInvalid("Text must not start with space.", button, label, bprop);
         } else if (! text.endsWith(".")) {
-            setInvalid("Text must end end with period.");
+            setInvalid("Text must end end with period.", button, label, bprop);
         } else if (nonStandardChar) {
-            setInvalid("Text contains a non-standard character encoding. Please remove it.");
+            setInvalid("Text contains a non-standard character encoding. Please remove it.", button, label, bprop);
         } else {
-            setValid();
-        }
-        if (validatingButton.getText().equals(CREATE_DEFINITION)) {
-            validatingButton.setText(EDIT_DEFINITION);
-        } else if (validatingButton.getText().equals(CREATE_COMMENT)) {
-            validatingButton.setText(EDIT_COMMENT);
+            setValid(button, label, bprop);
         }
     }
 
@@ -121,7 +130,7 @@ public class ValidatingTextEntryPaneController implements Initializable {
      * @param header - explanatory text
      * @return user-entered string
      */
-    private String getUserStringFromTextArea(String title, String header) {
+    private String getUserStringFromTextArea(String title, String header, String initialText) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle(title);
         dialog.setHeaderText(header);
@@ -142,7 +151,7 @@ public class ValidatingTextEntryPaneController implements Initializable {
                     txt = txt.replaceAll("  ", " ");
                     userTextField.setText(txt);
                 });
-        userTextField.setText(this.definitionStringProperty.get());
+        userTextField.setText(initialText);
         vbox.getChildren().add(userTextField);
         dialog.getDialogPane().setContent(vbox);
         Platform.runLater(userTextField::requestFocus);
@@ -161,16 +170,16 @@ public class ValidatingTextEntryPaneController implements Initializable {
 
 
 
-    private void setInvalid(String message) {
-        isValidProperty.set(false);
-        definitionErrorLabel.setText(message);
-        validatingButton.setStyle("-fx-text-box-border: red; -fx-focus-color: red ;");
+    private void setInvalid(String message, Button button, Label label, BooleanProperty bprop) {
+        bprop.set(false);
+        label.setText(message);
+        button.setStyle("-fx-text-box-border: red; -fx-focus-color: red ;");
     }
 
-    private void setValid() {
-        isValidProperty.set(true);
-        definitionErrorLabel.setText("");
-        validatingButton.setStyle("-fx-text-box-border: green; -fx-focus-color: green ;");
+    private void setValid(Button button, Label label, BooleanProperty bprop) {
+        bprop.set(true);
+        button.setText("");
+        label.setStyle("-fx-text-box-border: green; -fx-focus-color: green ;");
     }
 
 
@@ -180,12 +189,8 @@ public class ValidatingTextEntryPaneController implements Initializable {
 
     public Label getCommentErrorLabel() { return commentErrorLabel;}
 
-    public Button getValidatingButton() {
-        return validatingButton;
-    }
-
-    public Label getTextSummary() {
-        return textSummary;
+    public Button getDefinmitionValidateButton() {
+        return validatingButtonDefinition;
     }
 
 
@@ -197,16 +202,12 @@ public class ValidatingTextEntryPaneController implements Initializable {
         return commentStringProperty;
     }
 
-    public boolean isIsValidProperty() {
-        return isValidProperty.get();
+    public boolean getIsValidDefinitionProperty() {
+        return isValidDefinitionProperty.get();
     }
 
-    public BooleanProperty isValidPropertyProperty() {
-        return isValidProperty;
-    }
-
-    public void initButtonLabel(String label) {
-        validatingButton.setText(label);
+    public BooleanProperty isValidDefinitionPropertyProperty() {
+        return isValidDefinitionProperty;
     }
 
 
