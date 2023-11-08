@@ -109,10 +109,9 @@ public class RobotItem {
     }
 
     private String getRow() {
-
-        List<String> rowItems = List.of(this.newTermId.getValue(),
-                this.getNewTermLabel()
-                );
+        List<String> rowItems = new ArrayList<>();
+        rowItems.add(this.newTermId.getValue());
+        rowItems.add(this.getNewTermLabel());
         String parents = parentTerms.stream()
                 .map(Term::id)
                 .map(TermId::getValue)
