@@ -1,5 +1,7 @@
 package org.monarchinitiative.hpo2robot.controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -24,11 +26,16 @@ public class PmidXrefAdderController implements Initializable  {
 
     @FXML
     private Button xrefButton;
-
     @FXML
     private Label xrefLabel;
+    @FXML
+    private Button synonymAdderButton;
+    @FXML
+    private Label synonymAdderLabel;
 
     private List<String> pmidList;
+
+
 
 
     @Override
@@ -49,8 +56,8 @@ public class PmidXrefAdderController implements Initializable  {
             // TODO what XREFs do we want to allow and what prefixes?
             LOGGER.error("Set XREF");
         });
-
     }
+
 
 
     public List<String> getPmidList() {
@@ -60,5 +67,13 @@ public class PmidXrefAdderController implements Initializable  {
     public void clearFields() {
         pmidList = new ArrayList<>();
         pmidLabel.setText("(0)");
+    }
+
+    /**
+     * This is used to set an ActioHandler in {@link MainWindowController}
+     * @param handler
+     */
+    public void setAddSynoynmAction(EventHandler<ActionEvent> handler) {
+        synonymAdderButton.setOnAction(handler);
     }
 }

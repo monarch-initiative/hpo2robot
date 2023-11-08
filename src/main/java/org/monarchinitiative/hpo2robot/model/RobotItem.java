@@ -7,6 +7,7 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RobotItem {
@@ -35,6 +36,7 @@ public class RobotItem {
     public RobotItem(TermId newHpoTermId,
                      String newTermLabel,
                      List<Term> parentTerms,
+                     Set<Synonym> synonyms,
                      String definition,
                      String comment,
                      List<String> pmids,
@@ -75,10 +77,11 @@ public class RobotItem {
     public RobotItem(TermId newHpoTermId,
                      String newTermLabel,
                      List<Term> parentTerms,
+                     Set<Synonym> synonyms,
                      String definition,
                      String comment,
                      List<String> pmids){
-        this(newHpoTermId, newTermLabel, parentTerms, definition, comment, pmids, null);
+        this(newHpoTermId, newTermLabel, parentTerms, synonyms, definition, comment, pmids, null);
     }
 
     public StringProperty parentTermLabelPropertyProperty() {
@@ -160,5 +163,9 @@ public class RobotItem {
 
     public Optional<String> getGitHubIssueOpt() {
         return gitHubIssueOpt;
+    }
+
+    public boolean isValid() {
+        return true; //TODO check
     }
 }

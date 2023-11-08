@@ -9,8 +9,10 @@ import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.MainWindowController;
 import org.monarchinitiative.hpo2robot.controller.OptionsWindowController;
+import org.monarchinitiative.hpo2robot.controller.SynonymPaneController;
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.controller.BaseController;
+import org.monarchinitiative.hpo2robot.model.Synonym;
 
 import java.io.File;
 import java.io.IOException;
@@ -114,7 +116,6 @@ public class ViewFactory {
         OptionsWindowController controller = new OptionsWindowController( this, "OptionsWindow.fxml");
         initializeStageAndWait(controller);
         this.options = controller.getOptions();
-        System.out.println("ShowOptionsWindow: " + options);
     }
 
 
@@ -137,4 +138,11 @@ public class ViewFactory {
     public Optional<HostServices> getHostervicesOpt() {
         return Optional.ofNullable(this.hostServices);
     }
+
+    public Optional<Synonym> showAddSynonymWindow() {
+        SynonymPaneController controller = new SynonymPaneController( this, "SynonymPane.fxml");
+        initializeStageAndWait(controller);
+        return controller.getSynonym();
+    }
+
 }

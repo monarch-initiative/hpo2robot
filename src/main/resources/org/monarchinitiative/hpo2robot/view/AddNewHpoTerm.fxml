@@ -6,13 +6,23 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="githubVBox" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-    <HBox prefHeight="30.0" prefWidth="1000.0">
-        <Button fx:id="newRobotRowButton" prefWidth="150" text="Add new ROBOT row">
+<VBox fx:id="newRobotItemBox" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="1000.0">
+        <Button fx:id="newRobotRowButton" prefWidth="150" text="Add new ROBOT item">
             <HBox.margin>
                 <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
             </HBox.margin>
         </Button>
+      <Button mnemonicParsing="false"  text="Export ROBOT File">
+         <HBox.margin>
+            <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
+         </HBox.margin>
+      </Button>
+      <Button mnemonicParsing="false" text="Clear ROBOT table">
+         <HBox.margin>
+            <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
+         </HBox.margin>
+      </Button>
     </HBox>
     <HBox>
         <Label fx:id="robotStatusLabel">

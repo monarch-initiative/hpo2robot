@@ -29,15 +29,27 @@ import java.util.ResourceBundle;
  */
 public class ValidatingTextEntryPaneController implements Initializable {
     @FXML
-    private Label errorLabel;
+    private Label definitionErrorLabel;
 
     @FXML
     private Button validatingButton;
 
     @FXML
     private Label textSummary;
+
+    @FXML
+    private Label textSummaryComment;
+
+    @FXML
+    private Button validatingButtonComment;
+
+    @FXML
+    private Label commentErrorLabel;
     
-    private StringProperty userText;
+    private StringProperty definitionStringProperty;
+
+    private StringProperty commentStringProperty;
+
 
     private BooleanProperty isValidProperty;
 
@@ -46,31 +58,33 @@ public class ValidatingTextEntryPaneController implements Initializable {
     public static final String CREATE_COMMENT = "Create comment";
     public static final String EDIT_COMMENT = "Edit comment";
 
-
-    private boolean definitionMode = true;
-
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         isValidProperty = new SimpleBooleanProperty(false);
-        userText = new SimpleStringProperty("");
+        definitionStringProperty = new SimpleStringProperty("");
+        commentStringProperty = new SimpleStringProperty("");
         validatingButton.setOnAction(e -> {
             String text = getUserStringFromTextArea("Enter text", "Enter the text of the definition (comment) here. " +
                     "Stray white space and newlines will be remove automatically.");
-            userText.set(text);
+            definitionStringProperty.set(text);
             int N = Math.min(50, text.length());
             textSummary.setText(text.substring(0,N) + (text.length() > N ? "..." : ""));
             validateText(text);
-            if (definitionMode) {
-                validatingButton.setText(EDIT_DEFINITION);
-            } else {
-                validatingButton.setText(EDIT_COMMENT);
-            }
+            validatingButton.setText(EDIT_DEFINITION);
         });
         validatingButton.setText(CREATE_DEFINITION);
         // red text for error messages
-        errorLabel.setTextFill(Color.color(1, 0, 0));
+        definitionErrorLabel.setTextFill(Color.color(1, 0, 0));
+        validatingButtonComment.setText(CREATE_COMMENT);
+        validatingButtonComment.setOnAction(e -> {
+            String text = getUserStringFromTextArea("Enter text", "Enter the text of the definition (comment) here. " +
+                    "Stray white space and newlines will be remove automatically.");
+            commentStringProperty.set(text);
+            int N = Math.min(50, text.length());
+            textSummaryComment.setText(text.substring(0,N) + (text.length() > N ? "..." : ""));
+            validateText(text);
+            validatingButtonComment.setText(EDIT_COMMENT);
+        });
     }
 
 
@@ -128,7 +142,7 @@ public class ValidatingTextEntryPaneController implements Initializable {
                     txt = txt.replaceAll("  ", " ");
                     userTextField.setText(txt);
                 });
-        userTextField.setText(this.userText.get());
+        userTextField.setText(this.definitionStringProperty.get());
         vbox.getChildren().add(userTextField);
         dialog.getDialogPane().setContent(vbox);
         Platform.runLater(userTextField::requestFocus);
@@ -149,20 +163,22 @@ public class ValidatingTextEntryPaneController implements Initializable {
 
     private void setInvalid(String message) {
         isValidProperty.set(false);
-        errorLabel.setText(message);
+        definitionErrorLabel.setText(message);
         validatingButton.setStyle("-fx-text-box-border: red; -fx-focus-color: red ;");
     }
 
     private void setValid() {
         isValidProperty.set(true);
-        errorLabel.setText("");
+        definitionErrorLabel.setText("");
         validatingButton.setStyle("-fx-text-box-border: green; -fx-focus-color: green ;");
     }
 
 
-    public Label getErrorLabel() {
-        return errorLabel;
+    public Label getDefinitionErrorLabel() {
+        return definitionErrorLabel;
     }
+
+    public Label getCommentErrorLabel() { return commentErrorLabel;}
 
     public Button getValidatingButton() {
         return validatingButton;
@@ -173,8 +189,12 @@ public class ValidatingTextEntryPaneController implements Initializable {
     }
 
 
-    public StringProperty userTextProperty() {
-        return userText;
+    public StringProperty definitionStringProperty() {
+        return definitionStringProperty;
+    }
+
+    public StringProperty commentStringProperty() {
+        return commentStringProperty;
     }
 
     public boolean isIsValidProperty() {
@@ -190,7 +210,5 @@ public class ValidatingTextEntryPaneController implements Initializable {
     }
 
 
-    public void commentMode() {
-        definitionMode = false;
-    }
+
 }

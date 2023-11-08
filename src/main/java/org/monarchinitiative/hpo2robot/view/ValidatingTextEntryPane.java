@@ -14,9 +14,14 @@ public class ValidatingTextEntryPane extends AnchorPane {
 
     StringProperty buttonNameProperty;
 
-    StringProperty textProperty;
+    StringProperty definitionTextProperty;
 
-    StringProperty errorProperty;
+    StringProperty commentTextProperty;
+
+    StringProperty definitionErrorProperty;
+
+    StringProperty commentErrorProperty;
+
 
     BooleanProperty isValid;
 
@@ -31,10 +36,14 @@ public class ValidatingTextEntryPane extends AnchorPane {
             loader.setController(controller);
             Node node = loader.load();
             this.getChildren().add(node);
-            this.errorProperty = new SimpleStringProperty("");
-            errorProperty.bindBidirectional(controller.getErrorLabel().textProperty());
-            this.textProperty = new SimpleStringProperty("");
-            textProperty.bindBidirectional(controller.userTextProperty());
+            this.definitionErrorProperty = new SimpleStringProperty("");
+            commentErrorProperty = new SimpleStringProperty("");
+            definitionErrorProperty.bindBidirectional(controller.getDefinitionErrorLabel().textProperty());
+            commentTextProperty.bindBidirectional(controller.getCommentErrorLabel().textProperty());
+            this.definitionTextProperty = new SimpleStringProperty("");
+            this.commentTextProperty = new SimpleStringProperty("");
+            definitionTextProperty.bindBidirectional(controller.definitionStringProperty());
+            commentTextProperty.bindBidirectional(controller.commentStringProperty());
             isValid = new SimpleBooleanProperty(false);
             isValid.bindBidirectional(controller.isValidPropertyProperty());
             this.buttonNameProperty = new SimpleStringProperty("Get text");
@@ -43,12 +52,6 @@ public class ValidatingTextEntryPane extends AnchorPane {
             e.printStackTrace();
         }
     }
-
-
-    public String getUserText() {
-        return textProperty.get();
-    }
-
 
     public BooleanProperty isValidProperty() {
         return isValid;
@@ -59,11 +62,17 @@ public class ValidatingTextEntryPane extends AnchorPane {
     }
 
 
-    public void commentMode() {
-        controller.commentMode();
-    }
+
 
     public void clearFields() {
-        this.textProperty.set("");
+        this.definitionTextProperty.set("");
+    }
+
+    public String getDefinition() {
+        return controller.definitionStringProperty().get();
+    }
+
+    public String getComment() {
+        return controller.commentStringProperty().get();
     }
 }

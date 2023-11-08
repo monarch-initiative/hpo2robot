@@ -73,7 +73,6 @@
                 <ValidatingPane fx:id="termLabelValidator"/>
                 <ParentTermAdder fx:id="parentTermAdder"/>
                 <ValidatingTextEntryPane fx:id="definitionPane"/>
-                <ValidatingTextEntryPane fx:id="commentPane"/>
                 <PmidXrefAdder fx:id="pmidXrefAdderBox"/>
                 <AddNewHpoTerm fx:id="addNewHpoTermBox"/>
                 <GitHubIssueBox fx:id="gitHubIssueBox"/>

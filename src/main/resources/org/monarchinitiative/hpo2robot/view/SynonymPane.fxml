@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="270.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo2robot.view.SynonymPane">
+<AnchorPane prefHeight="270.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.monarchinitiative.hpo2robot.controller.SynonymPaneController">
    <children>
       <HBox maxHeight="100.0" prefHeight="100.0" prefWidth="600.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
@@ -28,8 +29,8 @@
 
                </children>
             </VBox>
-            <Button mnemonicParsing="false" stylesheets="@../css/options.css" text="Cancel" />
-            <Button mnemonicParsing="false" stylesheets="@../css/options.css" text="OK" />
+            <Button mnemonicParsing="false" stylesheets="@../css/options.css" text="Cancel" onAction="#cancelAction"/>
+            <Button mnemonicParsing="false" stylesheets="@../css/options.css" text="OK" onAction="#okAction"/>
          </children>
       </HBox>
    </children>

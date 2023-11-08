@@ -1,5 +1,7 @@
 package org.monarchinitiative.hpo2robot.view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
@@ -45,5 +47,9 @@ public class PmidXrefAdder extends AnchorPane {
 
     public void clearFields() {
         controller.clearFields();
+    }
+
+    public void setAction(EventHandler<ActionEvent> handler) {
+        controller.setAddSynoynmAction(handler);
     }
 }

@@ -15,10 +15,13 @@ import javafx.scene.text.FontWeight;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * This controller adds a new ROBOT Item (representing a new HPO term)
+ */
 public class AddNewHpoTermController implements Initializable {
 
     @FXML
-    private VBox githubVBox;
+    private VBox newRobotItemBox;
 
     @FXML
     private Button newRobotRowButton;
@@ -29,8 +32,8 @@ public class AddNewHpoTermController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        githubVBox.setSpacing(10);
-        githubVBox.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
+        newRobotItemBox.setSpacing(10);
+        newRobotItemBox.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
                 + "-fx-border-width: 1;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
         newRobotRowButton.setStyle("-fx-spacing: 10;");
@@ -38,7 +41,11 @@ public class AddNewHpoTermController implements Initializable {
         robotStatusLabel.setFont(small);
     }
 
-
+    /**
+     * This method takes a reference to a event handler that is defined in the Main controller and
+     * that adds the contents of the GUI to a new ROBOT item.
+     * @param handler function passed in from {@link MainWindowController}
+     */
     public void setAction(EventHandler<ActionEvent> handler) {
         newRobotRowButton.setOnAction(handler);
     }

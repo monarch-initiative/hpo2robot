@@ -29,6 +29,7 @@ import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
 import org.monarchinitiative.hpo2robot.model.Model;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
+import org.monarchinitiative.hpo2robot.model.Synonym;
 import org.monarchinitiative.hpo2robot.view.*;
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
@@ -40,7 +41,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,8 +79,6 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public ValidatingTextEntryPane definitionPane;
     @FXML
-    public ValidatingTextEntryPane commentPane;
-    @FXML
     private StackPane ontologyTreeViewPane;
     @FXML
     private ParentTermAdder parentTermAdder;
@@ -94,7 +92,6 @@ public class MainWindowController extends BaseController implements Initializabl
     private Ontology hpOntology;
     private  OntologyTree ontologyTree;
     private Optional<HostServices> hostServicesOpt;
-    private Optional<TermId> nextHpoTermIdOpt = Optional.empty();
 
     private final Model model;
 
@@ -116,10 +113,7 @@ public class MainWindowController extends BaseController implements Initializabl
         if (checkOptionsReadiness()) {
             loadHpoAndSetupOntologyTree();
             model.setOptions(options);
-            nextHpoTermIdOpt = Optional.ofNullable(model.getNextHpoId());
         }
-        nextHpoTermIdOpt.ifPresent(termId ->
-                addNewHpoTermBox.setRobotLabel(String.format("Next ID: %s", termId.getValue())));
     }
 
 
@@ -159,9 +153,6 @@ public class MainWindowController extends BaseController implements Initializabl
         this.hostServicesOpt = this.viewFactory.getHostervicesOpt();
         this.gitHubIssueBox.setHostServices(this.hostServicesOpt);
         termLabelValidator.setFieldLabel("New Term Label");
-        definitionPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_DEFINITION);
-        commentPane.initializeButtonText(ValidatingTextEntryPaneController.CREATE_COMMENT);
-        commentPane.commentMode();
         setUpStatusBar();
         readinessProperty = new SimpleBooleanProperty(false);
         setUpKeyAccelerators();
@@ -171,31 +162,24 @@ public class MainWindowController extends BaseController implements Initializabl
         }
         setUpTableView();
         setupRobotItemHandler();
-
-
+        setupAddSynonymItemHandler();
     }
 
 
 
     private void setupRobotItemHandler() {
         EventHandler<ActionEvent> handler = actionEvent -> {
-            RobotItem item = createNewRobotItem();
-            robotTableView.getItems().add(item);
+            createNewRobotItem();
             clearFields();
-            fetchNextHpoTermId();
         };
         this.addNewHpoTermBox.setAction(handler);
     }
 
-    private void fetchNextHpoTermId() {
-
-    }
 
     private void clearFields() {
         this.termLabelValidator.clearFields();
         this.parentTermAdder.clearFields();
         this.definitionPane.clearFields();
-        this.commentPane.clearFields();
         this.pmidXrefAdderBox.clearFields();
         this.addNewHpoTermBox.clearFields();
         this.gitHubIssueBox.clearFields();
@@ -204,30 +188,23 @@ public class MainWindowController extends BaseController implements Initializabl
     /**
      * This method uses to the data entered by the user to add another ROBOT item to the table
      */
-    private RobotItem createNewRobotItem() {
-        TermId newHpoTermId = model.getNextHpoId();
-        String newTermLabel = termLabelValidator.getLabel().get();
-        List<Term> parentTerms = parentTermAdder.getParentTermList();
-        String definition = this.definitionPane.getUserText();
-        String comment = this.commentPane.getUserText();
-        List<String> pmids = pmidXrefAdderBox.getPmidList();
+    private void createNewRobotItem() {
+        model.setHpoTermLabel(termLabelValidator.getLabel().get());
+        model.setDefinition(this.definitionPane.getDefinition());
+        model.setparentTerms(parentTermAdder.getParentTermList());
+        model.setComment(this.definitionPane.getComment());
+        model.setPmidList(pmidXrefAdderBox.getPmidList());
         Optional<String> opt = gitHubIssueBox.getGitHubIssueNumber();
-        if (opt.isPresent()) {
-            return new RobotItem(newHpoTermId,
-                    newTermLabel,
-                    parentTerms,
-                    definition,
-                    comment,
-                    pmids,
-                    opt.get());
+        opt.ifPresent(model::setGitHubIssue);
+        Optional<RobotItem> itemOpt = model.getRobotItemOpt();
+        if (itemOpt.isPresent()) {
+            model.reset();
+            robotTableView.getItems().add(itemOpt.get());
         } else {
-            return new RobotItem(newHpoTermId,
-                    newTermLabel,
-                    parentTerms,
-                    definition,
-                    comment,
-                    pmids);
+            PopUps.alertDialog("Error", "Could not create ROBOT Item");
         }
+
+
     }
 
 
@@ -461,6 +438,21 @@ public class MainWindowController extends BaseController implements Initializabl
         if (clean) {
             javafx.application.Platform.exit();
         }
+    }
+
+
+    /**
+     * This is an action handler that is used by the SynonymAdder controller
+     */
+    private void setupAddSynonymItemHandler() {
+        EventHandler<ActionEvent> handler = actionEvent -> {
+            Optional<Synonym> opt = this.viewFactory.showAddSynonymWindow();
+            if (opt.isPresent()) {
+                LOGGER.trace("Adding synonym: {}",opt.get());
+                model.addSynonym(opt.get());
+            }
+        };
+        this.pmidXrefAdderBox.setAction(handler);
     }
 
 
