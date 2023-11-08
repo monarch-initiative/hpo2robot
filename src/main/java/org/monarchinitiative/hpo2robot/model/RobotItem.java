@@ -2,15 +2,23 @@ package org.monarchinitiative.hpo2robot.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RobotItem {
+    private static Logger LOGGER = LoggerFactory.getLogger(RobotItem.class);
 
     private TermId newTermId;
 
@@ -29,6 +37,8 @@ public class RobotItem {
     private final List<Term> parentTerms;
 
     private final List<String> pmids;
+
+    private final List<Synonym> synonymList;
 
     private final Optional<String> gitHubIssueOpt;
 
@@ -63,6 +73,7 @@ public class RobotItem {
             pmidStringProperty = new SimpleStringProperty(String.join(";", pmids));
         }
         gitHubIssueOpt = Optional.ofNullable(gitHubIssue);
+        synonymList = new ArrayList<>(synonyms);
     }
 
     /**
@@ -82,6 +93,44 @@ public class RobotItem {
                      String comment,
                      List<String> pmids){
         this(newHpoTermId, newTermLabel, parentTerms, synonyms, definition, comment, pmids, null);
+    }
+
+    public static void exportRobotItems(ObservableList<RobotItem> items, String robotFile) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(robotFile))) {
+            bw.write(header() + "\n");
+            for (var item: items) {
+                bw.write(item.getRow() + "\n");
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        LOGGER.info("Wrote ROBOT file to {}", robotFile);
+    }
+
+    private String getRow() {
+
+        List<String> rowItems = List.of(this.newTermId.getValue(),
+                this.getNewTermLabel()
+                );
+        String parents = parentTerms.stream()
+                .map(Term::id)
+                .map(TermId::getValue)
+                .collect(Collectors.joining("|"));
+        rowItems.add(parents);
+        rowItems.add(getNewTermDefinition());
+        String pmids = getPmids().stream().collect(Collectors.joining("|"));
+        rowItems.add(pmids);
+        rowItems.add(getNewTermComment());
+        String synonyms = synonymList.stream().map(Synonym::toString).collect(Collectors.joining("|"));
+        rowItems.add(synonyms);
+        return String.join("\t", rowItems);
+    }
+
+
+    public static String header() {
+        //HPO ID	Label	Superclass	Definition	Definition xref	Synonym	S xref	has_synonym_type	Narrow synonym	NS xref	has_synonym_type	Broad synonym	BS xref	has_synonym_type	Related synonym	RS xref	has_synonym_type	rdfs:comment	database_cross_reference	has_alternative_id
+        List<String> headerItems = List.of("HPO_ID", "HPO_Label", "Superclass", "Definition", "Definition_PMID", "rdfs:comment", "Synonyms");
+        return String.join("\t", headerItems);
     }
 
     public StringProperty parentTermLabelPropertyProperty() {

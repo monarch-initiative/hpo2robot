@@ -13,12 +13,12 @@
                 <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
             </HBox.margin>
         </Button>
-      <Button mnemonicParsing="false"  text="Export ROBOT File">
+      <Button fx:id="exportRobotButton" mnemonicParsing="false" text="Export ROBOT File">
          <HBox.margin>
             <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
          </HBox.margin>
       </Button>
-      <Button mnemonicParsing="false" text="Clear ROBOT table">
+      <Button fx:id="clearRobotButton" mnemonicParsing="false" text="Clear ROBOT table">
          <HBox.margin>
             <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
          </HBox.margin>

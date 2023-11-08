@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
+import org.controlsfx.control.action.Action;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.AddNewHpoTermController;
 
@@ -38,6 +39,14 @@ public class AddNewHpoTerm extends HBox {
 
     public void setAction(EventHandler<ActionEvent> handler) {
         controller.setAction(handler);
+    }
+    
+    public void setExportRobotAction(EventHandler<ActionEvent> handler) {
+        controller.setExportRobotAction(handler);
+    }
+
+    public void setClearRobotAction(EventHandler<ActionEvent> handler) {
+        controller.setClearRobotAction(handler);
     }
 
 

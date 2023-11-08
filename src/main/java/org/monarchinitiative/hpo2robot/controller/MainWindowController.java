@@ -161,19 +161,11 @@ public class MainWindowController extends BaseController implements Initializabl
             loadHpoAndSetupOntologyTree();
         }
         setUpTableView();
-        setupRobotItemHandler();
+        setupRobotItemHandlers();
         setupAddSynonymItemHandler();
     }
 
 
-
-    private void setupRobotItemHandler() {
-        EventHandler<ActionEvent> handler = actionEvent -> {
-            createNewRobotItem();
-            clearFields();
-        };
-        this.addNewHpoTermBox.setAction(handler);
-    }
 
 
     private void clearFields() {
@@ -454,6 +446,28 @@ public class MainWindowController extends BaseController implements Initializabl
         };
         this.pmidXrefAdderBox.setAction(handler);
     }
+
+    /**
+     * Set up handlers for the three buttons on the new ROBOT item box
+     */
+    private void setupRobotItemHandlers() {
+        EventHandler<ActionEvent> handler = actionEvent -> {
+            createNewRobotItem();
+            clearFields();
+        };
+        this.addNewHpoTermBox.setAction(handler);
+        EventHandler<ActionEvent> clearHandler = actionEvent -> {
+            this.robotTableView.getItems().clear();
+        };
+        this.addNewHpoTermBox.setClearRobotAction(clearHandler);
+        EventHandler<ActionEvent> exportHandler = actionEvent -> {
+            RobotItem.exportRobotItems(robotTableView.getItems(), this.options.getRobotFile());
+        };
+        this.addNewHpoTermBox.setExportRobotAction(exportHandler);
+
+    }
+
+
 
 
 }

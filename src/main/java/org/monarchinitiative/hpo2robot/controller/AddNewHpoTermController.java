@@ -27,7 +27,15 @@ public class AddNewHpoTermController implements Initializable {
     private Button newRobotRowButton;
 
     @FXML
+    private Button clearRobotButton;
+
+    @FXML
+    private Button exportRobotButton;
+
+
+    @FXML
     private Label robotStatusLabel;
+
 
 
     @Override
@@ -48,6 +56,15 @@ public class AddNewHpoTermController implements Initializable {
      */
     public void setAction(EventHandler<ActionEvent> handler) {
         newRobotRowButton.setOnAction(handler);
+    }
+
+
+    public void setExportRobotAction(EventHandler<ActionEvent> handler) {
+        exportRobotButton.setOnAction(handler);
+    }
+
+    public void setClearRobotAction(EventHandler<ActionEvent> handler) {
+        clearRobotButton.setOnAction(handler);
     }
 
 
