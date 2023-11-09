@@ -12,18 +12,18 @@ import org.monarchinitiative.hpo2robot.controller.ValidatingTextEntryPaneControl
 
 public class ValidatingTextEntryPane extends AnchorPane {
 
-    StringProperty buttonNameProperty;
+    final StringProperty buttonNameProperty;
 
-    StringProperty definitionTextProperty;
+    final StringProperty definitionTextProperty;
 
-    StringProperty commentTextProperty;
+    final StringProperty commentTextProperty;
 
-    StringProperty definitionErrorProperty;
+    final StringProperty definitionErrorProperty;
 
-    StringProperty commentErrorProperty;
+    final StringProperty commentErrorProperty;
 
 
-    BooleanProperty isValid;
+    final BooleanProperty isValid;
 
     ValidatingTextEntryPaneController controller;
 

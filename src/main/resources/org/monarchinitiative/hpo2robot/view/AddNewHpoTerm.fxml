@@ -27,7 +27,7 @@
     <HBox>
         <Label fx:id="robotStatusLabel">
             <HBox.margin>
-                <Insets bottom="5.0" left="210.0" right="10.0" top="0" />
+                <Insets bottom="5.0" left="210.0" right="10.0"/>
             </HBox.margin>
         </Label>
     </HBox>

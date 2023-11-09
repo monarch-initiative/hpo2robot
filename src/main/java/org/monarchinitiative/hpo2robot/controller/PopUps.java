@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -296,7 +297,7 @@ public class PopUps {
 
     private static String getGithubIssueHtml(GitHubIssue issue) {
         final String CSS = """
-                p { font-size: 120%; color: dimgray; }
+                p { font-size: 120%; color: darkgray; }
                 p.important { border-style: solid; border-width: 0.5px; border-color: blue; }
                 """;
 
@@ -322,9 +323,24 @@ public class PopUps {
                                 
                 </html>
                 """;
+
+        String [] segments = issue.getBody().split("\n");
+        final Pattern pattern = Pattern.compile("\\*\\*(.*):?\\*\\*");
+        List<String> htmlSegments = new ArrayList<>();
+        for (var seg: segments) {
+            Matcher matcher = pattern.matcher(seg);
+            if (matcher.find()) {
+                String hit = matcher.group(1);
+                htmlSegments.add(String.format("<h2>%s</h2>", hit));
+            } else {
+                htmlSegments.add(String.format("<p>%s</p>", seg));
+            }
+        }
+        String htmlBody = String.join("\n", htmlSegments);
+
         StringBuilder sb = new StringBuilder();
         sb.append(HEADER);
-        sb.append("<p class=\"important\">").append(issue.getBody()).append("</p>");
+        sb.append("<p class=\"important\">").append(htmlBody).append("</p>");
         sb.append(FOOTER);
         return sb.toString();
     }
@@ -348,31 +364,7 @@ public class PopUps {
         //toolStage.initOwner(stage);
         toolStage.setAlwaysOnTop(true);
         toolStage.show();
-
-//        Alert al = new Alert(AlertType.CONFIRMATION);
-//        al.setTitle();
-        /*
-        al.setHeaderText(issue.getTitle());
-        al.setContentText(issue.getBody());
-
-
-        al.getDialogPane().setContent(scrollPane );
-
-        ButtonType buttonTypeOne = new ButtonType("Yes");
-        ButtonType buttonTypeTwo = new ButtonType("No");
-        ButtonType buttonTypeThree = new ButtonType("Cancel");
-
-        al.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeThree);
-        al.show();
-
-
-        toolStage.setScene(toolScene);
-        toolStage.initOwner(stage);
-        toolStage.setAlwaysOnTop(true);
-        toolStage.show();
-
-
-         */return true;
+        return true;
     }
 
 

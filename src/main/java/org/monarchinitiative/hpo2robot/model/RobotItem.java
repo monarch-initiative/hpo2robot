@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RobotItem {
-    private static Logger LOGGER = LoggerFactory.getLogger(RobotItem.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RobotItem.class);
 
     private TermId newTermId;
 
@@ -43,6 +43,8 @@ public class RobotItem {
 
     private final Optional<String> gitHubIssueOpt;
 
+    private final String orcidId;
+
 
     public RobotItem(TermId newHpoTermId,
                      String newTermLabel,
@@ -51,6 +53,7 @@ public class RobotItem {
                      String definition,
                      String comment,
                      List<String> pmids,
+                     String orcid,
                      String gitHubIssue) {
         this.newTermId = newHpoTermId;
         this.newTermLabelProperty = new SimpleStringProperty(newTermLabel);
@@ -58,6 +61,7 @@ public class RobotItem {
         this.newTermCommentProperty = new SimpleStringProperty(comment);
         this.parentTerms = parentTerms;
         issueProperty = new SimpleStringProperty("42");
+        this.orcidId = orcid;
         if (parentTerms.isEmpty()) {
             parentTermLabelProperty = new SimpleStringProperty("Error - no term found");
         } else {
@@ -92,8 +96,9 @@ public class RobotItem {
                      Set<Synonym> synonyms,
                      String definition,
                      String comment,
-                     List<String> pmids){
-        this(newHpoTermId, newTermLabel, parentTerms, synonyms, definition, comment, pmids, null);
+                     List<String> pmids,
+                     String orcid){
+        this(newHpoTermId, newTermLabel, parentTerms, synonyms, definition, comment, pmids,orcid, null);
     }
 
     public static void exportRobotItems(ObservableList<RobotItem> items, File robotFile) {
@@ -123,13 +128,14 @@ public class RobotItem {
         rowItems.add(getNewTermComment());
         String synonyms = synonymList.stream().map(Synonym::toString).collect(Collectors.joining("|"));
         rowItems.add(synonyms);
+        rowItems.add(orcidId);
         return String.join("\t", rowItems);
     }
 
 
     public static String header() {
         //HPO ID	Label	Superclass	Definition	Definition xref	Synonym	S xref	has_synonym_type	Narrow synonym	NS xref	has_synonym_type	Broad synonym	BS xref	has_synonym_type	Related synonym	RS xref	has_synonym_type	rdfs:comment	database_cross_reference	has_alternative_id
-        List<String> headerItems = List.of("HPO_ID", "HPO_Label", "Superclass", "Definition", "Definition_PMID", "rdfs:comment", "Synonyms");
+        List<String> headerItems = List.of("HPO_ID", "HPO_Label", "Superclass", "Definition", "Definition_PMID", "rdfs:comment", "Synonyms", "ORCID");
         return String.join("\t", headerItems);
     }
 
@@ -157,10 +163,9 @@ public class RobotItem {
     }
 
     public String getParentTermDisplay() {
-        String displayText = this.parentTerms
+        return this.parentTerms
                 .stream().map(Term::getName)
                 .collect(Collectors.joining("; "));
-        return displayText;
 
     }
 
@@ -216,5 +221,9 @@ public class RobotItem {
 
     public boolean isValid() {
         return true; //TODO check
+    }
+
+    public List<Synonym> getSynonyms() {
+        return synonymList;
     }
 }

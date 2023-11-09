@@ -84,7 +84,7 @@ public class GitHubIssue implements Comparable<GitHubIssue> {
         private String body="";
         private String label="none";
         private String issueNumber="";
-        List<String> comments = new ArrayList<>();
+        final List<String> comments = new ArrayList<>();
 
         public Builder(String title){
             this.title=title;

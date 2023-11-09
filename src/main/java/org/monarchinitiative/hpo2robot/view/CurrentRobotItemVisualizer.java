@@ -2,10 +2,12 @@ package org.monarchinitiative.hpo2robot.view;
 
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
+import org.monarchinitiative.hpo2robot.model.Synonym;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CurrentRobotItemVisualizer {
 
@@ -430,9 +432,17 @@ public class CurrentRobotItemVisualizer {
         builder.append(row("Parent term(s):", getParentTermString(item.getParentTerms())));
         String pmids = String.join("; ", item.getPmids());
         builder.append(row("PMIDs", pmids));
+        builder.append(row("Synonyms", getSynonymString(item.getSynonyms())));
         builder.append(orcidRow());
         builder.append(HTML_FOOT);
         return builder.toString();
+    }
+
+
+    private String getSynonymString(List<Synonym> synonyms) {
+        return synonyms.stream()
+                .map(Synonym::toString)
+                .collect(Collectors.joining(";"));
     }
 
 

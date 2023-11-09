@@ -108,6 +108,7 @@ public class Model {
     public Optional<RobotItem> getRobotItemOpt() {
         RobotItem item;
         TermId hpoTermId = getNextAvailableHpoId();
+        String orcidId = orcid == null ? options.getOrcid() : orcid;
         if (gitHubIssue != null) {
              item = new RobotItem(hpoTermId,
                     hpoTermLabel,
@@ -116,6 +117,7 @@ public class Model {
                     definition,
                      comment,
                     pmidList,
+                     orcidId,
                      gitHubIssue);
         } else {
             item = new RobotItem(hpoTermId,
@@ -124,7 +126,8 @@ public class Model {
                     synonymSet,
                     definition,
                     comment,
-                    pmidList);
+                    pmidList,
+                    orcidId);
         }
         if (item.isValid()) {
             return Optional.of(item);

@@ -22,7 +22,7 @@
     <HBox prefHeight="8.0" prefWidth="800.0">
         <Label fx:id="errorLabel">
          <HBox.margin>
-             <Insets bottom="5.0" left="210.0" right="10.0" top="0" />
+             <Insets bottom="5.0" left="210.0" right="10.0"/>
          </HBox.margin>
         </Label>
     </HBox>

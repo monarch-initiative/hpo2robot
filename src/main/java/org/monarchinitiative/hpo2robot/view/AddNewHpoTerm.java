@@ -12,7 +12,7 @@ import org.monarchinitiative.hpo2robot.controller.AddNewHpoTermController;
 
 public class AddNewHpoTerm extends HBox {
 
-    StringProperty robotStatusLabelProperty;
+    final StringProperty robotStatusLabelProperty;
 
     AddNewHpoTermController controller;
     public AddNewHpoTerm() {

@@ -50,6 +50,6 @@ public class PmidXrefAdder extends AnchorPane {
     }
 
     public void setAction(EventHandler<ActionEvent> handler) {
-        controller.setAddSynoynmAction(handler);
+        controller.setAddSynonymAction(handler);
     }
 }

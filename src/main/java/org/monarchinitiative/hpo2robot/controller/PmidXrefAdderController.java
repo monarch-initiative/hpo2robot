@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PmidXrefAdderController implements Initializable  {
-    Logger LOGGER = LoggerFactory.getLogger(PmidXrefAdderController.class);
+    final Logger LOGGER = LoggerFactory.getLogger(PmidXrefAdderController.class);
 
     @FXML
     private Button pmidButton;
@@ -71,9 +71,9 @@ public class PmidXrefAdderController implements Initializable  {
 
     /**
      * This is used to set an ActioHandler in {@link MainWindowController}
-     * @param handler
+     * @param handler Action handler that opens a dialog to add a synonym
      */
-    public void setAddSynoynmAction(EventHandler<ActionEvent> handler) {
+    public void setAddSynonymAction(EventHandler<ActionEvent> handler) {
         synonymAdderButton.setOnAction(handler);
     }
 }
