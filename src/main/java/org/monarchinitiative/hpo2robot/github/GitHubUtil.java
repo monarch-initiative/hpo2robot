@@ -28,16 +28,11 @@ public class GitHubUtil {
             c = string.charAt(i);
             switch (c) {
                 case '\\':
-                case '"':
+                case '"', '/':
                     sb.append('\\');
                     sb.append(c);
                     break;
-                case '/':
-                    //                if (b == '<') {
-                    sb.append('\\');
-                    //                }
-                    sb.append(c);
-                    break;
+                //                }
                 case '\b':
                     sb.append("\\b");
                     break;

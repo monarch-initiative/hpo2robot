@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo2robot.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import org.monarchinitiative.phenol.ontology.data.SynonymType;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
@@ -20,6 +21,39 @@ import java.util.stream.Collectors;
 
 public class RobotItem {
     private static final Logger LOGGER = LoggerFactory.getLogger(RobotItem.class);
+
+
+    private static List<String> ROBOT_HEADER_ITEMS = List.of("HPO_ID",
+            "HPO_Label",
+            "Superclass",
+            "Definition",
+            "Definition_PMID",
+            "rdfs:comment",
+            "creator orcid",
+            "github",
+            "Synonyms",
+            "synonym orcid",
+            "synonym pmid",
+            "synonym types");
+
+    private static String ROBOT_HEADER_LINE = String.join("\t", ROBOT_HEADER_ITEMS);
+
+    private static List<String> ROBOT_TEMPLATE_ITEMS = List.of("ID",
+            "LABEL",
+            "SC % SPLIT=|",
+            "A IAO:0000115",
+            ">A oboInOwl:hasDbXref SPLIT=|",
+            "A rdfs:comment",
+            "AI dc:contributor SPLIT=|",
+            "AI IAO:0000233",
+            "A oboInOwl:hasExactSynonym SPLIT=|",
+            ">AI oboInOwl:hasDbXref SPLIT=|",
+            ">A oboInOwl:hasDbXref SPLIT=|",
+            ">AI oboInOwl:hasSynonymType");
+
+    private static String EMPTY_CELL = "";
+
+    private static String ROBOT_TEMPLATE_LINE = String.join("\t", ROBOT_TEMPLATE_ITEMS);
 
     private TermId newTermId;
 
@@ -105,32 +139,95 @@ public class RobotItem {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(robotFile))) {
             bw.write(header() + "\n");
             for (var item: items) {
-                bw.write(item.getRow() + "\n");
+                item.getRows().forEach(r -> {
+                    try {
+                        bw.write(r + "\n");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            LOGGER.error("Could not write ROBOT row: {}", ioe.getMessage());
         }
         LOGGER.info("Wrote ROBOT file to {}", robotFile);
     }
 
-    private String getRow() {
-        List<String> rowItems = new ArrayList<>();
-        rowItems.add(this.newTermId.getValue());
-        rowItems.add(this.getNewTermLabel());
-        String parents = parentTerms.stream()
-                .map(Term::id)
-                .map(TermId::getValue)
-                .collect(Collectors.joining("|"));
-        rowItems.add(parents);
-        rowItems.add(getNewTermDefinition());
-        String pmids = getPmids().stream().collect(Collectors.joining("|"));
-        rowItems.add(pmids);
-        rowItems.add(getNewTermComment());
-        String synonyms = synonymList.stream().map(Synonym::toString).collect(Collectors.joining("|"));
-        rowItems.add(synonyms);
-        rowItems.add(orcidId);
-        return String.join("\t", rowItems);
+
+    /**
+     * "HPO_ID",
+     *             "HPO_Label",
+     *             "Superclass",
+     *             "Definition",
+     *             "Definition_PMID",
+     *             "rdfs:comment",
+     *             "creator orcid",
+     *             "github",
+     *             "Synonyms",
+     *             "synonym orcid",
+     *             "synonym pmid",
+     *             "synonym types"
+     * @return
+     */
+    private List<String> getRows() {
+        List<String> rows = new ArrayList<>();
+        if (synonymList.isEmpty()) {
+            List<String> rowItems = new ArrayList<>();
+            rowItems.add(this.newTermId.getValue());
+            rowItems.add(this.getNewTermLabel());
+            String parents = parentTerms.stream()
+                    .map(Term::id)
+                    .map(TermId::getValue)
+                    .collect(Collectors.joining("|"));
+            rowItems.add(parents);
+            rowItems.add(getNewTermDefinition());
+            String pmids = String.join("|", getPmids());
+            rowItems.add(pmids);
+            rowItems.add(getNewTermComment());
+            rowItems.add(orcidId);
+            rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));
+            rowItems.add(EMPTY_CELL); // synonym
+            rowItems.add(EMPTY_CELL); // synonym type
+            rowItems.add(EMPTY_CELL); // synonym PMID
+            rowItems.add(EMPTY_CELL); // synonym orcid
+            rows.add(String.join("\t", rowItems));
+        } else  {
+            Synonym synonym = synonymList.get(0);
+            List<String> rows = new ArrayList<>();
+            List<String> rowItems = new ArrayList<>();
+            rowItems.add(this.newTermId.getValue());
+            rowItems.add(this.getNewTermLabel());
+            String parents = parentTerms.stream()
+                    .map(Term::id)
+                    .map(TermId::getValue)
+                    .collect(Collectors.joining("|"));
+            rowItems.add(parents);
+            rowItems.add(getNewTermDefinition());
+            String pmids = String.join("|", getPmids());
+            rowItems.add(pmids);
+            rowItems.add(getNewTermComment());
+            rowItems.add(orcidId);
+            rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));
+          //  String synonyms = synonymList.stream().map(Synonym::label).collect(Collectors.joining("|"));
+            rowItems.add(synonym.label());
+            if (synonym.synonymType() == SynonymType.NONE) {
+                rowItems.add(synonym.synonymType().name());
+            } else {
+                rowItems.add(EMPTY_CELL);
+            }
+            rowItems.add(EMPTY_CELL); // synonym PMID
+            rowItems.add(EMPTY_CELL); // synonym orcid
+            rows.add(String.join("\t", rowItems));
+            if  (synonymList.size() > 1) {
+
+            }
+
+
+        return rows;
     }
+
+
 
 
     public static String header() {

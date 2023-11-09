@@ -95,30 +95,34 @@ public class ValidatingTextEntryPaneController implements Initializable {
 
 
     private void validateDefinitionText(String text) {
-       validate(text,validatingButtonDefinition, definitionErrorLabel, isValidDefinitionProperty);
+       validate(text,validatingButtonDefinition, textSummaryDefinition,definitionErrorLabel, isValidDefinitionProperty);
     }
 
     private void validateCommentText(String text) {
-        validate(text,validatingButtonDefinition, definitionErrorLabel, isValidDefinitionProperty);
+        validate(text,validatingButtonComment,textSummaryComment, commentErrorLabel, isValidCommentProperty);
     }
 
-    private void validate(String text, Button button, Label label, BooleanProperty bprop) {
+    private void validate(String text, Button button, Label label, Label errorLabel, BooleanProperty bprop) {
         byte[] bytes = text.getBytes(StandardCharsets.US_ASCII);
         String decodedLine = new String(bytes);
         boolean nonStandardChar = !text.equals(decodedLine);
         if (text.isEmpty()) {
             setInvalid("No text entered.",
-                    button, label, bprop);
+                    button, label, errorLabel, bprop);
         } else if (text.contains("  ")) {
-            setInvalid("Text must not contain multiple consecutive spaces.", button, label, bprop);
+            setInvalid("Text must not contain multiple consecutive spaces.",
+                    button, label, errorLabel, bprop);
         } else if (text.startsWith(" ")) {
-            setInvalid("Text must not start with space.", button, label, bprop);
+            setInvalid("Text must not start with space.",
+                    button, label,errorLabel, bprop);
         } else if (! text.endsWith(".")) {
-            setInvalid("Text must end end with period.", button, label, bprop);
+            setInvalid("Text must end end with period.",
+                    button, label, errorLabel,bprop);
         } else if (nonStandardChar) {
-            setInvalid("Text contains a non-standard character encoding. Please remove it.", button, label, bprop);
+            setInvalid("Text contains a non-standard character encoding. Please remove it.",
+                    button, label, errorLabel, bprop);
         } else {
-            setValid(button, label, bprop);
+            setValid(button,text, label, errorLabel, bprop);
         }
     }
 
@@ -170,16 +174,22 @@ public class ValidatingTextEntryPaneController implements Initializable {
 
 
 
-    private void setInvalid(String message, Button button, Label label, BooleanProperty bprop) {
+    private void setInvalid(String message, Button button,  Label label, Label errorLabel, BooleanProperty bprop) {
         bprop.set(false);
-        label.setText(message);
+        label.setText("");
         button.setStyle("-fx-text-box-border: red; -fx-focus-color: red ;");
+        errorLabel.setStyle("-fx-text-box-border: red; -fx-focus-color: red ;");
+        errorLabel.setText(message);
     }
 
-    private void setValid(Button button, Label label, BooleanProperty bprop) {
+    private void setValid(Button button, String text, Label label, Label errorLabel, BooleanProperty bprop) {
         bprop.set(true);
         button.setText("");
+        button.setStyle("-fx-text-box-border: green; -fx-focus-color: green ;");
         label.setStyle("-fx-text-box-border: green; -fx-focus-color: green ;");
+        String shortText = text.length() < 47 ? text : text.substring(0,47) + "...";
+        label.setText(shortText);
+        errorLabel.setText("");
     }
 
 

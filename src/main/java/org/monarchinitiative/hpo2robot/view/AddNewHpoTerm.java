@@ -9,8 +9,15 @@ import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.AddNewHpoTermController;
+import org.monarchinitiative.hpo2robot.controller.PopUps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * This custom control creates a panel with buttons to add ROBOT issues.
+ */
 public class AddNewHpoTerm extends HBox {
+    private final Logger LOGGER = LoggerFactory.getLogger(AddNewHpoTerm.class);
 
     final StringProperty robotStatusLabelProperty;
 
@@ -26,7 +33,9 @@ public class AddNewHpoTerm extends HBox {
             this.getChildren().add(node);
             robotStatusLabelProperty.bindBidirectional(controller.robotLabelProperty());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Could not load AddNewHpoTerm Widget: {}", e.getMessage());
+            PopUps.showException("Error", "Could not load AddNewHpoTerm Widget",
+                    e.getMessage(), e);
         }
     }
 
