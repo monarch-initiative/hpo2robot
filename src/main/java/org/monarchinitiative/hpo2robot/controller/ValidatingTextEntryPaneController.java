@@ -79,6 +79,7 @@ public class ValidatingTextEntryPaneController implements Initializable {
         validatingButtonDefinition.setText(CREATE_DEFINITION);
         // red text for error messages
         definitionErrorLabel.setTextFill(Color.color(1, 0, 0));
+        commentErrorLabel.setTextFill(Color.color(1, 0, 0));
         validatingButtonComment.setText(CREATE_COMMENT);
         validatingButtonComment.setOnAction(e -> {
             String text = getUserStringFromTextArea("Enter text", "Enter the text of the definition (comment) here. " +

@@ -208,7 +208,7 @@ public class RobotItem {
             rowItems.add(EMPTY_CELL); // synonym orcid
             rows.add(String.join("\t", rowItems));
             if (synonymList.size() > 1) {
-                for (int i = 1; i>synonymList.size();++i) {
+                for (int i = 1; i<synonymList.size();++i) {
                     Synonym syn = synonymList.get(i);
                     rowItems = new ArrayList<>();
                     rowItems.add(this.newTermId.getValue());               // HPO_ID",

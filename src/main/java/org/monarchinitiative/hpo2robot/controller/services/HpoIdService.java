@@ -48,7 +48,7 @@ public class HpoIdService {
                 }
             }
 
-            for (int i = this.lowValue; i < highValue; ++i) {
+            for (int i = lowValue; i < highValue; ++i) {
                 if (! hpoIdSet.contains(i)) {
                     TermId tid = integerToHpoIt(i);
                     availableHpoIdList.add(tid);

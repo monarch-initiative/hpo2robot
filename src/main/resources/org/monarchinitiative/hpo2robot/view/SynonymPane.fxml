@@ -20,16 +20,14 @@
          AnchorPane.bottomAnchor="165.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
          AnchorPane.topAnchor="110.0">
       <VBox prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <RadioButton fx:id="abbreviationRadioButton" minWidth="250.0" mnemonicParsing="false"
-                         text="abbreviation"/>
-            <RadioButton fx:id="laypersonRadioButton" minWidth="250.0" mnemonicParsing="false"
-                         text="layperson term"/>
-            <RadioButton fx:id="pluralRadioButton" minWidth="250.0" mnemonicParsing="false" text="plural form"/>
-            <RadioButton fx:id="ukRadioButton" minWidth="250.0" mnemonicParsing="false" text="UK spelling"/>
-            <RadioButton fx:id="noSynonymTypeRadioButton" minWidth="250.0" mnemonicParsing="false" text="None"/>
+         <RadioButton fx:id="abbreviationRadioButton" minWidth="250.0" mnemonicParsing="false"
+                      text="abbreviation"/>
+         <RadioButton fx:id="laypersonRadioButton" minWidth="250.0" mnemonicParsing="false"
+                      text="layperson term"/>
+         <RadioButton fx:id="pluralRadioButton" minWidth="250.0" mnemonicParsing="false" text="plural form"/>
+         <RadioButton fx:id="ukRadioButton" minWidth="250.0" mnemonicParsing="false" text="UK spelling"/>
+         <RadioButton fx:id="noSynonymTypeRadioButton" minWidth="250.0" mnemonicParsing="false" text="None"/>
 
-         </children>
       </VBox>
       <Button mnemonicParsing="false" stylesheets="@../css/options.css" text="Cancel" onAction="#cancelAction"/>
       <Button mnemonicParsing="false" stylesheets="@../css/options.css" text="OK" onAction="#okAction"/>

@@ -44,7 +44,7 @@ public class ValidatingTextEntryPane extends AnchorPane {
             Node node = loader.load();
             this.getChildren().add(node);
             definitionErrorProperty.bindBidirectional(controller.getDefinitionErrorLabel().textProperty());
-            commentTextProperty.bindBidirectional(controller.getCommentErrorLabel().textProperty());
+            commentErrorProperty.bindBidirectional(controller.getCommentErrorLabel().textProperty());
             definitionTextProperty.bindBidirectional(controller.definitionStringProperty());
             commentTextProperty.bindBidirectional(controller.commentStringProperty());
             isValid.bindBidirectional(controller.isValidDefinitionPropertyProperty());

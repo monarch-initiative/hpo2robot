@@ -1,8 +1,6 @@
 package org.monarchinitiative.hpo2robot.github;
 
 import javafx.application.HostServices;
-import javafx.event.ActionEvent;
-import javafx.scene.paint.Color;
 import org.monarchinitiative.hpo2robot.controller.PopUps;
 
 import java.io.BufferedReader;
