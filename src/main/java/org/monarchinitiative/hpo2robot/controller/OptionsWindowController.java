@@ -149,6 +149,7 @@ public class OptionsWindowController extends BaseController implements Initializ
     }
 
     public void hpJsonDownload(ActionEvent actionEvent) {
+        System.err.println("TODO IMPLEMENT ME");
     }
 
 

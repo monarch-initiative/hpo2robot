@@ -23,7 +23,7 @@ public class RobotItem {
     private static final Logger LOGGER = LoggerFactory.getLogger(RobotItem.class);
 
 
-    private static List<String> ROBOT_HEADER_ITEMS = List.of("HPO_ID",
+    private static final List<String> ROBOT_HEADER_ITEMS = List.of("HPO_ID",
             "HPO_Label",
             "Superclass",
             "Definition",
@@ -36,9 +36,9 @@ public class RobotItem {
             "synonym pmid",
             "synonym types");
 
-    private static String ROBOT_HEADER_LINE = String.join("\t", ROBOT_HEADER_ITEMS);
+    private static final String ROBOT_HEADER_LINE = String.join("\t", ROBOT_HEADER_ITEMS);
 
-    private static List<String> ROBOT_TEMPLATE_ITEMS = List.of("ID",
+    private static final List<String> ROBOT_TEMPLATE_ITEMS = List.of("ID",
             "LABEL",
             "SC % SPLIT=|",
             "A IAO:0000115",
@@ -51,9 +51,9 @@ public class RobotItem {
             ">A oboInOwl:hasDbXref SPLIT=|",
             ">AI oboInOwl:hasSynonymType");
 
-    private static String EMPTY_CELL = "";
+    private static final String EMPTY_CELL = "";
 
-    private static String ROBOT_TEMPLATE_LINE = String.join("\t", ROBOT_TEMPLATE_ITEMS);
+    private static final String ROBOT_TEMPLATE_LINE = String.join("\t", ROBOT_TEMPLATE_ITEMS);
 
     private TermId newTermId;
 
@@ -137,7 +137,8 @@ public class RobotItem {
 
     public static void exportRobotItems(ObservableList<RobotItem> items, File robotFile) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(robotFile))) {
-            bw.write(header() + "\n");
+            bw.write(ROBOT_HEADER_LINE + "\n");
+            bw.write(ROBOT_TEMPLATE_LINE + "\n");
             for (var item: items) {
                 item.getRows().forEach(r -> {
                     try {
@@ -156,45 +157,32 @@ public class RobotItem {
 
 
     /**
-     * "HPO_ID",
-     *             "HPO_Label",
-     *             "Superclass",
-     *             "Definition",
-     *             "Definition_PMID",
-     *             "rdfs:comment",
-     *             "creator orcid",
-     *             "github",
-     *             "Synonyms",
-     *             "synonym orcid",
-     *             "synonym pmid",
-     *             "synonym types"
-     * @return
+     * @return The one or more rows of the ROBOT file that correspond to a GitHub item.
      */
     private List<String> getRows() {
         List<String> rows = new ArrayList<>();
         if (synonymList.isEmpty()) {
-            List<String> rowItems = new ArrayList<>();
+            List<String> rowItems = new ArrayList<>();               // HPO_ID",
             rowItems.add(this.newTermId.getValue());
-            rowItems.add(this.getNewTermLabel());
+            rowItems.add(this.getNewTermLabel());                   //  "HPO_Label",
             String parents = parentTerms.stream()
                     .map(Term::id)
                     .map(TermId::getValue)
                     .collect(Collectors.joining("|"));
-            rowItems.add(parents);
-            rowItems.add(getNewTermDefinition());
+            rowItems.add(parents);                                  //  "Superclass",
+            rowItems.add(getNewTermDefinition());                   // "Definition",
             String pmids = String.join("|", getPmids());
-            rowItems.add(pmids);
-            rowItems.add(getNewTermComment());
-            rowItems.add(orcidId);
-            rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));
-            rowItems.add(EMPTY_CELL); // synonym
-            rowItems.add(EMPTY_CELL); // synonym type
-            rowItems.add(EMPTY_CELL); // synonym PMID
-            rowItems.add(EMPTY_CELL); // synonym orcid
+            rowItems.add(pmids);                                    // "Definition_PMID",
+            rowItems.add(getNewTermComment());                      // "rdfs:comment",
+            rowItems.add(orcidId);                                   //  "creator orcid",
+            rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));         // "github",
+            rowItems.add(EMPTY_CELL);                               // synonym
+            rowItems.add(EMPTY_CELL);                              // synonym orcid
+            rowItems.add(EMPTY_CELL);                            // synonym PMID
+            rowItems.add(EMPTY_CELL);                           // synonym type
             rows.add(String.join("\t", rowItems));
-        } else  {
+        } else {
             Synonym synonym = synonymList.get(0);
-            List<String> rows = new ArrayList<>();
             List<String> rowItems = new ArrayList<>();
             rowItems.add(this.newTermId.getValue());
             rowItems.add(this.getNewTermLabel());
@@ -209,7 +197,7 @@ public class RobotItem {
             rowItems.add(getNewTermComment());
             rowItems.add(orcidId);
             rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));
-          //  String synonyms = synonymList.stream().map(Synonym::label).collect(Collectors.joining("|"));
+            //  String synonyms = synonymList.stream().map(Synonym::label).collect(Collectors.joining("|"));
             rowItems.add(synonym.label());
             if (synonym.synonymType() == SynonymType.NONE) {
                 rowItems.add(synonym.synonymType().name());
@@ -219,9 +207,26 @@ public class RobotItem {
             rowItems.add(EMPTY_CELL); // synonym PMID
             rowItems.add(EMPTY_CELL); // synonym orcid
             rows.add(String.join("\t", rowItems));
-            if  (synonymList.size() > 1) {
-
+            if (synonymList.size() > 1) {
+                for (int i = 1; i>synonymList.size();++i) {
+                    Synonym syn = synonymList.get(i);
+                    rowItems = new ArrayList<>();
+                    rowItems.add(this.newTermId.getValue());               // HPO_ID",
+                    rowItems.add(this.getNewTermLabel());                   //  "HPO_Label"
+                    rowItems.add(EMPTY_CELL);                                  //  "Superclass",
+                    rowItems.add(EMPTY_CELL);                   // "Definition",
+                    rowItems.add(EMPTY_CELL);                                    // "Definition_PMID",
+                    rowItems.add(EMPTY_CELL);                      // "rdfs:comment",
+                    rowItems.add(EMPTY_CELL);                                   //  "creator orcid",
+                    rowItems.add(EMPTY_CELL);         // "github",
+                    rowItems.add(syn.label());                               // synonym
+                    rowItems.add(EMPTY_CELL);                              // synonym orcid
+                    rowItems.add(EMPTY_CELL);                            // synonym PMID
+                    rowItems.add(syn.synonymType().name());                           // synonym type
+                    rows.add(String.join("\t", rowItems));
+                }
             }
+        }
 
 
         return rows;
@@ -229,12 +234,6 @@ public class RobotItem {
 
 
 
-
-    public static String header() {
-        //HPO ID	Label	Superclass	Definition	Definition xref	Synonym	S xref	has_synonym_type	Narrow synonym	NS xref	has_synonym_type	Broad synonym	BS xref	has_synonym_type	Related synonym	RS xref	has_synonym_type	rdfs:comment	database_cross_reference	has_alternative_id
-        List<String> headerItems = List.of("HPO_ID", "HPO_Label", "Superclass", "Definition", "Definition_PMID", "rdfs:comment", "Synonyms", "ORCID");
-        return String.join("\t", headerItems);
-    }
 
     public StringProperty parentTermLabelPropertyProperty() {
         return parentTermLabelProperty;
@@ -323,4 +322,27 @@ public class RobotItem {
     public List<Synonym> getSynonyms() {
         return synonymList;
     }
+
+    public String getIssueSummary() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Adding new term: \n");
+        sb.append("- ID: ").append(this.newTermId.getValue()).append("\n");
+        sb.append("- label: ").append(this.getNewTermLabel()).append("\n");
+        String parents = parentTerms.stream()
+                .map(Term::id)
+                .map(TermId::getValue)
+                .collect(Collectors.joining("|"));
+        sb.append("- parents: ").append(parents).append("\n");
+        String pmids = String.join("|", getPmids());
+        sb.append("- pmid: ").append(pmids).append("\n");
+        sb.append("- def: ").append(getNewTermDefinition()).append("\n");
+        sb.append("- comment: ").append(getNewTermComment()).append("\n");
+        sb.append("- orcid: ").append(orcidId).append("\n");
+        sb.append("- github ID: ").append(gitHubIssueOpt.orElse(EMPTY_CELL)).append("\n");
+        String syn = synonymList.stream().map(Synonym::toString).collect(Collectors.joining("|"));
+        sb.append("- synonyms: ").append(syn).append("\n");
+        return sb.toString();
+    }
 }
+
+

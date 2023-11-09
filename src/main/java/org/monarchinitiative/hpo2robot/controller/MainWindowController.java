@@ -13,9 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
+import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -28,6 +26,7 @@ import javafx.stage.Window;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
+import org.monarchinitiative.hpo2robot.github.GitHubUtil;
 import org.monarchinitiative.hpo2robot.model.Model;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
 import org.monarchinitiative.hpo2robot.model.Synonym;
@@ -165,9 +164,44 @@ public class MainWindowController extends BaseController implements Initializabl
         setUpTableView();
         setupRobotItemHandlers();
         setupAddSynonymItemHandler();
+        setUpGithubColumnContextMenu();
     }
 
+    private void setUpGithubColumnContextMenu() {
+        issueCol.setCellFactory(
+                (column) -> {
+                    final TableCell<RobotItem, String> cell = new TableCell<>();
+                    cell.itemProperty().addListener(// ChangeListener
+                            (obs, oldValue, newValue) -> {
+                                if (newValue != null) {
+                                    final ContextMenu cellMenu = new ContextMenu();
+                                    MenuItem ghMenuItem = new MenuItem("Open GitHub Issue");
+                                    ghMenuItem.setOnAction(e -> {
+                                        RobotItem item = cell.getTableRow().getItem();
+                                        String gitHubIssue = item.getIssue();
+                                        GitHubUtil.openInGithubAction(gitHubIssue, hostServicesOpt.get());
+                                    });
+                                    MenuItem summaryMenuItem = new MenuItem("Copy item summary");
+                                    summaryMenuItem.setOnAction(e -> {
+                                        RobotItem item = cell.getTableRow().getItem();
+                                        String summary = item.getIssueSummary();
+                                        final Clipboard clipboard = Clipboard.getSystemClipboard();
+                                        final ClipboardContent content = new ClipboardContent();
+                                        content.putString(summary);
+                                        clipboard.setContent(content);
 
+                                    });
+                                    cellMenu.getItems().addAll(ghMenuItem, summaryMenuItem);
+                                    cell.setContextMenu(cellMenu);
+                                }
+
+                            }
+
+                    );
+                    cell.textProperty().bind(cell.itemProperty());
+                    return cell;
+                });
+    }
 
 
     private void clearFields() {

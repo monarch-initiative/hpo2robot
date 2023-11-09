@@ -27,11 +27,11 @@ public class HpoIdService {
     private final Logger LOGGER = LoggerFactory.getLogger(HpoIdService.class);
     /** List of identifiers that we can use for new terms */
     private final List<TermId> availableHpoIdList;
-    private final Pattern hpIdPattern = Pattern.compile("http://purl.obolibrary.org/obo/HP_(\\d{7,7})");
+    private final static Pattern hpIdPattern = Pattern.compile("http://purl.obolibrary.org/obo/HP_(\\d{7,7})");
 
 
-    private final Integer lowValue = 6_000_000;
-    private final Integer highValue = 6_500_000;
+    private final static Integer lowValue = 6_000_000;
+    private final static Integer highValue = 6_500_000;
 
     public HpoIdService(Path hpoEditOwl) {
         Set<Integer> hpoIdSet = new HashSet<>();

@@ -1,5 +1,8 @@
 package org.monarchinitiative.hpo2robot.github;
 
+import javafx.application.HostServices;
+import javafx.event.ActionEvent;
+import javafx.scene.paint.Color;
 import org.monarchinitiative.hpo2robot.controller.PopUps;
 
 import java.io.BufferedReader;
@@ -91,6 +94,18 @@ public class GitHubUtil {
         }
 
         return Optional.empty();
+    }
+
+
+
+    public static void openInGithubAction(String issueNumber, HostServices services) {
+        if (issueNumber == null) {
+            PopUps.alertDialog("Could not open GitHub", "Issue was null");
+            return;
+        }
+        final String urlPart = "https://github.com/obophenotype/human-phenotype-ontology/issues/";
+        String url = urlPart + issueNumber;
+        services.showDocument(url);
     }
 
 }
