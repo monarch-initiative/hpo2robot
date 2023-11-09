@@ -189,7 +189,7 @@ public class ValidatingTextEntryPaneController implements Initializable {
 
     public Label getCommentErrorLabel() { return commentErrorLabel;}
 
-    public Button getDefinmitionValidateButton() {
+    public Button getDefinitionValidateButton() {
         return validatingButtonDefinition;
     }
 

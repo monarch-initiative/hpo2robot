@@ -23,6 +23,11 @@
             <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
         </HBox.margin>
       </Button>
+      <Button fx:id="clearGitHubIssue" mnemonicParsing="false" text="Clear">
+         <HBox.margin>
+            <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
+         </HBox.margin>
+      </Button>
     </HBox>
     <HBox prefHeight="8.0" prefWidth="800.0">
         <Label fx:id="gitHubStatusLabel">

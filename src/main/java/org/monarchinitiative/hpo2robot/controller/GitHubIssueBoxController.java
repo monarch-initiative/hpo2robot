@@ -41,6 +41,8 @@ public class GitHubIssueBoxController implements Initializable  {
     private Button openInGithubButton;
 
     private Map<GitHubIssue, Boolean> gitHubIssueMap;
+    @FXML
+    private Button clearGitHubIssue;
 
     private Optional<GitHubIssue> currentIssueOpt;
 
@@ -62,6 +64,12 @@ public class GitHubIssueBoxController implements Initializable  {
         getIssuesButton.setOnAction(this::getGithubIssuesAction);
         nextIssueButton.setOnAction(this::nextGithubIssueAction);
         openInGithubButton.setOnAction(this::openInGithubAction);
+        clearGitHubIssue.setOnAction(e -> {
+            this.currentIssueOpt = Optional.empty();
+            this.gitHubStatusLabel.setTextFill(Color.BLACK);
+            this.gitHubStatusLabel.setFont(SMALL_FONT);
+            this.gitHubStatusLabel.setText("");
+        });
     }
     @FXML
     private void openInGithubAction(ActionEvent e) {

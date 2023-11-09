@@ -48,7 +48,7 @@ public class ValidatingTextEntryPane extends AnchorPane {
             definitionTextProperty.bindBidirectional(controller.definitionStringProperty());
             commentTextProperty.bindBidirectional(controller.commentStringProperty());
             isValid.bindBidirectional(controller.isValidDefinitionPropertyProperty());
-            this.buttonNameProperty.bindBidirectional(controller.getDefinmitionValidateButton().textProperty());
+            this.buttonNameProperty.bindBidirectional(controller.getDefinitionValidateButton().textProperty());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,6 +67,9 @@ public class ValidatingTextEntryPane extends AnchorPane {
 
     public void clearFields() {
         this.definitionTextProperty.set("");
+        this.commentTextProperty.set("");
+        this.definitionErrorProperty.set("");
+        this.commentErrorProperty.set("");
     }
 
     public String getDefinition() {
