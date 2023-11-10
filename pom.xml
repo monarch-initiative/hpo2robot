@@ -41,34 +41,17 @@
             <groupId>org.monarchinitiative.phenol</groupId>
             <artifactId>phenol-core</artifactId>
             <version>${phenol.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.monarchinitiative.phenol</groupId>
             <artifactId>phenol-annotations</artifactId>
             <version>${phenol.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.monarchinitiative.phenol</groupId>
             <artifactId>phenol-io</artifactId>
             <version>${phenol.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

@@ -5,35 +5,46 @@ import org.monarchinitiative.hpo2robot.model.Options;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.Properties;
 
 public class PersistenceAccess {
 
-    private final String HPO2ROBOT_DIRNAME = ".hpo2robot";
-    private final String HPO2ROBOT_DIRPATH = System.getProperty("user.home") + File.separator + HPO2ROBOT_DIRNAME;
+    private static final String HPO2ROBOT_DIRNAME = ".hpo2robot";
+    private static final String HPO2ROBOT_DIRPATH = System.getProperty("user.home") + File.separator + HPO2ROBOT_DIRNAME;
+    private static final String HP_JSON_FILE = "hp.json.file";
+    private static final String HP_OWL_FILE = "hp.owl.file";
+    private static final String USER_ORCID = "user.orcid";
 
-    private final String HPO2ROBOT_LOCATION = HPO2ROBOT_DIRPATH + File.separator + "hpo2robot_options.ser";
+    private static final String HPO2ROBOT_LOCATION = HPO2ROBOT_DIRPATH + File.separator + "hpo2robot_options.properties";
 
-    public Optional<Options> loadFromPersistence(){
+    private PersistenceAccess() {
+    }
+
+    public static Options loadFromPersistence(){
+        Options o = new Options();
         File f = new File(HPO2ROBOT_LOCATION);
         if (! f.isFile()) {
             // The options file has not been created yet or there is
             // some other problem. Then the user will have to
             // create new options
-            return Optional.empty();
+            return o;
         }
-        try {
-            FileInputStream fileInputStream
-                    = new FileInputStream(HPO2ROBOT_LOCATION);
-            ObjectInputStream objectInputStream
-                    = new ObjectInputStream(fileInputStream);
-            Options o = (Options) objectInputStream.readObject();
-            objectInputStream.close();
-            return Optional.of(o);
-        } catch (IOException | ClassNotFoundException e) {
+        Properties properties = new Properties();
+        try (FileInputStream is = new FileInputStream(HPO2ROBOT_LOCATION)) {
+            properties.load(is);
+            if (properties.containsKey(HP_JSON_FILE))
+                o.setHpJsonFile(new File(properties.getProperty(HP_JSON_FILE)));
+
+            if (properties.containsKey(HP_OWL_FILE))
+                o.setHpEditOwlFile(new File(properties.getProperty(HP_OWL_FILE)));
+
+            if (properties.containsKey(USER_ORCID))
+                o.setOrcid(properties.getProperty(USER_ORCID));
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return Optional.empty();
+
+        return o;
     }
 
 
@@ -44,16 +55,24 @@ public class PersistenceAccess {
      * parent directories that do not exist. This method does not throw an
      * exception if the directory already exists.
      */
-    public void saveToPersistence(Options options) {
+    public static void saveToPersistence(Options options) {
+        Properties properties = new Properties();
+
+        File hpJsonFile = options.getHpJsonFile();
+        if (hpJsonFile != null)
+            properties.setProperty(HP_JSON_FILE, hpJsonFile.getAbsolutePath());
+
+        File hpEditOwlFile = options.getHpEditOwlFile();
+        if (hpEditOwlFile != null)
+            properties.setProperty(HP_OWL_FILE, hpEditOwlFile.getAbsolutePath());
+
+        properties.setProperty(USER_ORCID, options.getOrcid());
+
         try {
             Files.createDirectories(Paths.get(HPO2ROBOT_DIRPATH));
-            FileOutputStream fileOutputStream
-                    = new FileOutputStream(HPO2ROBOT_LOCATION);
-            ObjectOutputStream objectOutputStream
-                    = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(options);
-            objectOutputStream.flush();
-            objectOutputStream.close();
+            try (FileOutputStream os = new FileOutputStream(HPO2ROBOT_LOCATION)) {
+                properties.store(os, "hpo2robot");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

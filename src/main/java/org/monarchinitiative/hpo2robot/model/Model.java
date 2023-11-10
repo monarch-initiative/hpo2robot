@@ -5,7 +5,7 @@ import org.monarchinitiative.hpo2robot.controller.services.HpoIdService;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.*;
 
 
@@ -58,12 +58,13 @@ public class Model {
 
     public void setOptions(Options options) {
         this.options = options;
-        String hpoEditOwl = options.getHpEditOwlFile();
+        File hpoEditOwl = options.getHpEditOwlFile();
         if (hpoEditOwl == null) {
             PopUps.alertDialog("Error", "Attempt to set up HPO ID service with invalid path");
+        } else {
+            HpoIdService hpoIdService = new HpoIdService(hpoEditOwl.toPath());
+            availableHpoIds = hpoIdService.getAvailableHpoIdList();
         }
-        HpoIdService hpoIdService = new HpoIdService(Path.of(hpoEditOwl));
-        availableHpoIds = hpoIdService.getAvailableHpoIdList();
     }
 
 

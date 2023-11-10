@@ -25,3 +25,5 @@
 hs_err_pid*
 replay_pid*
 /pom.xml.versionsBackup
+
+target/
