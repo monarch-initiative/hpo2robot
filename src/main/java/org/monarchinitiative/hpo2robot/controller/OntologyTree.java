@@ -140,7 +140,7 @@ public class OntologyTree extends VBox {
     }
 
     @FXML
-    private void addButtonAction() {
+    public void addButtonAction() {
         TreeItem<Term> selected = ontologyTreeView.getSelectionModel().getSelectedItem();
         Term phenotypeTerm = selected.getValue();
         addHook.get().accept(phenotypeTerm);

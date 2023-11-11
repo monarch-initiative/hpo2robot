@@ -188,9 +188,7 @@ public class MainWindowController extends BaseController implements Initializabl
                                     cellMenu.getItems().addAll(ghMenuItem, summaryMenuItem);
                                     cell.setContextMenu(cellMenu);
                                 }
-
                             }
-
                     );
                     cell.textProperty().bind(cell.itemProperty());
                     return cell;

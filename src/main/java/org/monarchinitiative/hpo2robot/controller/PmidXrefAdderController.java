@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
+import org.monarchinitiative.hpo2robot.controller.widgets.UserStringFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +35,12 @@ public class PmidXrefAdderController implements Initializable  {
     @FXML
     private Label synonymAdderLabel;
 
+    @FXML
+    private Button orcidButton;
+
     private List<String> pmidList;
+
+    private String customOrcid = null;
 
 
 
@@ -56,12 +63,37 @@ public class PmidXrefAdderController implements Initializable  {
             // TODO what XREFs do we want to allow and what prefixes?
             LOGGER.error("Set XREF");
         });
+
+        orcidButton.setOnAction(actionEvent -> {
+            Optional<String> opt = UserStringFetcher.fetchORCID();
+            if (opt.isPresent()) {
+                System.out.println("GOT ORCID " + opt.get());
+                customOrcid = opt.get();
+            } else {
+                LOGGER.error("Could not retrieve custom ORCID");
+            }
+
+        });
     }
+    private static final String NOT_INITIALIZED = "not initialized";
 
+    public static String getStringFromUser(String windowTitle, String promptText, String labelText) {
+        TextInputDialog dialog = new TextInputDialog(promptText);
+        dialog.setTitle(windowTitle);
+        dialog.setHeaderText(null);
+        dialog.setContentText(labelText);
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse(NOT_INITIALIZED);
 
+    }
 
     public List<String> getPmidList() {
         return pmidList;
+    }
+
+
+    public Optional<String> customOrcidOpt() {
+        return Optional.ofNullable(customOrcid);
     }
 
     public void clearFields() {
