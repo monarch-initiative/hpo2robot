@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * This custom control creates a panel with buttons to add ROBOT issues.
  */
 public class AddNewHpoTerm extends HBox {
-    private final Logger LOGGER = LoggerFactory.getLogger(AddNewHpoTerm.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AddNewHpoTerm.class);
 
     final StringProperty robotStatusLabelProperty;
 

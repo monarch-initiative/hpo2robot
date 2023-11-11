@@ -10,7 +10,6 @@ import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.ParentTermAdderController;
 import org.monarchinitiative.hpo2robot.model.HpoRosettaStone;
 import org.monarchinitiative.phenol.ontology.data.MinimalOntology;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,23 +69,6 @@ public class ParentTermAdder extends HBox {
         }
         return parentList;
     }
-
-// TODO(pnrobinson) - I am commenting out the method below since it appears to be unused.
-//  Please remove the method entirely or let me know if we really really need this one.
-//    /**
-//     * Links this widget to the OntologyTree widget such that if the user presses "Add", the
-//     * current term gets added to the parent term text field.
-//     * @param ontologyTree reference to the OntologyTree widget on the left side of the GUI
-//     */
-//    public void linkOntologyTreeAddButton(OntologyTree ontologyTree) {
-//        Button button = ontologyTree.getAddButton();
-//        TextField textField = ontologyTree.getSearchTextField();
-//        button.setOnAction(e -> {
-//            String text = textField.getText();
-//            parentTermLabelStringProperty.set(text);
-//        });
-//    }
-
 
     public void setParentTerm(String label) {
         this.controller.getTextField().setText(label);

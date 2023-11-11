@@ -337,12 +337,10 @@ public class PopUps {
             }
         }
         String htmlBody = String.join("\n", htmlSegments);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(HEADER);
-        sb.append("<p class=\"important\">").append(htmlBody).append("</p>");
-        sb.append(FOOTER);
-        return sb.toString();
+        return HEADER +
+                "<H1>HPO Issue #" + issue.getIssueNumber() + "</H1>\n" +
+                "<p class=\"important\">" + htmlBody + "</p>" +
+                FOOTER;
     }
 
 
@@ -359,9 +357,8 @@ public class PopUps {
         Button OK = new Button("Close");
         OK.setOnAction(e -> toolStage.close());
         vbox.getChildren().add(OK);
-        Scene toolScene = new Scene(vbox, 700, 500);
+        Scene toolScene = new Scene(vbox, 1000, 600);
         toolStage.setScene(toolScene);
-        //toolStage.initOwner(stage);
         toolStage.setAlwaysOnTop(true);
         toolStage.show();
         return true;

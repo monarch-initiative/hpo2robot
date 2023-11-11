@@ -132,7 +132,7 @@ public class RobotItem {
                      String comment,
                      List<String> pmids,
                      String orcid){
-        this(newHpoTermId, newTermLabel, parentTerms, synonyms, definition, comment, pmids,orcid, null);
+        this(newHpoTermId, newTermLabel, parentTerms, synonyms, definition, comment, pmids, orcid, null);
     }
 
     public static void exportRobotItems(ObservableList<RobotItem> items, File robotFile) {
@@ -147,7 +147,6 @@ public class RobotItem {
                         throw new RuntimeException(e);
                     }
                 });
-
             }
         } catch (IOException ioe) {
             LOGGER.error("Could not write ROBOT row: {}", ioe.getMessage());

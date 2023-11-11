@@ -1,7 +1,6 @@
 package org.monarchinitiative.hpo2robot.model;
 
 import org.monarchinitiative.phenol.ontology.data.MinimalOntology;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
@@ -13,7 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class HpoRosettaStone {
-    private final Logger LOGGER = LoggerFactory.getLogger(HpoRosettaStone.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(HpoRosettaStone.class);
 
     private final Map<String, Term> labelToTermMap;
 
