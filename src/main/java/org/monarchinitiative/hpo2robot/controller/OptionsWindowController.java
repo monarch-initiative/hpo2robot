@@ -50,7 +50,7 @@ public class OptionsWindowController extends BaseController implements Initializ
        String hp_json = this.hpJsonProperty.get();
         String orcid = orcidProperty.get();
         if (! hp_json.equals(NOT_INITIALIZED)) {
-            options.setHpJsonFile(hp_json);
+            options.setHpJsonFile(new File(hp_json));
         }
         if (! orcid.equals(NOT_INITIALIZED)) {
             options.setOrcid(orcid);
@@ -96,7 +96,7 @@ public class OptionsWindowController extends BaseController implements Initializ
         Optional<File> opt = setFile("Select hp.json File", "JSON file", "*.json");
         if (opt.isPresent()) {
             File f = opt.get();
-            this.options.setHpJsonFile(f.getAbsolutePath());
+            this.options.setHpJsonFile(f);
             this.hpJsonProperty.set(f.getAbsolutePath());
         }
     }
@@ -158,7 +158,7 @@ public class OptionsWindowController extends BaseController implements Initializ
         Optional<File> opt = setFile("Choose hp-edit.owl file", "OWL file", "*.owl");
         if (opt.isPresent()) {
             File f = opt.get();
-            this.options.setHpEditOwlFile(f.getAbsolutePath());
+            this.options.setHpEditOwlFile(f);
             this.hpEditOwlProperty.set(f.getAbsolutePath());
         }
     }

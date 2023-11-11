@@ -74,20 +74,21 @@ public class ParentTermAdder extends HBox {
         return parentList;
     }
 
-
-    /**
-     * Links this widget to the OntologyTree widget such that if the user presses "Add", the
-     * current term gets added to the parent term text field.
-     * @param ontologyTree reference to the OntologyTree widget on the left side of the GUI
-     */
-    public void linkOntologyTreeAddButton(OntologyTree ontologyTree) {
-        Button button = ontologyTree.getAddButton();
-        TextField textField = ontologyTree.getSearchTextField();
-        button.setOnAction(e -> {
-            String text = textField.getText();
-            parentTermLabelStringProperty.set(text);
-        });
-    }
+// TODO(pnrobinson) - I am commenting out the method below since it appears to be unused.
+//  Please remove the method entirely or let me know if we really really need this one.
+//    /**
+//     * Links this widget to the OntologyTree widget such that if the user presses "Add", the
+//     * current term gets added to the parent term text field.
+//     * @param ontologyTree reference to the OntologyTree widget on the left side of the GUI
+//     */
+//    public void linkOntologyTreeAddButton(OntologyTree ontologyTree) {
+//        Button button = ontologyTree.getAddButton();
+//        TextField textField = ontologyTree.getSearchTextField();
+//        button.setOnAction(e -> {
+//            String text = textField.getText();
+//            parentTermLabelStringProperty.set(text);
+//        });
+//    }
 
 
     public void setParentTerm(String label) {

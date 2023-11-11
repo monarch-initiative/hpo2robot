@@ -6,15 +6,12 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.*;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -24,22 +21,18 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Window;
 import javafx.util.Callback;
-import org.monarchinitiative.hpo2robot.Launcher;
-import org.monarchinitiative.hpo2robot.controller.services.LoadHpoService;
 import org.monarchinitiative.hpo2robot.github.GitHubUtil;
 import org.monarchinitiative.hpo2robot.model.Model;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
 import org.monarchinitiative.hpo2robot.model.Synonym;
 import org.monarchinitiative.hpo2robot.view.*;
-import org.monarchinitiative.hpo2robot.model.Options;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
+import org.monarchinitiative.phenol.io.OntologyLoader;
+import org.monarchinitiative.phenol.ontology.data.MinimalOntology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -48,6 +41,7 @@ import org.slf4j.LoggerFactory;
 public class MainWindowController extends BaseController implements Initializable {
     private final Logger LOGGER = LoggerFactory.getLogger(MainWindowController.class);
 
+    private final ObjectProperty<MinimalOntology> hpOntology = new SimpleObjectProperty<>();
     @FXML
     public MenuItem newMenuItem;
     @FXML
@@ -80,7 +74,7 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public ValidatingTextEntryPane definitionPane;
     @FXML
-    private StackPane ontologyTreeViewPane;
+    public OntologyTree ontologyTree;
     @FXML
     private ParentTermAdder parentTermAdder;
     @FXML
@@ -88,10 +82,6 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public Label statusBarLabel;
     private StringProperty statusBarTextProperty;
-    private BooleanProperty readinessProperty;
-    private Options options;
-    private Ontology hpOntology;
-    private  OntologyTree ontologyTree;
     private Optional<HostServices> hostServicesOpt;
 
     private final Model model;
@@ -110,11 +100,6 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     void optionsAction() {
         this.viewFactory.showOptionsWindow();
-        options = viewFactory.getOptions();
-        if (checkOptionsReadiness()) {
-            loadHpoAndSetupOntologyTree();
-            model.setOptions(options);
-        }
     }
 
 
@@ -126,25 +111,37 @@ public class MainWindowController extends BaseController implements Initializabl
      * browser on the left of the GUI.
      */
     private void loadHpoAndSetupOntologyTree() {
-        LOGGER.trace("loading hp.json");
-        SimpleDoubleProperty progress = new SimpleDoubleProperty(0.0);
-       // progress.addListener((obj, oldvalue, newvalue) -> updateProgress(newvalue.doubleValue(), 100) );
-        LoadHpoService service = new LoadHpoService(options.getHpJsonFile());
-        service.setOnSucceeded(e -> {
-            this.hpOntology = service.getValue();
-            Map<String, String> metamap = hpOntology.getMetaInfo();
-            String version = metamap.getOrDefault("data-version", "n/a");
-            LOGGER.info("Loaded HPO, version {}", version);
-            ontologyLoadedProperty.set(true);
-            if (checkOptionsReadiness()) {
-                setupGuiOntologyTree(progress);
-            }
-        });
-        service.setOnFailed(e -> {
-            LOGGER.error("Could not load hp.json");
-            ontologyLoadedProperty.set(false);
-        });
-        service.start();
+        ontologyTree.addHookProperty().set(this::addPhenotypeTerm);
+        ontologyTree.ontologyProperty().bind(hpOntology);
+
+        // Setup event handlers to update HPO in case the user changes path to another one
+        viewFactory.getOptions().hpJsonFileProperty().addListener((obs, old, hpJsonFilePath) -> loadHpo(hpJsonFilePath));
+        // Do the actual loading..
+        loadHpo(viewFactory.getOptions().getHpJsonFile());
+    }
+
+    private void loadHpo(File hpJsonFilePath) {
+        if (hpJsonFilePath != null && hpJsonFilePath.isFile()) {
+            // Path to HPO is available.
+            Task<MinimalOntology> hpoLoadTask = new Task<>() {
+                @Override
+                protected MinimalOntology call() {
+                    MinimalOntology hpoOntology = OntologyLoader.loadOntology(hpJsonFilePath);
+                    LOGGER.info("Loaded HPO, version {}", hpoOntology.version().orElse("n/a"));
+                    return hpoOntology;
+                }
+            };
+            hpoLoadTask.setOnSucceeded(e -> hpOntology.set(hpoLoadTask.getValue()));
+            hpoLoadTask.setOnFailed(e -> {
+                LOGGER.warn("Could not load HPO from {}", hpJsonFilePath.getAbsolutePath());
+                hpOntology.set(null);
+            });
+            Thread thread = new Thread(hpoLoadTask);
+            thread.start();
+        } else {
+            // We want to reset HPO.
+            hpOntology.set(null);
+        }
     }
 
 
@@ -155,12 +152,9 @@ public class MainWindowController extends BaseController implements Initializabl
         this.gitHubIssueBox.setHostServices(this.hostServicesOpt);
         termLabelValidator.setFieldLabel("New Term Label");
         setUpStatusBar();
-        readinessProperty = new SimpleBooleanProperty(false);
         setUpKeyAccelerators();
-        boolean ready = checkOptionsReadiness();
-        if (ready) {
-            loadHpoAndSetupOntologyTree();
-        }
+        setupStatusBarOptions();
+        loadHpoAndSetupOntologyTree();
         setUpTableView();
         setupRobotItemHandlers();
         setupAddSynonymItemHandler();
@@ -343,37 +337,28 @@ public class MainWindowController extends BaseController implements Initializabl
      */
     private void showItemInTable(RobotItem item) {
         WebEngine engine = this.currentRobotView.getEngine();
-        CurrentRobotItemVisualizer visualizer = new CurrentRobotItemVisualizer(this.options);
+        CurrentRobotItemVisualizer visualizer = new CurrentRobotItemVisualizer(viewFactory.getOptions());
         String html = visualizer.toHTML(item);
         engine.loadContent(html);
     }
 
-    private boolean checkOptionsReadiness() {
-       this.options = viewFactory.getOptions();
-       readinessProperty.set(options.isValid());
-       statusBarOptions();
-       if (options.isValid()) {
-           model.setOptions(options);
-       }
-       return options.isValid();
-    }
-
-
-    private void statusBarOptions() {
-        if (readinessProperty.get()) {
-            statusBarTextProperty.set("input data: ready");
-            statusBarLabel.setTextFill(Color.BLACK);
-            statusBarLabel.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
-            if (! ontologyLoadedProperty.get()) {
-                statusBarTextProperty.set("hp.json not loaded.");
+    private void setupStatusBarOptions() {
+        viewFactory.getOptions().isReadyProperty().addListener((obs, old, novel) -> {
+            if (novel) {
+                statusBarTextProperty.set("input data: ready");
+                statusBarLabel.setTextFill(Color.BLACK);
+                statusBarLabel.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
+                if (! ontologyLoadedProperty.get()) {
+                    statusBarTextProperty.set("hp.json not loaded.");
+                    statusBarLabel.setTextFill(Color.RED);
+                    statusBarLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
+                }
+            } else {
+                statusBarTextProperty.set(viewFactory.getOptions().getErrorMessage());
                 statusBarLabel.setTextFill(Color.RED);
                 statusBarLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
             }
-        } else {
-            statusBarTextProperty.set(this.options.getErrorMessage());
-            statusBarLabel.setTextFill(Color.RED);
-            statusBarLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
-        }
+        });
     }
 
     private void setUpStatusBar() {
@@ -392,58 +377,6 @@ public class MainWindowController extends BaseController implements Initializabl
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.META_DOWN));
         exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.X, KeyCombination.META_DOWN));
         optionsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.META_DOWN));
-    }
-
-
-    private void setupGuiOntologyTree(SimpleDoubleProperty progress) {
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() {
-                progress.addListener((obj, oldvalue, newvalue) -> updateProgress(newvalue.doubleValue(), 100) );
-                updateProgress(100, 100);
-                return null;
-            }
-        };
-
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        progressIndicator.progressProperty().bind(task.progressProperty());
-        progressIndicator.setMinHeight(70);
-        progressIndicator.setMinWidth(70);
-        progressIndicator.setMaxHeight(70);
-        progressIndicator.setMaxWidth(70);
-        ontologyTreeViewPane.setMinWidth(250);
-        Label initOntoLabel=new Label("initializing HPO browser");
-
-        task.setOnRunning(event -> {
-            ontologyTreeViewPane.getChildren().addAll(progressIndicator,initOntoLabel);
-            StackPane.setAlignment(progressIndicator, Pos.CENTER);
-        });
-
-        task.setOnSucceeded(event -> {
-            ontologyTreeViewPane.getChildren().clear();
-            ontologyTreeViewPane.getChildren().remove(initOntoLabel);
-            setupOntologyTreeView();
-            this.parentTermAdder.setOntology(this.hpOntology);
-            parentTermAdder.linkOntologyTreeAddButton(ontologyTree);
-        });
-
-        new Thread(task).start();
-    }
-
-
-    private void setupOntologyTreeView() {
-        Consumer<Term> addHook = this::addPhenotypeTerm;
-        this.ontologyTree = new OntologyTree(hpOntology, addHook);
-        FXMLLoader ontologyTreeLoader = new FXMLLoader(Launcher.class.getResource("view/OntologyTreeViewPane.fxml"));
-        ontologyTreeLoader.setControllerFactory(clazz -> this.ontologyTree);
-        try {
-            ontologyTreeViewPane.getChildren().add(ontologyTreeLoader.load());
-        } catch (IOException e) {
-            PopUps.showException("Error",
-                    "Could not setup up ontology tree",
-                    e.getMessage(),
-                    e);
-        }
     }
 
     /**

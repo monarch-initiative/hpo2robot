@@ -8,8 +8,6 @@ import org.monarchinitiative.hpo2robot.controller.services.GetOptionsService;
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.view.ViewFactory;
 
-import java.util.Optional;
-
 /**
  * A JavaFX App for creating ROBOT templates to add or modify terms
  * of the Human Phenotype Ontology (HPO)
@@ -27,9 +25,7 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) {
-        PersistenceAccess persistenceAccess = new PersistenceAccess();
-        Optional<Options> opt = persistenceAccess.loadFromPersistence();
-        Options options = opt.orElse(new Options());
+        Options options = PersistenceAccess.loadFromPersistence();
         HostServices hostServices = getHostServices();
         viewFactory = new ViewFactory(options, hostServices);
         viewFactory.showMainWindow();
@@ -58,8 +54,7 @@ public class Launcher extends Application {
     @Override
     public void stop() {
         if (viewFactory != null) {
-            PersistenceAccess persistenceAccess = new PersistenceAccess();
-            persistenceAccess.saveToPersistence(viewFactory.getOptions());
+            PersistenceAccess.saveToPersistence(viewFactory.getOptions());
         }
 
 
