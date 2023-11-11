@@ -457,16 +457,11 @@ public class CurrentRobotItemVisualizer {
 
 
     private String row(String key, String value) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<tr class=\"row100\">");
-        builder.append("<td class=\"column100 column1\" data-column=\"column1\">");
-        builder.append(key);
-        builder.append("</td>");
-        builder.append("<td class=\"column100 column2\" data-column=\"column1\">");
-        builder.append(value);
-        builder.append("</td>");
-        builder.append("</tr>");
-        return builder.toString();
+        return "<tr class=\"row100\"><td class=\"column100 column1\" data-column=\"column1\">" +
+                key +
+                "</td><td class=\"column100 column2\" data-column=\"column1\">" +
+                value +
+                "</td></tr>";
     }
 
 

@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo2robot.model;
 
+import org.monarchinitiative.phenol.ontology.data.MinimalOntology;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -18,7 +19,7 @@ public class HpoRosettaStone {
 
     private final Map<TermId, String> idToLabelMap;
 
-    public HpoRosettaStone(Ontology ontology) {
+    public HpoRosettaStone(MinimalOntology ontology) {
         Map<String, Term> labelMap = new HashMap<>();
         Map<TermId, String> idMap = new HashMap<>();
         if (ontology == null) {

@@ -4,14 +4,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import org.controlsfx.control.textfield.TextFields;
 import org.monarchinitiative.hpo2robot.Launcher;
-import org.monarchinitiative.hpo2robot.controller.OntologyTree;
 import org.monarchinitiative.hpo2robot.controller.ParentTermAdderController;
 import org.monarchinitiative.hpo2robot.model.HpoRosettaStone;
+import org.monarchinitiative.phenol.ontology.data.MinimalOntology;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.slf4j.Logger;
@@ -53,14 +51,13 @@ public class ParentTermAdder extends HBox {
         }
     }
 
-    public void setOntology(Ontology ontology) {
+    public void setOntology(MinimalOntology ontology) {
         if (ontology == null) {
             LOGGER.error("Attempt to set Ontology with null pointer.");
             return;
         }
         rosettaStone = new HpoRosettaStone(ontology);
         TextFields.bindAutoCompletion(controller.getTextField(), rosettaStone.allLabels());
-       // WidthAwareTextFields.bindWidthAwareAutoCompletion(controller.getTextField(),rosettaStone.allLabels());
     }
 
 

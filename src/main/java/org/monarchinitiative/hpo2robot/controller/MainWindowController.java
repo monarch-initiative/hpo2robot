@@ -131,7 +131,10 @@ public class MainWindowController extends BaseController implements Initializabl
                     return hpoOntology;
                 }
             };
-            hpoLoadTask.setOnSucceeded(e -> hpOntology.set(hpoLoadTask.getValue()));
+            hpoLoadTask.setOnSucceeded(e -> {
+                hpOntology.set(hpoLoadTask.getValue());
+                parentTermAdder.setOntology(this.hpOntology.get());
+            });
             hpoLoadTask.setOnFailed(e -> {
                 LOGGER.warn("Could not load HPO from {}", hpJsonFilePath.getAbsolutePath());
                 hpOntology.set(null);
@@ -173,7 +176,11 @@ public class MainWindowController extends BaseController implements Initializabl
                                     ghMenuItem.setOnAction(e -> {
                                         RobotItem item = cell.getTableRow().getItem();
                                         String gitHubIssue = item.getIssue();
-                                        GitHubUtil.openInGithubAction(gitHubIssue, hostServicesOpt.get());
+                                        if (hostServicesOpt.isPresent()) {
+                                            GitHubUtil.openInGithubAction(gitHubIssue, hostServicesOpt.get());
+                                        } else {
+                                            LOGGER.error("Could not access HostServices");
+                                        }
                                     });
                                     MenuItem summaryMenuItem = new MenuItem("Copy item summary");
                                     summaryMenuItem.setOnAction(e -> {
