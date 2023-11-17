@@ -31,26 +31,6 @@ public class Launcher extends Application {
         viewFactory.showMainWindow();
     }
 
-    private Options getOptions() {
-        GetOptionsService service = new GetOptionsService();
-        service.setOnSucceeded(e -> System.out.println("[INFO] Got Options"));
-        service.setOnFailed(e -> System.err.println("[ERROR] Could not get valid options."));
-
-        service.start();
-
-
-        service.setOnSucceeded(e -> {
-            Options options =  service.getValue();
-            System.out.println("SUCCESS");
-            System.out.println(options);
-            System.exit(0);
-
-        });
-
-
-        return null;
-    }
-
     @Override
     public void stop() {
         if (viewFactory != null) {

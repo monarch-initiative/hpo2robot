@@ -79,17 +79,16 @@ public class OptionsWindowController extends BaseController implements Initializ
 
     public OptionsWindowController(ViewFactory viewFactory, String fxmlName) {
         super(viewFactory, fxmlName);
+        hpJsonProperty = new SimpleStringProperty(NOT_INITIALIZED);
+        hpSrcOntologyProperty = new SimpleStringProperty(NOT_INITIALIZED);
+        orcidProperty = new SimpleStringProperty(NOT_INITIALIZED);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.options = new Options();
-        hpJsonProperty = new SimpleStringProperty(NOT_INITIALIZED);
-        hpJsonProperty.bindBidirectional(hpJsonLabel.textProperty());
-        hpSrcOntologyProperty = new SimpleStringProperty(NOT_INITIALIZED);
-        hpSrcOntologyProperty.bindBidirectional(hpSrcOntologyLabel.textProperty());
-        orcidProperty = new SimpleStringProperty(NOT_INITIALIZED);
-        orcidProperty.bindBidirectional(orcidLabel.textProperty());
+        hpJsonLabel.textProperty().bind(hpJsonProperty);
+        hpSrcOntologyLabel.textProperty().bind(hpSrcOntologyProperty);
+        orcidLabel.textProperty().bind(orcidProperty);
         buttonBox.setSpacing(10);
         setupCss();
     }
@@ -103,6 +102,7 @@ public class OptionsWindowController extends BaseController implements Initializ
                 -fx-background-radius: 8,7,6;
                 -fx-background-insets: 0,1,2;
                 -fx-text-fill: black;
+                -fx-pref-width: 100;
                 -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
             }
             """;
@@ -141,9 +141,14 @@ public class OptionsWindowController extends BaseController implements Initializ
         }
     }
 
-    public Options getOptions() {
-        return new Options(hpJsonProperty.get(), orcidProperty.get(),
+    public Optional<Options> getOptions() {
+        Options options =  new Options(hpJsonProperty.get(), orcidProperty.get(),
                 hpSrcOntologyProperty.get());
+        if (options.isValid()) {
+            return Optional.of(options);
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -179,4 +184,10 @@ public class OptionsWindowController extends BaseController implements Initializ
     }
 
 
+    public void setCurrentOptions(Options options) {
+        this.options = options;
+        this.hpJsonProperty.set(options.getHpJsonFile().getAbsolutePath());
+        this.hpSrcOntologyProperty.set(options.getHpSrcOntologyDir().getAbsolutePath());
+        this.orcidProperty.set(options.getOrcid());
+    }
 }

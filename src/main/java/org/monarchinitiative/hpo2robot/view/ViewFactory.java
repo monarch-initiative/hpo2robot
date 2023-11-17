@@ -123,8 +123,16 @@ public class ViewFactory {
 
     public void showOptionsWindow() {
         OptionsWindowController controller = new OptionsWindowController( this, "OptionsWindow.fxml");
+        if (this.options.isValid()) {
+            controller.setCurrentOptions(options);
+        }
         initializeStageAndWait(controller, "Settings");
-        this.options = controller.getOptions();
+        Optional<Options> opt = controller.getOptions();
+        if (opt.isPresent()) {
+            this.options = opt.get();
+        } else {
+            LOGGER.warn("Could not retrieve valid Options");
+        }
     }
 
 

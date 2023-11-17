@@ -81,7 +81,7 @@ public class Options implements Serializable {
         if (hpJsonFile.get() == null || ! hpJsonFile.get().isFile()) {
             return false;
         }
-        if (hpSrcOntologyDirectory.get() == null || hpSrcOntologyDirectory.get().isDirectory()) {
+        if (hpSrcOntologyDirectory.get() == null || ! hpSrcOntologyDirectory.get().isDirectory()) {
             return false;
         }
         // the last thing to check is if the ORCID matches
