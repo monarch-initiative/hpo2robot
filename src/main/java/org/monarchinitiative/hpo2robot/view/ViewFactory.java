@@ -92,7 +92,7 @@ public class ViewFactory {
 
 
 
-    private void initializeStageAndWait(BaseController controller) {
+    private void initializeStageAndWait(BaseController controller, String title) {
         Optional<Parent> opt = initializeBaseStage(controller);
         if (opt.isEmpty()) {
             System.err.println("[ERROR] could not initialize stage");
@@ -102,7 +102,14 @@ public class ViewFactory {
         Scene scene = new Scene(parent);
         Stage stage = new Stage();
         stage.setScene(scene);
+        if (title != null) {
+            stage.setTitle(title);
+        }
         stage.showAndWait();
+    }
+
+    private void initializeStageAndWait(BaseController controller) {
+        initializeStageAndWait(controller, null);
     }
 
 
@@ -114,12 +121,17 @@ public class ViewFactory {
 
     public void showOptionsWindow() {
         OptionsWindowController controller = new OptionsWindowController( this, "OptionsWindow.fxml");
-        initializeStageAndWait(controller);
+        initializeStageAndWait(controller, "Settings");
         this.options = controller.getOptions();
     }
 
 
-
+    /**
+     * Retrieves the URL corresponding to the basename of an FXML file
+     * @param dir directory where FXML files live
+     * @param fxmlName Name of the FXML file
+     * @return corresponding URL
+     */
     public URL getLocation(String dir, String fxmlName) {
         String path = dir + File.separator + fxmlName;
         return Launcher.class.getResource(path);

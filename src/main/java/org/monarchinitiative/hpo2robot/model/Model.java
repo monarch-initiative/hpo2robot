@@ -58,7 +58,7 @@ public class Model {
 
     public void setOptions(Options options) {
         this.options = options;
-        File hpoEditOwl = options.getHpEditOwlFile();
+        File hpoEditOwl = options.getHpSrcOntologyDir();
         if (hpoEditOwl == null) {
             PopUps.alertDialog("Error", "Attempt to set up HPO ID service with invalid path");
         } else {

@@ -15,6 +15,8 @@ public class PersistenceAccess {
     private static final String HP_OWL_FILE = "hp.owl.file";
     private static final String USER_ORCID = "user.orcid";
 
+    private static final String HPO_SRC_FOLDER = "hpo_src_ontology";
+
     private static final String HPO2ROBOT_LOCATION = HPO2ROBOT_DIRPATH + File.separator + "hpo2robot_options.properties";
 
     private PersistenceAccess() {
@@ -36,7 +38,7 @@ public class PersistenceAccess {
                 o.setHpJsonFile(new File(properties.getProperty(HP_JSON_FILE)));
 
             if (properties.containsKey(HP_OWL_FILE))
-                o.setHpEditOwlFile(new File(properties.getProperty(HP_OWL_FILE)));
+                o.setHpSrcOntologyDir(new File(properties.getProperty(HP_OWL_FILE)));
 
             if (properties.containsKey(USER_ORCID))
                 o.setOrcid(properties.getProperty(USER_ORCID));
@@ -62,7 +64,7 @@ public class PersistenceAccess {
         if (hpJsonFile != null)
             properties.setProperty(HP_JSON_FILE, hpJsonFile.getAbsolutePath());
 
-        File hpEditOwlFile = options.getHpEditOwlFile();
+        File hpEditOwlFile = options.getHpSrcOntologyDir();
         if (hpEditOwlFile != null)
             properties.setProperty(HP_OWL_FILE, hpEditOwlFile.getAbsolutePath());
 

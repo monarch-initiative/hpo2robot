@@ -7,31 +7,31 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import javafx.scene.layout.VBox?>
 <AnchorPane prefHeight="200.0" prefWidth="800.0" stylesheets="@../css/options.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.hpo2robot.controller.OptionsWindowController">
-    <Button layoutX="325.0" layoutY="339.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="120.0" />
-    <Button layoutX="455.0" layoutY="340.0" mnemonicParsing="false" onAction="#okButtonAction" text="OK" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
-    <GridPane layoutX="70.0" layoutY="219.0" prefHeight="90.0" prefWidth="428.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
+      <GridPane layoutX="70.0" layoutY="219.0" prefHeight="90.0" prefWidth="428.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
         <columnConstraints>
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="400" prefWidth="400.0" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="169.0" minWidth="80.0" prefWidth="142.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="163.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="416.0" minWidth="387.0" prefWidth="415.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Button mnemonicParsing="false" onAction="#setHpJsonFile" text="Open" GridPane.columnIndex="2" />
-        <Label fx:id="hpJsonLabel" text="not initialized" GridPane.columnIndex="3" />
-        <Button mnemonicParsing="false" onAction="#setORCID" text="Set" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Label fx:id="orcidLabel" text="not initialized" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+        <Button fx:id="hpJsonButton" mnemonicParsing="false" onAction="#setHpJsonFile" text="Open" GridPane.columnIndex="1" />
+        <Label fx:id="hpJsonLabel" text="not initialized" GridPane.columnIndex="2" />
+        <Button fx:id="orcidButton" mnemonicParsing="false" onAction="#setORCID" text="Set" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label fx:id="orcidLabel" text="not initialized" GridPane.columnIndex="2" GridPane.rowIndex="2" />
       <Label text="hp.json" />
       <Label text="ORCID ID" GridPane.rowIndex="2" />
-      <Button mnemonicParsing="false" onAction="#hpJsonDownload" text="Download" GridPane.columnIndex="1" />
-      <Label text="hp-edit.owl" GridPane.rowIndex="1" />
-      <Button mnemonicParsing="false" onAction="#setHpEditOwl" text="Set" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <Label fx:id="hpEditOwlLabel" text="not initialized" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <Label text="hpo/src/ontology folder" GridPane.rowIndex="1" />
+      <Button fx:id="hpSrcOntoButton" mnemonicParsing="false" onAction="#setHpSrcOntology" text="Set" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label fx:id="hpSrcOntologyLabel" text="not initialized" GridPane.columnIndex="2" GridPane.rowIndex="1" />
     </GridPane>
-    <Label layoutX="117.0" layoutY="14.0" text="Settings" />
+    <VBox fx:id="buttonBox" layoutX="325.0" layoutY="339.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
+        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel"  />
+        <Button fx:id="okButton" layoutX="455.0" layoutY="340.0" mnemonicParsing="false" onAction="#okButtonAction" text="OK"  />
+    </VBox>
 </AnchorPane>

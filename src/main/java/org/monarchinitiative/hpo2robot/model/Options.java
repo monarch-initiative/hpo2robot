@@ -21,26 +21,28 @@ public class Options implements Serializable {
     private static final String ORCID_REGEX =
             "^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$";
 
+    private static final String EMPTY_STRING = "";
+
     /** Regular expression to check whether an input string is a valid ORCID id. */
     private static final Pattern ORCID_PATTERN = Pattern.compile(ORCID_REGEX);
 
     private final ObjectProperty<File> hpJsonFile = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<File> hpEditOwlFile = new SimpleObjectProperty<>();
+    private final ObjectProperty<File> hpSrcOntologyDirectory = new SimpleObjectProperty<>();
 
     private final StringProperty orcid = new SimpleStringProperty();
 
     private final BooleanBinding isReady;
 
-    public Options(String hpJsonFile, String orcid, String hpEdit) {
+    public Options(String hpJsonFile, String orcid, String hpSrcOntologyFolder) {
         this();
         this.hpJsonFile.set(new File(hpJsonFile));
-        this.hpEditOwlFile.set(new File(hpEdit));
+        this.hpSrcOntologyDirectory.set(new File(hpSrcOntologyFolder));
         this.orcid.set(orcid);
     }
 
     public Options(){
-        isReady = hpJsonFile.isNotNull().and(hpEditOwlFile.isNotNull()).and(orcid.isNotEmpty());
+        isReady = hpJsonFile.isNotNull().and(hpSrcOntologyDirectory.isNotNull()).and(orcid.isNotEmpty());
     }
 
     public File getHpJsonFile() {
@@ -55,12 +57,12 @@ public class Options implements Serializable {
         return hpJsonFile;
     }
 
-    public File getHpEditOwlFile() {
-        return hpEditOwlFile.get();
+    public File getHpSrcOntologyDir() {
+        return hpSrcOntologyDirectory.get();
     }
 
-    public void setHpEditOwlFile(File hpEditOwlFile) {
-        this.hpEditOwlFile.set(hpEditOwlFile);
+    public void setHpSrcOntologyDir(File hpEditOwlFile) {
+        this.hpSrcOntologyDirectory.set(hpEditOwlFile);
     }
 
     public String getOrcid() {
@@ -76,13 +78,10 @@ public class Options implements Serializable {
     }
 
     public boolean isValid() {
-        if (hpJsonFile.get() == null) {
+        if (hpJsonFile.get() == null || ! hpJsonFile.get().isFile()) {
             return false;
         }
-        if (! hpJsonFile.get().isFile()) {
-            return false;
-        }
-        if (hpEditOwlFile.get() == null) {
+        if (hpSrcOntologyDirectory.get() == null || hpSrcOntologyDirectory.get().isDirectory()) {
             return false;
         }
         // the last thing to check is if the ORCID matches
@@ -97,29 +96,31 @@ public class Options implements Serializable {
     public String toString() {
         return String.format("""
                                 HPO: %s
-                                hp-edit: %s
+                                hpo/src/ontology: %s
                                 biocurator: %s
                                 valid: %s""",
-                hpJsonFile.get(), hpEditOwlFile.get(), orcid, isValid());
+                hpJsonFile.get(), hpSrcOntologyDirectory.get(), orcid, isValid());
     }
 
     public String getErrorMessage() {
         StringBuilder sb = new StringBuilder();
         File hp = hpJsonFile.get();
         if (hp == null) {
-            sb.append("hp.json not set. ");
+            return "hp.json not initialized.";
         } else if (!hp.isFile()) {
-            sb.append("could not find hp.json at ").append(hp);
+            return String.format("could not find hp.json at %s", hp);
         }
-        File howl = hpEditOwlFile.get();
-        if (howl == null) {
-            sb.append("hp-edit.owl not set. ");
+        File hpSrcOnto = hpSrcOntologyDirectory.get();
+        if (hpSrcOnto == null) {
+            sb.append("hp/src/ontology not set. ");
+        } else if (! hpSrcOnto.isDirectory()) {
+            return String.format("%s is not a valid directory.", hpSrcOnto);
         }
         final Matcher matcher = ORCID_PATTERN.matcher(orcid.get());
         boolean ORCID_OK = matcher.matches();
         if (! ORCID_OK) {
-            sb.append(String.format("Malformed ORCID: \"%s\". ", orcid.get()));
+            return String.format("Malformed ORCID: \"%s\". ", orcid.get());
         }
-        return sb.toString();
+        return EMPTY_STRING;
     }
 }
