@@ -103,7 +103,6 @@ public class Options implements Serializable {
     }
 
     public String getErrorMessage() {
-        StringBuilder sb = new StringBuilder();
         File hp = hpJsonFile.get();
         if (hp == null) {
             return "hp.json not initialized.";
@@ -112,7 +111,7 @@ public class Options implements Serializable {
         }
         File hpSrcOnto = hpSrcOntologyDirectory.get();
         if (hpSrcOnto == null) {
-            sb.append("hp/src/ontology not set. ");
+            return "hp/src/ontology not set.";
         } else if (! hpSrcOnto.isDirectory()) {
             return String.format("%s is not a valid directory.", hpSrcOnto);
         }

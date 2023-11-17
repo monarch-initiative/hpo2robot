@@ -104,7 +104,7 @@ public class GitHubPoster {
                 GitHubUtil.escape(this.githubLabel));
     }
 
-    private void reformatPayloadWithLabel(List<String> labels) {
+/*    private void reformatPayloadWithLabel(List<String> labels) {
         this.payload = String.format("""
                         {
                         "title": "%s",
@@ -113,7 +113,7 @@ public class GitHubPoster {
                 GitHubUtil.escape(this.githubTitle),
                 GitHubUtil.escape(this.githubBody),
                 labelsArray4Json(this.githubLabels));
-    }
+    }*/
 
 
 

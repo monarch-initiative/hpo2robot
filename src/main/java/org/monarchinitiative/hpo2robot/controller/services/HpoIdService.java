@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * @author Peter N Robinson
  */
 public class HpoIdService {
-    private final Logger LOGGER = LoggerFactory.getLogger(HpoIdService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(HpoIdService.class);
     /** List of identifiers that we can use for new terms */
     private final List<TermId> availableHpoIdList;
     private final static Pattern hpIdPattern = Pattern.compile("http://purl.obolibrary.org/obo/HP_(\\d{7,7})");

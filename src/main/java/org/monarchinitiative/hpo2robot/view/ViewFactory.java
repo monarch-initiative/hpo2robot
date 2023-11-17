@@ -13,6 +13,8 @@ import org.monarchinitiative.hpo2robot.controller.SynonymPaneController;
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.controller.BaseController;
 import org.monarchinitiative.hpo2robot.model.Synonym;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.net.URL;
 import java.util.Optional;
 
 public class ViewFactory {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ViewFactory.class);
 
     private Options options;
 
@@ -60,19 +63,18 @@ public class ViewFactory {
                 try {
                     return type.getDeclaredConstructor().newInstance();
                 } catch (Exception exc) {
-                    exc.printStackTrace();
+                    LOGGER.error(exc.getMessage());
                     throw new RuntimeException(exc); // fatal, just bail...
                 }
             }};
 
         loader.setControllerFactory(controllerFactory);
-        // loader.setController(controller);
         Parent parent;
         try {
             parent = loader.load();
             return  Optional.of(parent);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
             return Optional.empty();
         }
     }

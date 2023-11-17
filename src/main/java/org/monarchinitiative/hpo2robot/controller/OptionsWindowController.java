@@ -7,13 +7,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.monarchinitiative.hpo2robot.controller.widgets.UserStringFetcher;
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.view.ViewFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -21,7 +23,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class OptionsWindowController extends BaseController implements Initializable {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(OptionsWindowController.class);
 
     private static final String NOT_INITIALIZED = "not initialized";
     @FXML
@@ -128,32 +130,14 @@ public class OptionsWindowController extends BaseController implements Initializ
         }
     }
 
-
-    /**
-     * Request a String from user.
-     *
-     * @param windowTitle - Title of PopUp window
-     * @param promptText  - Prompt of Text field (suggestion for user)
-     * @param labelText   - Text of your request
-     * @return String with user input
-     */
-    public static String getStringFromUser(String windowTitle, String promptText, String labelText) {
-        TextInputDialog dialog = new TextInputDialog(promptText);
-        dialog.setTitle(windowTitle);
-        dialog.setHeaderText(null);
-        dialog.setContentText(labelText);
-        Optional<String> result = dialog.showAndWait();
-        return result.orElse(NOT_INITIALIZED);
-
-    }
-
     public void setORCID(ActionEvent actionEvent) {
-        String orcid = getStringFromUser("Set Biocurator ORCID",
-                "ORCID CURIE:", "orcid"
-        );
-        if (!orcid.equals(NOT_INITIALIZED)) {
+        Optional<String> opt = UserStringFetcher.fetchORCID();
+        if (opt.isPresent()) {
+            String orcid = opt.get();
             this.options.setOrcid(orcid);
             this.orcidProperty.set(orcid);
+        } else {
+            LOGGER.warn("Could not retrieve ORCID from user");
         }
     }
 

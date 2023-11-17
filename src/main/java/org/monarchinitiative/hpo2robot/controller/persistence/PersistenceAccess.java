@@ -12,7 +12,6 @@ public class PersistenceAccess {
     private static final String HPO2ROBOT_DIRNAME = ".hpo2robot";
     private static final String HPO2ROBOT_DIRPATH = System.getProperty("user.home") + File.separator + HPO2ROBOT_DIRNAME;
     private static final String HP_JSON_FILE = "hp.json.file";
-    private static final String HP_OWL_FILE = "hp.owl.file";
     private static final String USER_ORCID = "user.orcid";
 
     private static final String HPO_SRC_FOLDER = "hpo_src_ontology";
@@ -23,30 +22,28 @@ public class PersistenceAccess {
     }
 
     public static Options loadFromPersistence(){
-        Options o = new Options();
+        Options options = new Options();
         File f = new File(HPO2ROBOT_LOCATION);
         if (! f.isFile()) {
             // The options file has not been created yet or there is
             // some other problem. Then the user will have to
             // create new options
-            return o;
+            return options;
         }
         Properties properties = new Properties();
         try (FileInputStream is = new FileInputStream(HPO2ROBOT_LOCATION)) {
             properties.load(is);
             if (properties.containsKey(HP_JSON_FILE))
-                o.setHpJsonFile(new File(properties.getProperty(HP_JSON_FILE)));
-
-            if (properties.containsKey(HP_OWL_FILE))
-                o.setHpSrcOntologyDir(new File(properties.getProperty(HP_OWL_FILE)));
-
+                options.setHpJsonFile(new File(properties.getProperty(HP_JSON_FILE)));
+            if (properties.containsKey(HPO_SRC_FOLDER))
+                options.setHpSrcOntologyDir(new File(properties.getProperty(HPO_SRC_FOLDER)));
             if (properties.containsKey(USER_ORCID))
-                o.setOrcid(properties.getProperty(USER_ORCID));
+                options.setOrcid(properties.getProperty(USER_ORCID));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return o;
+        return options;
     }
 
 
@@ -64,9 +61,9 @@ public class PersistenceAccess {
         if (hpJsonFile != null)
             properties.setProperty(HP_JSON_FILE, hpJsonFile.getAbsolutePath());
 
-        File hpEditOwlFile = options.getHpSrcOntologyDir();
-        if (hpEditOwlFile != null)
-            properties.setProperty(HP_OWL_FILE, hpEditOwlFile.getAbsolutePath());
+        File hpSrcOntologyDirectory = options.getHpSrcOntologyDir();
+        if (hpSrcOntologyDirectory != null)
+            properties.setProperty(HPO_SRC_FOLDER, hpSrcOntologyDirectory.getAbsolutePath());
 
         properties.setProperty(USER_ORCID, options.getOrcid());
 
