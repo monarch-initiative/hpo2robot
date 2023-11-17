@@ -23,6 +23,11 @@
             <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
          </HBox.margin>
       </Button>
+        <Button fx:id="runRobotButton" mnemonicParsing="false" text="Run ROBOT">
+        <HBox.margin>
+            <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
+        </HBox.margin>
+    </Button>
     </HBox>
     <HBox>
         <Label fx:id="robotStatusLabel">

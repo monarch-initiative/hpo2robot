@@ -44,11 +44,11 @@ public class OptionsWindowController extends BaseController implements Initializ
     @FXML
     private Label orcidLabel;
 
-    private StringProperty hpJsonProperty;
+    private final StringProperty hpJsonProperty;
 
-    private StringProperty hpSrcOntologyProperty;
+    private final StringProperty hpSrcOntologyProperty;
 
-    private StringProperty orcidProperty;
+    private final StringProperty orcidProperty;
 
     private Options options;
 
@@ -130,7 +130,8 @@ public class OptionsWindowController extends BaseController implements Initializ
         }
     }
 
-    public void setORCID(ActionEvent actionEvent) {
+    public void setORCID(ActionEvent e) {
+        e.consume();
         Optional<String> opt = UserStringFetcher.fetchORCID();
         if (opt.isPresent()) {
             String orcid = opt.get();

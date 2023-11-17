@@ -1,6 +1,8 @@
 package org.monarchinitiative.hpo2robot.controller.persistence;
 
 import org.monarchinitiative.hpo2robot.model.Options;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -8,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 public class PersistenceAccess {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersistenceAccess.class);
 
     private static final String HPO2ROBOT_DIRNAME = ".hpo2robot";
     private static final String HPO2ROBOT_DIRPATH = System.getProperty("user.home") + File.separator + HPO2ROBOT_DIRNAME;
@@ -40,9 +43,8 @@ public class PersistenceAccess {
             if (properties.containsKey(USER_ORCID))
                 options.setOrcid(properties.getProperty(USER_ORCID));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not initialize properties: {}", e.getMessage());
         }
-
         return options;
     }
 
@@ -73,7 +75,7 @@ public class PersistenceAccess {
                 properties.store(os, "hpo2robot");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not save properties: {}", e.getMessage());
         }
 
     }

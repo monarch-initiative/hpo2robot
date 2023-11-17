@@ -14,4 +14,5 @@ module org.monarchinitiative.hpo2robot {
     opens org.monarchinitiative.hpo2robot.model to javafx.base;
 
     exports org.monarchinitiative.hpo2robot;
+    opens org.monarchinitiative.hpo2robot.controller.runner to javafx.base;
 }

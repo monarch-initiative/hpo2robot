@@ -57,6 +57,9 @@ public class AddNewHpoTerm extends HBox {
         controller.setClearRobotAction(handler);
     }
 
+    public void setRunRobotAction(EventHandler<ActionEvent> handler) {
+        controller.setRunRobotAction(handler);
+    }
 
     public void clearFields() {
         robotStatusLabelProperty.set("");

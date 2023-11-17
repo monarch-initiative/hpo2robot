@@ -12,6 +12,7 @@ import java.util.*;
 /**
  * This class keeps a record of items that we can use to make the next ROBOT item.
  * Note that for now we keep the list of approvaed ROBOT items in the MainController.
+ *
  * @author Peter N Robinson
  */
 public class Model {
@@ -29,9 +30,9 @@ public class Model {
     private HpoIdService hpoIdService;
 
     private Set<Synonym> synonymSet;
-    private String definition ;
+    private String definition;
 
-    private String comment ;
+    private String comment;
 
     private String orcid;
 
@@ -39,7 +40,7 @@ public class Model {
 
     private String gitHubIssue;
 
-    public Model(){
+    public Model() {
         reset();
     }
 
@@ -58,13 +59,19 @@ public class Model {
 
     public void setOptions(Options options) {
         this.options = options;
-        File hpoEditOwl = options.getHpSrcOntologyDir();
-        if (hpoEditOwl == null) {
-            PopUps.alertDialog("Error", "Attempt to set up HPO ID service with invalid path");
-        } else {
-            HpoIdService hpoIdService = new HpoIdService(hpoEditOwl.toPath());
-            availableHpoIds = hpoIdService.getAvailableHpoIdList();
+        File hpoSrcOntology = options.getHpSrcOntologyDir();
+
+        if (hpoSrcOntology == null) {
+            PopUps.alertDialog("Attempt to set up HPO ID service with invalid path", "Error");
+            return;
         }
+        File hpEditOwl = new File(hpoSrcOntology + File.separator + "hp-edit.owl");
+        if (!hpEditOwl.isFile()) {
+            PopUps.alertDialog("Problem with initializing the hp-edit.owl file", "Error");
+            return;
+        }
+        HpoIdService hpoIdService = new HpoIdService(hpEditOwl.toPath());
+        availableHpoIds = hpoIdService.getAvailableHpoIdList();
     }
 
 
@@ -111,15 +118,15 @@ public class Model {
         TermId hpoTermId = getNextAvailableHpoId();
         String orcidId = orcid == null ? options.getOrcid() : orcid;
         if (gitHubIssue != null) {
-             item = new RobotItem(hpoTermId,
+            item = new RobotItem(hpoTermId,
                     hpoTermLabel,
                     parentTermList,
                     synonymSet,
                     definition,
-                     comment,
+                    comment,
                     pmidList,
-                     orcidId,
-                     gitHubIssue);
+                    orcidId,
+                    gitHubIssue);
         } else {
             item = new RobotItem(hpoTermId,
                     hpoTermLabel,

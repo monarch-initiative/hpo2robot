@@ -23,7 +23,9 @@ import javafx.stage.Window;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.github.GitHubUtil;
 import org.monarchinitiative.hpo2robot.model.Model;
+import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
+import org.monarchinitiative.hpo2robot.controller.runner.RobotRunner;
 import org.monarchinitiative.hpo2robot.model.Synonym;
 import org.monarchinitiative.hpo2robot.view.*;
 import org.monarchinitiative.phenol.io.OntologyLoader;
@@ -122,7 +124,6 @@ public class MainWindowController extends BaseController implements Initializabl
 
     private void loadHpo(File hpJsonFilePath) {
         if (hpJsonFilePath != null && hpJsonFilePath.isFile()) {
-            // Path to HPO is available.
             Task<MinimalOntology> hpoLoadTask = new Task<>() {
                 @Override
                 protected MinimalOntology call() {
@@ -142,7 +143,6 @@ public class MainWindowController extends BaseController implements Initializabl
             Thread thread = new Thread(hpoLoadTask);
             thread.start();
         } else {
-            // We want to reset HPO.
             hpOntology.set(null);
         }
     }
@@ -216,6 +216,8 @@ public class MainWindowController extends BaseController implements Initializabl
      * This method uses to the data entered by the user to add another ROBOT item to the table
      */
     private void createNewRobotItem() {
+        // TODO where should we be sotring the Options?
+        model.setOptions(this.viewFactory.getOptions());
         model.setHpoTermLabel(termLabelValidator.getLabel().get());
         model.setDefinition(this.definitionPane.getDefinition());
         model.setparentTerms(parentTermAdder.getParentTermList());
@@ -421,6 +423,8 @@ public class MainWindowController extends BaseController implements Initializabl
         this.pmidXrefAdderBox.setAction(handler);
     }
 
+    private File robotTemplateFile = null;
+
     /**
      * Set up handlers for the three buttons on the new ROBOT item box
      */
@@ -437,11 +441,34 @@ public class MainWindowController extends BaseController implements Initializabl
             Optional<File> opt = PopUps.selectRobotFileToSave(window);
             if (opt.isPresent()) {
                 RobotItem.exportRobotItems(robotTableView.getItems(), opt.get());
+                robotTemplateFile = opt.get();
             } else {
                 PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
+                robotTemplateFile = null;
             }
         };
         this.addNewHpoTermBox.setExportRobotAction(exportHandler);
+        EventHandler<ActionEvent> runRobotHandler = actionEvent -> {
+            System.out.println("Run Robot");
+            if (robotTemplateFile == null) {
+                PopUps.showInfoMessage("Attempt to run ROBOT before ROBOT file exported", "Error");
+                return;
+            }
+            // TODO
+            Options options = viewFactory.getOptions();
+            if (options == null) {
+                PopUps.showInfoMessage("Could not retrieve options", "ERROR");
+                return;
+            }
+            File hpoDir = options.getHpSrcOntologyDir();
+            RobotRunner runner = new RobotRunner(robotTemplateFile.getAbsolutePath(), hpoDir);
+            LOGGER.info("ROBOT command: {}", runner.getCommandString());
+            runner.run();
+            String gobbledText = runner.getGobbledText();
+            System.out.println("Exit code " +  gobbledText);
+            LOGGER.info(gobbledText);
+        };
+        this.addNewHpoTermBox.setRunRobotAction(runRobotHandler);
 
     }
 

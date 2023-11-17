@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
 import org.monarchinitiative.hpo2robot.controller.persistence.PersistenceAccess;
-import org.monarchinitiative.hpo2robot.controller.services.GetOptionsService;
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.view.ViewFactory;
 
@@ -14,7 +13,6 @@ import org.monarchinitiative.hpo2robot.view.ViewFactory;
  * @author Peter Robinson
  */
 public class Launcher extends Application {
-
 
     ViewFactory viewFactory = null;
 
@@ -36,8 +34,5 @@ public class Launcher extends Application {
         if (viewFactory != null) {
             PersistenceAccess.saveToPersistence(viewFactory.getOptions());
         }
-
-
-
     }
 }
