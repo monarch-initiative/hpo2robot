@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -14,21 +13,21 @@ import java.util.function.Consumer;
 public class RobotRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RobotRunner.class);
 
-    private static final String COMMAND_TEMPLATE = "cd %s; sh run.sh make MERGE_TEMPLATE_FILE=%s merge_template";
-
-    private final String command;
+    private static final String COMMAND = "sh run.sh make MERGE_TEMPLATE_FILE=tmp/hpo2robot.tsv";
 
     String gobbledText;
 
+    private final File hpoFolder;
+
     int exitCode;
 
-    public RobotRunner(String robotTemplateFilePath, File hpoSrcOntologyFolder) {
-        command = String.format(COMMAND_TEMPLATE, hpoSrcOntologyFolder.getAbsolutePath(), robotTemplateFilePath);
+    public RobotRunner(File robotTemplateFilePath, File hpoSrcOntologyFolder) {
+       hpoFolder = hpoSrcOntologyFolder;
     }
 
 
     public String getCommandString() {
-        return command;
+        return COMMAND;
     }
 
     public void run() {
@@ -38,7 +37,7 @@ public class RobotRunner {
                         new LinkedBlockingQueue<Runnable>());
         try {
             process = Runtime.getRuntime()
-                    .exec(getCommandString());
+                    .exec(getCommandString(), null, hpoFolder);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             List<String> l = new ArrayList<>();
             Consumer<String> c1 = s -> l.add(s);

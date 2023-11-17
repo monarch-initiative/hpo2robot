@@ -154,4 +154,28 @@ public class Model {
     public void setComment(String userText) {
         this.comment = userText;
     }
+
+    public Optional<File> getRobotSaveFileOpt() {
+        if (options == null) {
+            return Optional.empty();
+        }
+        File hpoDir = options.getHpSrcOntologyDir();
+        if (hpoDir == null || ! hpoDir.isDirectory()) {
+            return Optional.empty();
+        }
+        File robotSaveFile = new File(hpoDir + File.separator + "tmp/robot2hpo-merge.tsv");
+        return Optional.ofNullable(robotSaveFile);
+    }
+
+    public Optional<File> getHpoSrcDir() {
+        if (options == null) {
+            return Optional.empty();
+        }
+        File hpoDir = options.getHpSrcOntologyDir();
+        if (hpoDir == null || ! hpoDir.isDirectory()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(hpoDir);
+        }
+    }
 }

@@ -437,36 +437,34 @@ public class MainWindowController extends BaseController implements Initializabl
         EventHandler<ActionEvent> clearHandler = actionEvent -> this.robotTableView.getItems().clear();
         this.addNewHpoTermBox.setClearRobotAction(clearHandler);
         EventHandler<ActionEvent> exportHandler = actionEvent -> {
-            Window window = this.statusBarLabel.getScene().getWindow();
-            Optional<File> opt = PopUps.selectRobotFileToSave(window);
+            Optional<File> opt = this.model.getRobotSaveFileOpt();
             if (opt.isPresent()) {
                 RobotItem.exportRobotItems(robotTableView.getItems(), opt.get());
-                robotTemplateFile = opt.get();
             } else {
                 PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
-                robotTemplateFile = null;
+
             }
         };
         this.addNewHpoTermBox.setExportRobotAction(exportHandler);
         EventHandler<ActionEvent> runRobotHandler = actionEvent -> {
-            System.out.println("Run Robot");
-            if (robotTemplateFile == null) {
-                PopUps.showInfoMessage("Attempt to run ROBOT before ROBOT file exported", "Error");
-                return;
+            Optional<File> opt = this.model.getRobotSaveFileOpt();
+            if (opt.isPresent()) {
+                File robotSaveFile = opt.get();
+                Optional<File> hpoSrcDirOpt = model.getHpoSrcDir();
+                if (hpoSrcDirOpt.isEmpty()) {
+                    LOGGER.error("HPO Dir empty"); // should never happen here
+                }
+                RobotRunner runner = new RobotRunner(robotSaveFile, hpoSrcDirOpt.get());
+                LOGGER.info("ROBOT command: {}", runner.getCommandString());
+                runner.run();
+                String gobbledText = runner.getGobbledText();
+                System.out.println("Exit code " +  gobbledText);
+                LOGGER.info(gobbledText);
+            } else {
+                PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
+                robotTemplateFile = null;
             }
-            // TODO
-            Options options = viewFactory.getOptions();
-            if (options == null) {
-                PopUps.showInfoMessage("Could not retrieve options", "ERROR");
-                return;
-            }
-            File hpoDir = options.getHpSrcOntologyDir();
-            RobotRunner runner = new RobotRunner(robotTemplateFile.getAbsolutePath(), hpoDir);
-            LOGGER.info("ROBOT command: {}", runner.getCommandString());
-            runner.run();
-            String gobbledText = runner.getGobbledText();
-            System.out.println("Exit code " +  gobbledText);
-            LOGGER.info(gobbledText);
+
         };
         this.addNewHpoTermBox.setRunRobotAction(runRobotHandler);
 
