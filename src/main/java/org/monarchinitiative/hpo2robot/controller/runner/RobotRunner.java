@@ -3,12 +3,9 @@ package org.monarchinitiative.hpo2robot.controller.runner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.function.Consumer;
+import java.io.*;
+import java.util.Optional;
+
 
 public class RobotRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RobotRunner.class);
@@ -19,10 +16,11 @@ public class RobotRunner {
 
     private final File hpoFolder;
 
-    int exitCode;
+    Integer exitCode;
 
-    public RobotRunner(File robotTemplateFilePath, File hpoSrcOntologyFolder) {
+    public RobotRunner(File hpoSrcOntologyFolder) {
        hpoFolder = hpoSrcOntologyFolder;
+       exitCode = null;
     }
 
 
@@ -31,28 +29,35 @@ public class RobotRunner {
     }
 
     public void run() {
-        Process process;
-        ExecutorService executorService =
-                new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
-                        new LinkedBlockingQueue<Runnable>());
+        StringBuilder sb = new StringBuilder();
+        ProcessBuilder pb = new ProcessBuilder("sh", "run.sh", "make",
+                "MERGE_TEMPLATE_FILE=tmp/hpo2robot.tsv", "merge_template");
+        pb.directory(hpoFolder);
+        String myCommand = String.join(" ",pb.command());
+        LOGGER.info("Running ROBOT command {} in directory {}", myCommand, pb.directory().getAbsolutePath());
         try {
-            process = Runtime.getRuntime()
-                    .exec(getCommandString(), null, hpoFolder);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            List<String> l = new ArrayList<>();
-            Consumer<String> c1 = s -> l.add(s);
-            StreamGobbler streamGobbler =
-                    new StreamGobbler(process.getInputStream(), c1);
-            Future<?> future = executorService.submit(streamGobbler);
-            exitCode = process.waitFor();
-            future.get(10, TimeUnit.SECONDS);
-            gobbledText = String.join("\n", l);
-        } catch (Exception e) {
-            LOGGER.error("Could not run ROBOT Command {}", getCommandString());
-            LOGGER.error("Because of error: {}", e.getMessage());
-            exitCode =  -1;
+            Process p = pb.start();
+            BufferedReader read = new BufferedReader(new InputStreamReader(
+                    p.getInputStream()));
+            try {
+                p.waitFor();
+            } catch (InterruptedException e) {
+                LOGGER.error(e.getMessage());
+            }
+            while (read.ready()) {
+                sb.append(read.readLine());
+            }
+            exitCode = p.exitValue();
+            gobbledText = sb.toString();
+            LOGGER.info("ROBOT Command exit code = {}", exitCode);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+            exitCode = null;
         }
-        LOGGER.info("ROBOT Command exit code = {}", exitCode);
+    }
+
+    public Optional<Integer> getExitCode() {
+        return Optional.ofNullable(exitCode);
     }
 
 
@@ -66,9 +71,6 @@ public class RobotRunner {
         if (exitCode == 127) {
             return "ROBOT command not found in PATH";
         }
-        if (exitCode == 0) {
-            return "success";
-        }
-        return String.format("%d: %s", exitCode, gobbledText);
+        return gobbledText;
     }
 }

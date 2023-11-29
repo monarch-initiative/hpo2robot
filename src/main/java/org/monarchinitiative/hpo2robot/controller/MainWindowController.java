@@ -447,19 +447,22 @@ public class MainWindowController extends BaseController implements Initializabl
         };
         this.addNewHpoTermBox.setExportRobotAction(exportHandler);
         EventHandler<ActionEvent> runRobotHandler = actionEvent -> {
-            Optional<File> opt = this.model.getRobotSaveFileOpt();
+            Optional<File> opt = model.getHpoSrcDir();
             if (opt.isPresent()) {
-                File robotSaveFile = opt.get();
-                Optional<File> hpoSrcDirOpt = model.getHpoSrcDir();
-                if (hpoSrcDirOpt.isEmpty()) {
-                    LOGGER.error("HPO Dir empty"); // should never happen here
-                }
-                RobotRunner runner = new RobotRunner(robotSaveFile, hpoSrcDirOpt.get());
+                File hpoSrcDir = opt.get();
+                RobotRunner runner = new RobotRunner(hpoSrcDir);
                 LOGGER.info("ROBOT command: {}", runner.getCommandString());
                 runner.run();
-                String gobbledText = runner.getGobbledText();
-                System.out.println("Exit code " +  gobbledText);
-                LOGGER.info(gobbledText);
+                Optional<Integer> exitOpt = runner.getExitCode();
+                if (exitOpt.isPresent()) {
+                    String gobbledText = runner.getGobbledText();
+                    System.out.println("Exit code " +exitOpt.get() + " -- " +  gobbledText);
+                } else {
+                    System.out.println("Some other error");
+                    System.out.println(runner.getGobbledText());;
+                }
+
+                //LOGGER.info(gobbledText);
             } else {
                 PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
                 robotTemplateFile = null;

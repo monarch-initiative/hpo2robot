@@ -63,10 +63,31 @@ public class GitHubIssueRetriever {
 
     private void parseLabelElement(Object obj) {
         JSONObject jsonObject = (JSONObject) obj;
-        String title = jsonObject.get("title").toString();
-        String body = jsonObject.get("body").toString();
-        String label = jsonObject.get("label")==null?"none":jsonObject.get("label").toString();
-        String number = jsonObject.get("number")==null?"?":jsonObject.get("number").toString();
+        final String NOT_AVAILABLE = "n/a";
+        String title = jsonObject.get("title")==null ? NOT_AVAILABLE : jsonObject.get("title").toString();
+        String body = jsonObject.get("body")==null   ? NOT_AVAILABLE : jsonObject.get("body").toString();
+        String label = jsonObject.get("label")==null ? NOT_AVAILABLE : jsonObject.get("label").toString();
+        // number can come through as long or String
+        Object number_obj = jsonObject.get("number")==null ? NOT_AVAILABLE :jsonObject.get("number");
+        String number;
+        if (number_obj instanceof Long) {
+            number = String.valueOf((long)number_obj);
+        } else if (number_obj instanceof String) {
+            number = (String) number_obj;
+        } else {
+            number = NOT_AVAILABLE;
+        }
+        /*
+        Object number_obj = jsonObject.getOrDefault("number", NOT_AVAILABLE).toString();
+        String number;
+        if (number_obj instanceof Long) {
+            number = String.valueOf((long)number_obj);
+        } else if (number_obj instanceof String) {
+            number = (String) number_obj;
+        } else {
+            number = NOT_AVAILABLE;
+        }
+         */
         GitHubIssue.Builder builder = new GitHubIssue.Builder(title).body(body).label(label).number(number);
         issues.add(builder.build());
     }
