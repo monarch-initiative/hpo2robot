@@ -93,6 +93,7 @@ public class GitHubIssueRetriever {
     }
 
 
+    @SuppressWarnings("resource")
     private int retrieveIssues()  {
         try {
             final String hpo_github_url ="https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues";

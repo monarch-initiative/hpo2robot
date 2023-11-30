@@ -176,4 +176,8 @@ public class Model {
             return Optional.of(hpoDir);
         }
     }
+
+    public void setSynonymList(List<Synonym> synonymList) {
+        this.synonymSet = new HashSet<>(synonymList);
+    }
 }

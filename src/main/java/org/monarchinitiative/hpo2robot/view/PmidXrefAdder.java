@@ -1,12 +1,11 @@
 package org.monarchinitiative.hpo2robot.view;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.PmidXrefAdderController;
+import org.monarchinitiative.hpo2robot.model.Synonym;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +18,7 @@ public class PmidXrefAdder extends AnchorPane {
     private final Logger LOGGER = LoggerFactory.getLogger(PmidXrefAdder.class);
 
     PmidXrefAdderController controller = null;
+
 
     public PmidXrefAdder() {
         super();
@@ -45,11 +45,20 @@ public class PmidXrefAdder extends AnchorPane {
         }
     }
 
+    public List<Synonym> getSynonymList() {
+        if (this.controller == null ) {
+            LOGGER.error("Attempt to get PMID list but Controller is null");
+            return List.of();
+        } else {
+            return controller.getSynonymList();
+        }
+    }
+
     public void clearFields() {
         controller.clearFields();
     }
 
-    public void setAction(EventHandler<ActionEvent> handler) {
-        controller.setAddSynonymAction(handler);
+    public void setViewFactory(ViewFactory viewFactory) {
+        this.controller.setViewFactory(viewFactory);
     }
 }

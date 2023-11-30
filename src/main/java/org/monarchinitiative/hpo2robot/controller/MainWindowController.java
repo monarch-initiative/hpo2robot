@@ -24,7 +24,6 @@ import org.monarchinitiative.hpo2robot.github.GitHubUtil;
 import org.monarchinitiative.hpo2robot.model.Model;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
 import org.monarchinitiative.hpo2robot.controller.runner.RobotRunner;
-import org.monarchinitiative.hpo2robot.model.Synonym;
 import org.monarchinitiative.hpo2robot.view.*;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.MinimalOntology;
@@ -158,8 +157,12 @@ public class MainWindowController extends BaseController implements Initializabl
         loadHpoAndSetupOntologyTree();
         setUpTableView();
         setupRobotItemHandlers();
-        setupAddSynonymItemHandler();
         setUpGithubColumnContextMenu();
+        setUpPmidXrefAdder();
+    }
+
+    private void setUpPmidXrefAdder() {
+        this.pmidXrefAdderBox.setViewFactory(this.viewFactory);
     }
 
     private void setUpGithubColumnContextMenu() {
@@ -218,6 +221,7 @@ public class MainWindowController extends BaseController implements Initializabl
         model.setparentTerms(parentTermAdder.getParentTermList());
         model.setComment(this.definitionPane.getComment());
         model.setPmidList(pmidXrefAdderBox.getPmidList());
+        model.setSynonymList(pmidXrefAdderBox.getSynonymList());
         Optional<String> opt = gitHubIssueBox.getGitHubIssueNumber();
         opt.ifPresent(model::setGitHubIssue);
         Optional<RobotItem> itemOpt = model.getRobotItemOpt();
@@ -399,20 +403,6 @@ public class MainWindowController extends BaseController implements Initializabl
         javafx.application.Platform.exit();
     }
 
-
-    /**
-     * This is an action handler that is used by the SynonymAdder controller
-     */
-    private void setupAddSynonymItemHandler() {
-        EventHandler<ActionEvent> handler = actionEvent -> {
-            Optional<Synonym> opt = this.viewFactory.showAddSynonymWindow();
-            if (opt.isPresent()) {
-                LOGGER.trace("Adding synonym: {}",opt.get());
-                model.addSynonym(opt.get());
-            }
-        };
-        this.pmidXrefAdderBox.setAction(handler);
-    }
 
     private File robotTemplateFile = null;
 
