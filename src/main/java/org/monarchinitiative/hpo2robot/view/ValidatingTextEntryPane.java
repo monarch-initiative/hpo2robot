@@ -9,9 +9,11 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.ValidatingTextEntryPaneController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ValidatingTextEntryPane extends AnchorPane {
-
+    Logger LOGGER = LoggerFactory.getLogger(ValidatingTextEntryPane.class);
     final StringProperty buttonNameProperty;
 
     final StringProperty definitionTextProperty;
@@ -50,7 +52,7 @@ public class ValidatingTextEntryPane extends AnchorPane {
             isValid.bindBidirectional(controller.isValidDefinitionPropertyProperty());
             this.buttonNameProperty.bindBidirectional(controller.getDefinitionValidateButton().textProperty());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Error loading ValidatingTextEntryPaneController: {}", e.getMessage());
         }
     }
 

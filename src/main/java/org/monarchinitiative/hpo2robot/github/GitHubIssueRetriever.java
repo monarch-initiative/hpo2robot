@@ -27,7 +27,7 @@ import java.net.http.HttpClient;
  * @author Peter Robinson
  */
 public class GitHubIssueRetriever {
-    private static final Logger logger = LoggerFactory.getLogger(GitHubIssueRetriever.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitHubIssueRetriever.class);
 
     private final List<GitHubIssue> issues = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class GitHubIssueRetriever {
             token = null;
         }
         int responsecode = retrieveIssues();
-        logger.error(String.format("We retrieved %d issues with response code %d", issues.size() ,responsecode));
+        LOGGER.trace(String.format("We retrieved %d issues with response code %d", issues.size() ,responsecode));
     }
 
 
@@ -77,17 +77,6 @@ public class GitHubIssueRetriever {
         } else {
             number = NOT_AVAILABLE;
         }
-        /*
-        Object number_obj = jsonObject.getOrDefault("number", NOT_AVAILABLE).toString();
-        String number;
-        if (number_obj instanceof Long) {
-            number = String.valueOf((long)number_obj);
-        } else if (number_obj instanceof String) {
-            number = (String) number_obj;
-        } else {
-            number = NOT_AVAILABLE;
-        }
-         */
         GitHubIssue.Builder builder = new GitHubIssue.Builder(title).body(body).label(label).number(number);
         issues.add(builder.build());
     }
@@ -119,7 +108,7 @@ public class GitHubIssueRetriever {
             decodeJSON(responseBody);
             return response.statusCode();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error retrieving GitHub issues: {}", e.getMessage());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

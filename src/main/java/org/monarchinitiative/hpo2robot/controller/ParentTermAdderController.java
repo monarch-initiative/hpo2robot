@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -53,6 +54,7 @@ public class ParentTermAdderController implements Initializable {
             String parentTermText = textField.getText();
             parentTermLabels.add(parentTermText);
             textField.clear();
+            setValid(getErrorLabel());
             parentTermErrorLabel.setText(getErrorLabel());
         });
         addButton.setStyle("-fx-spacing: 10;");
@@ -60,7 +62,21 @@ public class ParentTermAdderController implements Initializable {
         parentTermLabel.setFont(largeFont);
         parentTermLabelSetSize = Bindings.size(parentTermLabels);
         parentTermReadyProperty.bind(parentTermLabelSetSize.greaterThan(0));
+        setInvalid();
     }
+
+    private void setInvalid() {
+        parentTermErrorLabel.setTextFill(Color.RED);
+        parentTermErrorLabel.setText("Enter at least one parent term");
+        textField.setStyle("-fx-text-box-border: red; -fx-focus-color: red ;");
+    }
+
+    private void setValid(String msg) {
+        parentTermErrorLabel.setTextFill(Color.BLACK);
+        parentTermErrorLabel.setText(msg);
+        textField.setStyle("-fx-text-box-border: green; -fx-focus-color: green ;");
+    }
+
 
 
     private String getErrorLabel() {
@@ -95,6 +111,7 @@ public class ParentTermAdderController implements Initializable {
     public void clearFields() {
         this.parentTermLabels.clear();
         this.parentTermErrorLabel.setText("");
+        setInvalid();
     }
 
     public BooleanProperty parentTermsReady() {

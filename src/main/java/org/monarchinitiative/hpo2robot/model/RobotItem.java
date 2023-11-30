@@ -53,6 +53,8 @@ public class RobotItem {
 
     private static final String EMPTY_CELL = "";
 
+    public static final String NOT_AVAILABLE = "n/a";
+
     private static final String ROBOT_TEMPLATE_LINE = String.join("\t", ROBOT_TEMPLATE_ITEMS);
 
     private TermId newTermId;
@@ -174,7 +176,7 @@ public class RobotItem {
             rowItems.add(pmids);                                     // Definition_PMID
             rowItems.add(getNewTermComment());                       // rdfs:comment
             rowItems.add(orcidId);                                   // creator orcid
-            rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));         // github
+            rowItems.add(gitHubIssueOpt.orElse(NOT_AVAILABLE));         // github
             rowItems.add(EMPTY_CELL);                                // synonym
             rowItems.add(EMPTY_CELL);                                // synonym orcid
             rowItems.add(EMPTY_CELL);                                // synonym PMID
@@ -190,7 +192,7 @@ public class RobotItem {
             rowItems.add(pmids);                                      // Definition_PMID
             rowItems.add(getNewTermComment());                        // rdfs:comment
             rowItems.add(orcidId);
-            rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));
+            rowItems.add(gitHubIssueOpt.orElse(NOT_AVAILABLE));
             rowItems.add(synonym.label());
             if (synonym.synonymType() == SynonymType.NONE) {
                 rowItems.add(synonym.synonymType().name());
@@ -212,7 +214,7 @@ public class RobotItem {
                     rowItems.add(EMPTY_CELL);                           // Definition_PMID
                     rowItems.add(EMPTY_CELL);                           // rdfs:comment
                     rowItems.add(EMPTY_CELL);                           // creator orcid
-                    rowItems.add(EMPTY_CELL);                           // github
+                    rowItems.add(NOT_AVAILABLE);                        // github
                     rowItems.add(syn.label());                          // synonym
                     rowItems.add(EMPTY_CELL);                           // synonym orcid
                     rowItems.add(EMPTY_CELL);                           // synonym PMID
@@ -221,8 +223,6 @@ public class RobotItem {
                 }
             }
         }
-
-
         return rows;
     }
 

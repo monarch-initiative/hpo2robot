@@ -51,7 +51,7 @@ public class ParentTermAdder extends HBox {
             parentTermLabelStringProperty.bindBidirectional(controller.parentTermProperty());
             parentTermReadyProperty.bind(controller.parentTermsReady());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Error loading ParentTermAdderController: {}", e.getMessage());
         }
     }
 

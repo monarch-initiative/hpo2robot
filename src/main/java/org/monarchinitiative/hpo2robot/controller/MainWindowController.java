@@ -1,6 +1,7 @@
 package org.monarchinitiative.hpo2robot.controller;
 
 import javafx.application.HostServices;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -164,9 +165,17 @@ public class MainWindowController extends BaseController implements Initializabl
         setUpNewTermReadiness();
     }
 
+    /**
+     * We are ready to enter a new ROBOT item if we have a valid label, at least one parent term
+     * and a valid definition. Here, we bind the new ROBOT item button to the
+     * three corresponding Boolean properties.
+     */
     private void setUpNewTermReadiness() {
-        this.robotIssueIsReadyProperty.bind(parentTermAdder.parentTermsReady());
-        this.addNewHpoTermBox.bindNewTermButton(this.robotIssueIsReadyProperty);
+        BooleanBinding readyBinding = parentTermAdder.parentTermsReady()
+                .and(termLabelValidator.getIsValidProperty())
+                .and(definitionPane.isValidProperty());
+        this.robotIssueIsReadyProperty.bind(readyBinding);
+        this.addNewHpoTermBox.bindNewTermButton(robotIssueIsReadyProperty);
     }
 
     private void setUpPmidXrefAdder() {
@@ -201,7 +210,12 @@ public class MainWindowController extends BaseController implements Initializabl
                                         clipboard.setContent(content);
 
                                     });
-                                    cellMenu.getItems().addAll(ghMenuItem, summaryMenuItem);
+                                    MenuItem markedFinishedMenuItem = new MenuItem("Mark finished");
+                                    markedFinishedMenuItem.setOnAction(e -> {
+                                        TableRow<RobotItem> currentRow = cell.getTableRow();
+                                        currentRow.setStyle("-fx-background-color:darkgrey");
+                                    });
+                                    cellMenu.getItems().addAll(ghMenuItem, summaryMenuItem, markedFinishedMenuItem);
                                     cell.setContextMenu(cellMenu);
                                 }
                             }

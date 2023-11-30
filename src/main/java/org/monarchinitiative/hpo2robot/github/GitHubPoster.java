@@ -104,18 +104,6 @@ public class GitHubPoster {
                 GitHubUtil.escape(this.githubLabel));
     }
 
-/*    private void reformatPayloadWithLabel(List<String> labels) {
-        this.payload = String.format("""
-                        {
-                        "title": "%s",
-                        "body": "%s",
-                        "labels": [ %s] }""",
-                GitHubUtil.escape(this.githubTitle),
-                GitHubUtil.escape(this.githubBody),
-                labelsArray4Json(this.githubLabels));
-    }*/
-
-
 
     private String formatPayload(String title, String messagebody) {
         return String.format("""

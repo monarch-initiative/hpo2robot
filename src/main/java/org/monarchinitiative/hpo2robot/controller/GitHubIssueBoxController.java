@@ -88,7 +88,7 @@ public class GitHubIssueBoxController implements Initializable  {
                     gitHubStatusLabel.setText("Could not retrieve host services");
                 }
             } catch (InternalError ee) {
-                ee.printStackTrace();
+                LOGGER.error("Error opening system browser to show GitHub issue: {}", ee.getMessage());
             }
         }
     }

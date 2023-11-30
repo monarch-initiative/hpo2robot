@@ -8,10 +8,13 @@ import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo2robot.Launcher;
 import org.monarchinitiative.hpo2robot.controller.GitHubIssueBoxController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 public class GitHubIssueBox extends HBox  {
+    Logger LOGGER = LoggerFactory.getLogger(GitHubIssueBox.class);
 
     private GitHubIssueBoxController controller;
 
@@ -29,7 +32,7 @@ public class GitHubIssueBox extends HBox  {
             this.getChildren().add(node);
             gitHubLabelProperty.bindBidirectional(controller.getGitHubLabelProperty());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Error setting up the GitHubIssueBox: {}", e.getMessage());
         }
     }
 

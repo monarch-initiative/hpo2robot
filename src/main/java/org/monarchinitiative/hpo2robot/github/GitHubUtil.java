@@ -2,6 +2,8 @@ package org.monarchinitiative.hpo2robot.github;
 
 import javafx.application.HostServices;
 import org.monarchinitiative.hpo2robot.controller.PopUps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class GitHubUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitHubUtil.class);
 
 
     public static String escape(String string) {
@@ -88,7 +91,8 @@ public class GitHubUtil {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error retrieving GitHub user info. Is your .git-credentials file set up? {}",
+                    e.getMessage());
         }
 
         return Optional.empty();

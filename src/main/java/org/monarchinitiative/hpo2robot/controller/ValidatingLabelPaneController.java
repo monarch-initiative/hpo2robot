@@ -103,4 +103,9 @@ public class ValidatingLabelPaneController implements Initializable {
     public TextField getTextField() {
         return textField;
     }
+
+
+    public BooleanProperty getIsValidProperty() {
+        return isValidProperty;
+    }
 }

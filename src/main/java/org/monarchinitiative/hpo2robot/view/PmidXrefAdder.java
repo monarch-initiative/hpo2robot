@@ -30,7 +30,8 @@ public class PmidXrefAdder extends AnchorPane {
             Node node = loader.load();
             this.getChildren().add(node);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Error loading PmidXrefAdderController: {}", e.getMessage());
+
         }
     }
 
