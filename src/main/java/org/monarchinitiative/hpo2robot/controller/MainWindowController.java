@@ -173,7 +173,7 @@ public class MainWindowController extends BaseController implements Initializabl
     private void setUpNewTermReadiness() {
         BooleanBinding readyBinding = parentTermAdder.parentTermsReady()
                 .and(termLabelValidator.getIsValidProperty())
-                .and(definitionPane.isValidProperty());
+                .and(definitionPane.isReadyProperty());
         this.robotIssueIsReadyProperty.bind(readyBinding);
         this.addNewHpoTermBox.bindNewTermButton(robotIssueIsReadyProperty);
     }

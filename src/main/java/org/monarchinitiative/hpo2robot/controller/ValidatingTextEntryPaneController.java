@@ -92,6 +92,7 @@ public class ValidatingTextEntryPaneController implements Initializable {
             validatingButtonComment.setText(EDIT_COMMENT);
         });
         validatingButtonComment.setText(CREATE_COMMENT);
+        invalidateDefinitionButton();
     }
 
 
@@ -178,8 +179,8 @@ public class ValidatingTextEntryPaneController implements Initializable {
     private void setInvalid(String message, Button button,  Label label, Label errorLabel, BooleanProperty bprop) {
         bprop.set(false);
         label.setText("");
-        button.setStyle("-fx-text-box-border: red; -fx-focus-color: red ;");
-        errorLabel.setStyle("-fx-text-box-border: red; -fx-focus-color: red ;");
+        button.setStyle("-fx-text-box-border: red; -fx-focus-color: red;");
+        errorLabel.setStyle("-fx-text-box-border: red; -fx-focus-color: red;");
         errorLabel.setText(message);
     }
 
@@ -188,6 +189,8 @@ public class ValidatingTextEntryPaneController implements Initializable {
         button.setText("");
         button.setStyle("-fx-text-box-border: green; -fx-focus-color: green ;");
         label.setStyle("-fx-text-box-border: green; -fx-focus-color: green ;");
+        validatingButtonDefinition.setStyle("-fx-text-box-border: green; -fx-focus-color: green;");
+        textSummaryDefinition.setTextFill(Color.BLACK);
         String shortText = text.length() < 47 ? text : text.substring(0,47) + "...";
         label.setText(shortText);
         errorLabel.setText("");
@@ -221,6 +224,21 @@ public class ValidatingTextEntryPaneController implements Initializable {
         return isValidDefinitionProperty;
     }
 
+    private static final String EMPTY_STR = "";
+    public void clearFields() {
+        definitionStringProperty.set(EMPTY_STR);
+        commentStringProperty.set(EMPTY_STR);
+        definitionErrorLabel.setText(EMPTY_STR);
+        commentErrorLabel.setText(EMPTY_STR);
+        textSummaryComment.setText(EMPTY_STR);
+        isValidDefinitionProperty.set(false);
+        isValidCommentProperty.set(false);
+        invalidateDefinitionButton();
+    }
 
-
+    private void invalidateDefinitionButton() {
+        validatingButtonDefinition.setStyle("-fx-text-box-border: red; -fx-focus-color: red;");
+        textSummaryDefinition.setTextFill(Color.RED);
+        textSummaryDefinition.setText("Enter a definition");
+    }
 }

@@ -3,6 +3,7 @@ package org.monarchinitiative.hpo2robot.controller.widgets;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.concurrent.Service;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -60,7 +61,8 @@ public class ProcessRunnerWidget {
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.getKeyFrames().add(
                     new KeyFrame(Duration.seconds(1),
-                            (EventHandler) event -> {
+                            // lambda for EventHandler<ActionEvent>
+                            event -> {
                                 int timeSeconds = 0;
                                 timeSeconds++;
                                 timerLabel.setText(String.format("%s s", timeSeconds));

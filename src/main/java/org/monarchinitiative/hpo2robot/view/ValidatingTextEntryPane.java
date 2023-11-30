@@ -24,8 +24,11 @@ public class ValidatingTextEntryPane extends AnchorPane {
 
     final StringProperty commentErrorProperty;
 
-
-    final BooleanProperty isValid;
+    /**
+     * If true, then the definition (contents of this pane is valid so we are ready o contribute to a new ROBOT item.
+     * Note that the comment is optional and does not affect this property.
+     */
+    final BooleanProperty isReady;
 
     ValidatingTextEntryPaneController controller;
 
@@ -36,7 +39,7 @@ public class ValidatingTextEntryPane extends AnchorPane {
         this.commentTextProperty = new SimpleStringProperty("");
         this.definitionErrorProperty = new SimpleStringProperty("");
         this.commentErrorProperty = new SimpleStringProperty("");
-        this.isValid = new SimpleBooleanProperty(false);
+        this.isReady = new SimpleBooleanProperty(false);
         this.buttonNameProperty = new SimpleStringProperty("Get text");
 
         try {
@@ -49,15 +52,15 @@ public class ValidatingTextEntryPane extends AnchorPane {
             commentErrorProperty.bindBidirectional(controller.getCommentErrorLabel().textProperty());
             definitionTextProperty.bindBidirectional(controller.definitionStringProperty());
             commentTextProperty.bindBidirectional(controller.commentStringProperty());
-            isValid.bindBidirectional(controller.isValidDefinitionPropertyProperty());
+            isReady.bindBidirectional(controller.isValidDefinitionPropertyProperty());
             this.buttonNameProperty.bindBidirectional(controller.getDefinitionValidateButton().textProperty());
         } catch (Exception e) {
             LOGGER.error("Error loading ValidatingTextEntryPaneController: {}", e.getMessage());
         }
     }
 
-    public BooleanProperty isValidProperty() {
-        return isValid;
+    public BooleanProperty isReadyProperty() {
+        return isReady;
     }
 
     public void initializeButtonText(String label) {
@@ -68,10 +71,7 @@ public class ValidatingTextEntryPane extends AnchorPane {
 
 
     public void clearFields() {
-        this.definitionTextProperty.set("");
-        this.commentTextProperty.set("");
-        this.definitionErrorProperty.set("");
-        this.commentErrorProperty.set("");
+        this.controller.clearFields();
     }
 
     public String getDefinition() {

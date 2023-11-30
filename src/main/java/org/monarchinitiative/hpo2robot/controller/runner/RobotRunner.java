@@ -37,13 +37,13 @@ public class RobotRunner {
         String [] commandParts = {"sh", "run.sh", "make",
                 "MERGE_TEMPLATE_FILE=tmp/hpo2robot.tsv", "merge_template"};
         String []  commandPartsTMP = {"touch", "TEST.txt"};
-        return runProcess(commandPartsTMP);
+        return runProcess(commandParts);
     }
 
     public String runQc() {
         String [] commandParts = {"sh", "hp-qc-pipeline.sh"};
         String []  commandPartsTMP = {"touch", "TEST-QC.txt"};
-        return runProcess(commandPartsTMP);
+        return runProcess(commandParts);
     }
 
     public Optional<Integer> getExitCode() {
@@ -78,13 +78,13 @@ public class RobotRunner {
                                 }
                                 exitCode = p.exitValue();
                                 long processPid = p.pid();
-                                String msg = String.format("ROBOT Command %s - PID: %d; exit code: %d.\n", myCommand, processPid, exitCode);
+                                String msg = String.format("ROBOT Command %s - PID: %d; exit code: %d.\n", myCommand.get(), processPid, exitCode);
                                 LOGGER.info(msg);
                                 return String.format("%s%s", msg, sb.toString());
                             } catch (IOException e) {
                                 LOGGER.error(e.getMessage());
                                 exitCode = null;
-                                return String.format("Could not run process with %s: %s.", myCommand, e.getMessage());
+                                return String.format("Could not run process with %s: %s.", myCommand.get(), e.getMessage());
                             }
                         }
                     };

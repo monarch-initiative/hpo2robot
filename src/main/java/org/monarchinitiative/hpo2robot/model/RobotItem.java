@@ -77,7 +77,7 @@ public class RobotItem {
 
     private final List<Synonym> synonymList;
 
-    private final Optional<String> gitHubIssueOpt;
+    private final String gitHubIssue;
 
     private final String orcidId;
 
@@ -97,7 +97,7 @@ public class RobotItem {
         this.newTermCommentProperty = new SimpleStringProperty(comment);
         this.parentTerms = parentTerms;
         issueProperty = new SimpleStringProperty(gitHubIssue);
-        this.orcidId = orcid;
+        this.orcidId = String.format("orcid:%s", orcid);
         if (parentTerms.isEmpty()) {
             parentTermLabelProperty = new SimpleStringProperty("Error - no term found");
         } else {
@@ -113,7 +113,11 @@ public class RobotItem {
         } else {
             pmidStringProperty = new SimpleStringProperty(String.join(";", pmids));
         }
-        gitHubIssueOpt = Optional.ofNullable(gitHubIssue);
+        if (gitHubIssue == null) {
+            this.gitHubIssue = "";
+        } else {
+            this.gitHubIssue = String.format("https://github.com/obophenotype/human-phenotype-ontology/issues/%s",gitHubIssue);
+        }
         synonymList = new ArrayList<>(synonyms);
     }
 
@@ -176,7 +180,7 @@ public class RobotItem {
             rowItems.add(pmids);                                     // Definition_PMID
             rowItems.add(getNewTermComment());                       // rdfs:comment
             rowItems.add(orcidId);                                   // creator orcid
-            rowItems.add(gitHubIssueOpt.orElse(NOT_AVAILABLE));         // github
+            rowItems.add(gitHubIssue);         // github
             rowItems.add(EMPTY_CELL);                                // synonym
             rowItems.add(EMPTY_CELL);                                // synonym orcid
             rowItems.add(EMPTY_CELL);                                // synonym PMID
@@ -192,7 +196,7 @@ public class RobotItem {
             rowItems.add(pmids);                                      // Definition_PMID
             rowItems.add(getNewTermComment());                        // rdfs:comment
             rowItems.add(orcidId);
-            rowItems.add(gitHubIssueOpt.orElse(NOT_AVAILABLE));
+            rowItems.add(gitHubIssue);
             rowItems.add(synonym.label());
             if (synonym.synonymType() == SynonymType.NONE) {
                 rowItems.add(synonym.synonymType().name());
@@ -306,7 +310,12 @@ public class RobotItem {
     }
 
     public Optional<String> getGitHubIssueOpt() {
-        return gitHubIssueOpt;
+        if (gitHubIssue == "") {
+            return Optional.empty();
+        } else {
+            return Optional.of(gitHubIssue);
+        }
+
     }
 
     public boolean isValid() {
@@ -332,7 +341,7 @@ public class RobotItem {
         sb.append("- def: ").append(getNewTermDefinition()).append("\n");
         sb.append("- comment: ").append(getNewTermComment()).append("\n");
         sb.append("- orcid: ").append(orcidId).append("\n");
-        sb.append("- github ID: ").append(gitHubIssueOpt.orElse(EMPTY_CELL)).append("\n");
+        sb.append("- github ID: ").append(gitHubIssue).append("\n");
         String syn = synonymList.stream().map(Synonym::toString).collect(Collectors.joining("|"));
         sb.append("- synonyms: ").append(syn).append("\n");
         return sb.toString();
