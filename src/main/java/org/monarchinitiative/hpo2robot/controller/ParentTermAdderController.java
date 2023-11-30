@@ -56,7 +56,6 @@ public class ParentTermAdderController implements Initializable {
         if (parentTermLabels.isEmpty()) {
             return "";
         } else {
-            StringBuilder sb = new StringBuilder();
             List<String> shortLabels = new ArrayList<>();
             for (String ptl : parentTermLabels) {
                 shortLabels.add(ptl.length() < 30 ? ptl : String.format("%s...", ptl.substring(0,27)));
@@ -79,6 +78,12 @@ public class ParentTermAdderController implements Initializable {
 
     public TextField getTextField() {
         return textField;
+    }
+
+
+    public void clearFields() {
+        this.parentTermLabels.clear();
+        this.parentTermErrorLabel.setText("");
     }
 
 

@@ -75,6 +75,6 @@ public class ParentTermAdder extends HBox {
     }
 
     public void clearFields() {
-        parentTermLabelStringProperty.set("");
+        this.controller.clearFields();
     }
 }

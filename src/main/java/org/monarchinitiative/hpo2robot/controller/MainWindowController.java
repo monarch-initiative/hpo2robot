@@ -19,11 +19,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Window;
 import javafx.util.Callback;
 import org.monarchinitiative.hpo2robot.github.GitHubUtil;
 import org.monarchinitiative.hpo2robot.model.Model;
-import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
 import org.monarchinitiative.hpo2robot.controller.runner.RobotRunner;
 import org.monarchinitiative.hpo2robot.model.Synonym;
@@ -56,7 +54,6 @@ public class MainWindowController extends BaseController implements Initializabl
     public PmidXrefAdder pmidXrefAdderBox;
     @FXML
     public GitHubIssueBox gitHubIssueBox;
-
     @FXML
     public AddNewHpoTerm addNewHpoTermBox;
     @FXML
@@ -120,6 +117,7 @@ public class MainWindowController extends BaseController implements Initializabl
         viewFactory.getOptions().hpJsonFileProperty().addListener((obs, old, hpJsonFilePath) -> loadHpo(hpJsonFilePath));
         // Do the actual loading..
         loadHpo(viewFactory.getOptions().getHpJsonFile());
+        this.model.setOptions(viewFactory.getOptions());
     }
 
     private void loadHpo(File hpJsonFilePath) {
@@ -209,15 +207,12 @@ public class MainWindowController extends BaseController implements Initializabl
         this.definitionPane.clearFields();
         this.pmidXrefAdderBox.clearFields();
         this.addNewHpoTermBox.clearFields();
-        this.gitHubIssueBox.clearFields();
     }
 
     /**
      * This method uses to the data entered by the user to add another ROBOT item to the table
      */
     private void createNewRobotItem() {
-        // TODO where should we be sotring the Options?
-        model.setOptions(this.viewFactory.getOptions());
         model.setHpoTermLabel(termLabelValidator.getLabel().get());
         model.setDefinition(this.definitionPane.getDefinition());
         model.setparentTerms(parentTermAdder.getParentTermList());
@@ -401,11 +396,7 @@ public class MainWindowController extends BaseController implements Initializabl
      */
     @FXML
     private void exitGui() {
-        //settings.saveToFile();
-        boolean clean = true;// savedBeforeExit();
-        if (clean) {
-            javafx.application.Platform.exit();
-        }
+        javafx.application.Platform.exit();
     }
 
 
@@ -433,7 +424,7 @@ public class MainWindowController extends BaseController implements Initializabl
             createNewRobotItem();
             clearFields();
         };
-        this.addNewHpoTermBox.setAction(handler);
+        this.addNewHpoTermBox.setCreateNewRobotItemAction(handler);
         EventHandler<ActionEvent> clearHandler = actionEvent -> this.robotTableView.getItems().clear();
         this.addNewHpoTermBox.setClearRobotAction(clearHandler);
         EventHandler<ActionEvent> exportHandler = actionEvent -> {
@@ -456,10 +447,10 @@ public class MainWindowController extends BaseController implements Initializabl
                 Optional<Integer> exitOpt = runner.getExitCode();
                 if (exitOpt.isPresent()) {
                     String gobbledText = runner.getGobbledText();
-                    System.out.println("Exit code " +exitOpt.get() + " -- " +  gobbledText);
+                    PopUps.alertDialog("ROBOT", gobbledText);
+
                 } else {
-                    System.out.println("Some other error");
-                    System.out.println(runner.getGobbledText());;
+                    PopUps.alertDialog("ERROR running ROBOT", runner.getGobbledText());
                 }
 
                 //LOGGER.info(gobbledText);

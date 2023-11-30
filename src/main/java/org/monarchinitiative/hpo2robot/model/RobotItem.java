@@ -94,7 +94,7 @@ public class RobotItem {
         this.newTermDefinitionProperty = new SimpleStringProperty(definition);
         this.newTermCommentProperty = new SimpleStringProperty(comment);
         this.parentTerms = parentTerms;
-        issueProperty = new SimpleStringProperty("42");
+        issueProperty = new SimpleStringProperty(gitHubIssue);
         this.orcidId = orcid;
         if (parentTerms.isEmpty()) {
             parentTermLabelProperty = new SimpleStringProperty("Error - no term found");
@@ -160,68 +160,63 @@ public class RobotItem {
      */
     private List<String> getRows() {
         List<String> rows = new ArrayList<>();
+        String parents = parentTerms.stream()
+                .map(Term::id)
+                .map(TermId::getValue)
+                .collect(Collectors.joining("|"));
+        String pmids = String.join("|", getPmids());
         if (synonymList.isEmpty()) {
-            List<String> rowItems = new ArrayList<>();               // HPO_ID",
-            rowItems.add(this.newTermId.getValue());
-            rowItems.add(this.getNewTermLabel());                   //  "HPO_Label",
-            String parents = parentTerms.stream()
-                    .map(Term::id)
-                    .map(TermId::getValue)
-                    .collect(Collectors.joining("|"));
-            rowItems.add(parents);                                  //  "Superclass",
-            rowItems.add(getNewTermDefinition());                   // "Definition",
-            String pmids = String.join("|", getPmids());
-            rowItems.add(pmids);                                    // "Definition_PMID",
-            rowItems.add(getNewTermComment());                      // "rdfs:comment",
-            rowItems.add(orcidId);                                   //  "creator orcid",
-            rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));         // "github",
-            rowItems.add(EMPTY_CELL);                               // synonym
-            rowItems.add(EMPTY_CELL);                              // synonym orcid
-            rowItems.add(EMPTY_CELL);                            // synonym PMID
-            rowItems.add(EMPTY_CELL);                           // synonym type
+            List<String> rowItems = new ArrayList<>();
+            rowItems.add(this.newTermId.getValue());                 // HPO_ID
+            rowItems.add(this.getNewTermLabel());                    // HPO_Label
+            rowItems.add(parents);                                   // Superclass
+            rowItems.add(getNewTermDefinition());                    // Definition
+            rowItems.add(pmids);                                     // Definition_PMID
+            rowItems.add(getNewTermComment());                       // rdfs:comment
+            rowItems.add(orcidId);                                   // creator orcid
+            rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));         // github
+            rowItems.add(EMPTY_CELL);                                // synonym
+            rowItems.add(EMPTY_CELL);                                // synonym orcid
+            rowItems.add(EMPTY_CELL);                                // synonym PMID
+            rowItems.add(EMPTY_CELL);                                // synonym type
             rows.add(String.join("\t", rowItems));
         } else {
             Synonym synonym = synonymList.get(0);
             List<String> rowItems = new ArrayList<>();
-            rowItems.add(this.newTermId.getValue());
-            rowItems.add(this.getNewTermLabel());
-            String parents = parentTerms.stream()
-                    .map(Term::id)
-                    .map(TermId::getValue)
-                    .collect(Collectors.joining("|"));
-            rowItems.add(parents);
-            rowItems.add(getNewTermDefinition());
-            String pmids = String.join("|", getPmids());
-            rowItems.add(pmids);
-            rowItems.add(getNewTermComment());
+            rowItems.add(this.newTermId.getValue());                  // HPO_ID
+            rowItems.add(this.getNewTermLabel());                     // HPO_Label
+            rowItems.add(parents);                                    // Superclass
+            rowItems.add(getNewTermDefinition());                     // Definition
+            rowItems.add(pmids);                                      // Definition_PMID
+            rowItems.add(getNewTermComment());                        // rdfs:comment
             rowItems.add(orcidId);
             rowItems.add(gitHubIssueOpt.orElse(EMPTY_CELL));
-            //  String synonyms = synonymList.stream().map(Synonym::label).collect(Collectors.joining("|"));
             rowItems.add(synonym.label());
             if (synonym.synonymType() == SynonymType.NONE) {
                 rowItems.add(synonym.synonymType().name());
             } else {
                 rowItems.add(EMPTY_CELL);
             }
-            rowItems.add(EMPTY_CELL); // synonym PMID
-            rowItems.add(EMPTY_CELL); // synonym orcid
+            rowItems.add(EMPTY_CELL);                                 // synonym PMID
+            rowItems.add(EMPTY_CELL);                                 // synonym orcid
             rows.add(String.join("\t", rowItems));
+            // each synonym gets its own row
             if (synonymList.size() > 1) {
                 for (int i = 1; i<synonymList.size();++i) {
                     Synonym syn = synonymList.get(i);
                     rowItems = new ArrayList<>();
-                    rowItems.add(this.newTermId.getValue());               // HPO_ID",
-                    rowItems.add(this.getNewTermLabel());                   //  "HPO_Label"
-                    rowItems.add(EMPTY_CELL);                                  //  "Superclass",
-                    rowItems.add(EMPTY_CELL);                   // "Definition",
-                    rowItems.add(EMPTY_CELL);                                    // "Definition_PMID",
-                    rowItems.add(EMPTY_CELL);                      // "rdfs:comment",
-                    rowItems.add(EMPTY_CELL);                                   //  "creator orcid",
-                    rowItems.add(EMPTY_CELL);         // "github",
-                    rowItems.add(syn.label());                               // synonym
-                    rowItems.add(EMPTY_CELL);                              // synonym orcid
-                    rowItems.add(EMPTY_CELL);                            // synonym PMID
-                    rowItems.add(syn.synonymType().name());                           // synonym type
+                    rowItems.add(this.newTermId.getValue());            // HPO_ID
+                    rowItems.add(this.getNewTermLabel());               // HPO_Label
+                    rowItems.add(EMPTY_CELL);                           // Superclass
+                    rowItems.add(EMPTY_CELL);                           // Definition
+                    rowItems.add(EMPTY_CELL);                           // Definition_PMID
+                    rowItems.add(EMPTY_CELL);                           // rdfs:comment
+                    rowItems.add(EMPTY_CELL);                           // creator orcid
+                    rowItems.add(EMPTY_CELL);                           // github
+                    rowItems.add(syn.label());                          // synonym
+                    rowItems.add(EMPTY_CELL);                           // synonym orcid
+                    rowItems.add(EMPTY_CELL);                           // synonym PMID
+                    rowItems.add(syn.synonymType().name());             // synonym type
                     rows.add(String.join("\t", rowItems));
                 }
             }

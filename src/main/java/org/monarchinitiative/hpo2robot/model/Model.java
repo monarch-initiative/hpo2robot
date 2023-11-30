@@ -4,6 +4,8 @@ import org.monarchinitiative.hpo2robot.controller.PopUps;
 import org.monarchinitiative.hpo2robot.controller.services.HpoIdService;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
@@ -16,10 +18,10 @@ import java.util.*;
  * @author Peter N Robinson
  */
 public class Model {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Model.class);
 
     private Options options = null;
-
-    List<TermId> availableHpoIds = null;
+    private AvailableHpoIds availableHpoIdService;
 
     public Set<TermId> usedHpoTermIdSet;
 
@@ -50,7 +52,6 @@ public class Model {
         comment = null;
         orcid = null;
         gitHubIssue = null;
-        usedHpoTermIdSet = new HashSet<>();
         synonymSet = new HashSet<>();
         pmidList = new ArrayList<>();
         parentTermList = new ArrayList<>();
@@ -71,20 +72,7 @@ public class Model {
             return;
         }
         HpoIdService hpoIdService = new HpoIdService(hpEditOwl.toPath());
-        availableHpoIds = hpoIdService.getAvailableHpoIdList();
-    }
-
-
-    private TermId getNextAvailableHpoId() {
-        TermId nextId = availableHpoIds.getFirst();
-        availableHpoIds.removeFirst();
-        if (usedHpoTermIdSet.contains(nextId)) {
-            // SHOULD NEVER HAPPEN BUT IF IT DOES THERE IS NO TOMORROW
-            System.err.println("[FATAL] Attempt to reuse HPO id " + nextId.getValue());
-            System.exit(1);
-        }
-        usedHpoTermIdSet.add(nextId);
-        return nextId;
+        availableHpoIdService = new AvailableHpoIds(hpoIdService.getAvailableHpoIdList());
     }
 
 
@@ -114,8 +102,18 @@ public class Model {
     }
 
     public Optional<RobotItem> getRobotItemOpt() {
+        if (options == null || ! options.isValid()) {
+            LOGGER.error("Attempt to create ROBOT item before Options initialized");
+            return Optional.empty();
+        }
         RobotItem item;
-        TermId hpoTermId = getNextAvailableHpoId();
+        Optional<TermId> optId = availableHpoIdService.getNextAvailableId();
+        if (optId.isEmpty()) {
+            // this should really never happen
+            PopUps.showInfoMessage("Could not get HPO ids", "Error");
+            return Optional.empty();
+        }
+        TermId hpoTermId = optId.get();
         String orcidId = orcid == null ? options.getOrcid() : orcid;
         if (gitHubIssue != null) {
             item = new RobotItem(hpoTermId,

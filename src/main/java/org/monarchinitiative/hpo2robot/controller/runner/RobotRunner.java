@@ -32,6 +32,7 @@ public class RobotRunner {
         StringBuilder sb = new StringBuilder();
         ProcessBuilder pb = new ProcessBuilder("sh", "run.sh", "make",
                 "MERGE_TEMPLATE_FILE=tmp/hpo2robot.tsv", "merge_template");
+        pb = new ProcessBuilder("touch", "TEST.txt");
         pb.directory(hpoFolder);
         String myCommand = String.join(" ",pb.command());
         LOGGER.info("Running ROBOT command {} in directory {}", myCommand, pb.directory().getAbsolutePath());
@@ -48,8 +49,11 @@ public class RobotRunner {
                 sb.append(read.readLine());
             }
             exitCode = p.exitValue();
-            gobbledText = sb.toString();
-            LOGGER.info("ROBOT Command exit code = {}", exitCode);
+            long processPid = p.pid();
+
+            String msg = String.format("ROBOT Command %s - PID: %d; exit code: %d.\n", myCommand, processPid, exitCode);
+            LOGGER.info(msg);
+            gobbledText = String.format("%s%s", msg, sb.toString());
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
             exitCode = null;
@@ -65,7 +69,7 @@ public class RobotRunner {
      *
 
      Value 127 is returned by /bin/sh when the given command is not found within your PATH system variable
-     * @return
+     * @return the text returned by the process running.
      */
     public String getGobbledText() {
         if (exitCode == 127) {

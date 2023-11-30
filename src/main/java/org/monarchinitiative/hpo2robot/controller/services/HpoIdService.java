@@ -50,7 +50,7 @@ public class HpoIdService {
 
             for (int i = lowValue; i < highValue; ++i) {
                 if (! hpoIdSet.contains(i)) {
-                    TermId tid = integerToHpoIt(i);
+                    TermId tid = integerToHpoId(i);
                     availableHpoIdList.add(tid);
                 }
             }
@@ -64,7 +64,7 @@ public class HpoIdService {
 
 
 
-    public TermId integerToHpoIt(int identifier) {
+    public TermId integerToHpoId(int identifier) {
         String s =  String.format("HP:%07d", identifier);
         return TermId.of(s);
     }

@@ -45,7 +45,7 @@ public class AddNewHpoTerm extends HBox {
     }
 
 
-    public void setAction(EventHandler<ActionEvent> handler) {
+    public void setCreateNewRobotItemAction(EventHandler<ActionEvent> handler) {
         controller.setAction(handler);
     }
     
