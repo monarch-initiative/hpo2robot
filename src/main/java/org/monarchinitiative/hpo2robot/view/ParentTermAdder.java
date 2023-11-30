@@ -1,5 +1,7 @@
 package org.monarchinitiative.hpo2robot.view;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +34,9 @@ public class ParentTermAdder extends HBox {
 
     private HpoRosettaStone rosettaStone = null;
 
+    private final BooleanProperty parentTermReadyProperty = new SimpleBooleanProperty(false);
+
+
 
 
     public ParentTermAdder() {
@@ -44,7 +49,7 @@ public class ParentTermAdder extends HBox {
             this.getChildren().add(node);
             parentTermLabelStringProperty = new SimpleStringProperty("");
             parentTermLabelStringProperty.bindBidirectional(controller.parentTermProperty());
-
+            parentTermReadyProperty.bind(controller.parentTermsReady());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,5 +81,9 @@ public class ParentTermAdder extends HBox {
 
     public void clearFields() {
         this.controller.clearFields();
+    }
+
+    public BooleanProperty parentTermsReady() {
+        return parentTermReadyProperty;
     }
 }

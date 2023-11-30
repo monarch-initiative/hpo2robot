@@ -262,39 +262,6 @@ public class PopUps {
         alert.showAndWait();
     }
 
-/*
-    public static Optional<String> getPMID() {
-        final Pattern pattern = Pattern.compile("PMID:\\d+");
-        String promptText = "PMID:...";
-        TextInputDialog dialog = new TextInputDialog(promptText);
-        dialog.setTitle("Enter PMID");
-        dialog.setHeaderText(null);
-        dialog.setContentText("PMID");
-        dialog.getEditor().textProperty().addListener( // ChangeListener
-                (observable, oldValue, newValue) -> {
-                    String txt = dialog.getEditor().getText();
-                    txt = txt.replaceAll("\\s", "");
-                    dialog.getEditor().setText(txt);
-                });
-        Optional<String> opt = dialog.showAndWait();
-        if (opt.isPresent()) {
-            String result = opt.get();
-            Matcher matcher = pattern.matcher(result);
-            if (matcher.matches()) {
-                return opt;
-            } else {
-                LOGGER.error("Malformed PMID ENTERED: {}", result);
-                return Optional.empty();
-            }
-        } else {
-            // empty string entered, do not call error
-            return opt;
-        }
-    }*/
-
-
-
-
     private static String getGithubIssueHtml(GitHubIssue issue) {
         final String CSS = """
                 p { font-size: 120%; color: darkgray; }

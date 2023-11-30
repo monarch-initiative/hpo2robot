@@ -1,6 +1,12 @@
 package org.monarchinitiative.hpo2robot.controller;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -31,11 +37,14 @@ public class ParentTermAdderController implements Initializable {
     @FXML
     private Label parentTermErrorLabel;
 
+    private final BooleanProperty parentTermReadyProperty = new SimpleBooleanProperty(false);
 
-    private final Set<String> parentTermLabels;
+    private IntegerBinding parentTermLabelSetSize;
+
+    private final ObservableSet<String> parentTermLabels;
 
     public ParentTermAdderController() {
-        parentTermLabels = new HashSet<>();
+        parentTermLabels = FXCollections.observableSet();
     }
 
     @Override
@@ -49,6 +58,8 @@ public class ParentTermAdderController implements Initializable {
         addButton.setStyle("-fx-spacing: 10;");
         Font largeFont = Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 18);
         parentTermLabel.setFont(largeFont);
+        parentTermLabelSetSize = Bindings.size(parentTermLabels);
+        parentTermReadyProperty.bind(parentTermLabelSetSize.greaterThan(0));
     }
 
 
@@ -85,6 +96,11 @@ public class ParentTermAdderController implements Initializable {
         this.parentTermLabels.clear();
         this.parentTermErrorLabel.setText("");
     }
+
+    public BooleanProperty parentTermsReady() {
+        return parentTermReadyProperty;
+    }
+
 
 
 }

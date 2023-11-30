@@ -90,6 +90,8 @@ public class MainWindowController extends BaseController implements Initializabl
      */
     private final BooleanProperty ontologyLoadedProperty = new SimpleBooleanProperty(false);
 
+    private final BooleanProperty robotIssueIsReadyProperty = new SimpleBooleanProperty(false);
+
     public MainWindowController(ViewFactory viewFactory, String fxmlName) {
         super(viewFactory, fxmlName);
         model = new Model();
@@ -159,6 +161,12 @@ public class MainWindowController extends BaseController implements Initializabl
         setupRobotItemHandlers();
         setUpGithubColumnContextMenu();
         setUpPmidXrefAdder();
+        setUpNewTermReadiness();
+    }
+
+    private void setUpNewTermReadiness() {
+        this.robotIssueIsReadyProperty.bind(parentTermAdder.parentTermsReady());
+        this.addNewHpoTermBox.bindNewTermButton(this.robotIssueIsReadyProperty);
     }
 
     private void setUpPmidXrefAdder() {

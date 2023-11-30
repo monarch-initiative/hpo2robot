@@ -1,11 +1,13 @@
 package org.monarchinitiative.hpo2robot.controller;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXML;
 import javafx.scene.text.Font;
@@ -78,5 +80,16 @@ public class AddNewHpoTermController implements Initializable {
 
     public StringProperty robotLabelProperty() {
         return robotStatusLabel.textProperty();
+    }
+
+    public void bindNewTermButton(BooleanProperty robotIssueIsReadyProperty) {
+        this.newRobotRowButton.disableProperty().bind(robotIssueIsReadyProperty.not());
+        final Tooltip isDisabledTooltip = new Tooltip("Complete data for new HPO term before adding new ROBOT line");
+        this.newRobotItemBox.setOnMouseEntered(e -> {
+            if (newRobotRowButton.isDisable()) {
+                Tooltip.install(newRobotItemBox, isDisabledTooltip);
+            } else {
+                Tooltip.uninstall(newRobotItemBox, isDisabledTooltip);
+            }});
     }
 }

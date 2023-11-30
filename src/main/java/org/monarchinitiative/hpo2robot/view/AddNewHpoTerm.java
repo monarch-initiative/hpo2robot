@@ -1,5 +1,6 @@
 package org.monarchinitiative.hpo2robot.view;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -63,5 +64,9 @@ public class AddNewHpoTerm extends HBox {
 
     public void clearFields() {
         robotStatusLabelProperty.set("");
+    }
+
+    public void bindNewTermButton(BooleanProperty robotIssueIsReadyProperty) {
+        this.controller.bindNewTermButton(robotIssueIsReadyProperty);
     }
 }
