@@ -1,3 +1,11 @@
+# New term creation
+
+- For the biospecimen phenotype branch [> 0020000 , <= 0025000]
+- For manual term entry [> 0030001 , <= 0040000]
+- For ROBOT new terms using this app [> 5000000 , <= 5199999]
+
+
+
 # ROBOT
 
     [ROBOT](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3002-3){:target="_blank"}. is Tool for Automating Ontology Workflows. The hpo2robot application is a GUI that streamlines the generation of input files for ROBOT.

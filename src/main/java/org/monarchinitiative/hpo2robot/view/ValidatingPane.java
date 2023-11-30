@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.monarchinitiative.hpo2robot.Launcher;
-import org.monarchinitiative.hpo2robot.controller.PmidXrefAdderController;
 import org.monarchinitiative.hpo2robot.controller.ValidatingLabelPaneController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

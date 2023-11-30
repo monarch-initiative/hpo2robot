@@ -28,11 +28,16 @@
             <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
         </HBox.margin>
     </Button>
+      <Button mnemonicParsing="false" fx:id="runHpoQcScriptButton" text="Run HP QC script">
+         <HBox.margin>
+            <Insets bottom="2.0" left="10.0" right="10.0" top="5.0" />
+         </HBox.margin>
+      </Button>
     </HBox>
     <HBox>
         <Label fx:id="robotStatusLabel">
             <HBox.margin>
-                <Insets bottom="5.0" left="210.0" right="10.0"/>
+                <Insets bottom="5.0" left="210.0" right="10.0" />
             </HBox.margin>
         </Label>
     </HBox>

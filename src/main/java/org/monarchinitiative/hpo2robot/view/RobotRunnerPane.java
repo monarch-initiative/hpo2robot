@@ -9,7 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import org.monarchinitiative.hpo2robot.Launcher;
-import org.monarchinitiative.hpo2robot.controller.AddNewHpoTermController;
+import org.monarchinitiative.hpo2robot.controller.RobotRunnerController;
 import org.monarchinitiative.hpo2robot.controller.PopUps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,18 +17,18 @@ import org.slf4j.LoggerFactory;
 /**
  * This custom control creates a panel with buttons to add ROBOT issues.
  */
-public class AddNewHpoTerm extends HBox {
-    private final static Logger LOGGER = LoggerFactory.getLogger(AddNewHpoTerm.class);
+public class RobotRunnerPane extends HBox {
+    private final static Logger LOGGER = LoggerFactory.getLogger(RobotRunnerPane.class);
 
     final StringProperty robotStatusLabelProperty;
 
-    AddNewHpoTermController controller;
-    public AddNewHpoTerm() {
+    RobotRunnerController controller;
+    public RobotRunnerPane() {
         super();
         robotStatusLabelProperty = new SimpleStringProperty("");
         try {
-            FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/AddNewHpoTerm.fxml"));
-            controller = new AddNewHpoTermController();
+            FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("view/RobotRunnerPanel.fxml"));
+            controller = new RobotRunnerController();
             loader.setController(controller);
             Node node = loader.load();
             this.getChildren().add(node);
@@ -47,7 +47,7 @@ public class AddNewHpoTerm extends HBox {
 
 
     public void setCreateNewRobotItemAction(EventHandler<ActionEvent> handler) {
-        controller.setAction(handler);
+        controller.setNewRobotItemAction(handler);
     }
     
     public void setExportRobotAction(EventHandler<ActionEvent> handler) {
@@ -60,6 +60,10 @@ public class AddNewHpoTerm extends HBox {
 
     public void setRunRobotAction(EventHandler<ActionEvent> handler) {
         controller.setRunRobotAction(handler);
+    }
+
+    public void setRunHpoQcAction(EventHandler<ActionEvent> handler) {
+        controller.setRunHpoQcAction(handler);
     }
 
     public void clearFields() {

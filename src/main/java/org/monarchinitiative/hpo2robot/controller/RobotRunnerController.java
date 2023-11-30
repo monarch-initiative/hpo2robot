@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 /**
  * This controller adds a new ROBOT Item (representing a new HPO term)
  */
-public class AddNewHpoTermController implements Initializable {
+public class RobotRunnerController implements Initializable {
 
     @FXML
     private VBox newRobotItemBox;
@@ -36,6 +36,8 @@ public class AddNewHpoTermController implements Initializable {
 
     @FXML
     private Button runRobotButton;
+    @FXML
+    private Button runHpoQcScriptButton;
 
 
     @FXML
@@ -59,11 +61,11 @@ public class AddNewHpoTermController implements Initializable {
      * that adds the contents of the GUI to a new ROBOT item.
      * @param handler function passed in from {@link MainWindowController}
      */
-    public void setAction(EventHandler<ActionEvent> handler) {
+    public void setNewRobotItemAction(EventHandler<ActionEvent> handler) {
         newRobotRowButton.setOnAction(handler);
     }
 
-
+    public void setRunHpoQcAction(EventHandler<ActionEvent> handler) { runHpoQcScriptButton.setOnAction(handler);}
     public void setExportRobotAction(EventHandler<ActionEvent> handler) {
         exportRobotButton.setOnAction(handler);
     }

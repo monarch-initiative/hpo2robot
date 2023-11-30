@@ -119,7 +119,7 @@ public class GitHubPoster {
         URI uri = new URI("https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues");
         URL url = uri.toURL();
         URLConnection con = url.openConnection();
-        String userpass = String.format("%s:%s",username,password);
+        //String userpass = String.format("%s:%s",username,password);
         //String token = replace with GitHub AUTH token;
         String token = "???-REPLACEME-???";
         token = token + ":x-oauth-basic";

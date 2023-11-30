@@ -162,7 +162,7 @@ public class Model {
             return Optional.empty();
         }
         File robotSaveFile = new File(hpoDir + File.separator + "tmp/robot2hpo-merge.tsv");
-        return Optional.ofNullable(robotSaveFile);
+        return Optional.of(robotSaveFile);
     }
 
     public Optional<File> getHpoSrcDir() {

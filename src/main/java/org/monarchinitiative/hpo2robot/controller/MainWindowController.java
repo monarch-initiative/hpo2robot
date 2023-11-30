@@ -55,7 +55,7 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public GitHubIssueBox gitHubIssueBox;
     @FXML
-    public AddNewHpoTerm addNewHpoTermBox;
+    public RobotRunnerPane addNewHpoTermBox;
     @FXML
     private TableView<RobotItem> robotTableView;
     @FXML
@@ -455,14 +455,13 @@ public class MainWindowController extends BaseController implements Initializabl
                 File hpoSrcDir = opt.get();
                 RobotRunner runner = new RobotRunner(hpoSrcDir);
                 LOGGER.info("ROBOT command: {}", runner.getCommandString());
-                runner.run();
+                String result = runner.runRobot();
                 Optional<Integer> exitOpt = runner.getExitCode();
                 if (exitOpt.isPresent()) {
-                    String gobbledText = runner.getGobbledText();
-                    PopUps.alertDialog("ROBOT", gobbledText);
+                    PopUps.alertDialog("ROBOT", result);
 
                 } else {
-                    PopUps.alertDialog("ERROR running ROBOT", runner.getGobbledText());
+                    PopUps.alertDialog("ERROR running ROBOT", result);
                 }
 
                 //LOGGER.info(gobbledText);
@@ -470,13 +469,30 @@ public class MainWindowController extends BaseController implements Initializabl
                 PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
                 robotTemplateFile = null;
             }
-
         };
         this.addNewHpoTermBox.setRunRobotAction(runRobotHandler);
+        EventHandler<ActionEvent> runHpoQcHandler = actionEvent -> {
+            Optional<File> opt = model.getHpoSrcDir();
+            if (opt.isPresent()) {
+                File hpoSrcDir = opt.get();
+                RobotRunner runner = new RobotRunner(hpoSrcDir);
+                String result = runner.runQc();
+                Optional<Integer> exitOpt = runner.getExitCode();
+                if (exitOpt.isPresent()) {
+                    PopUps.alertDialog("ROBOT", result);
 
+                } else {
+                    PopUps.alertDialog("ERROR running ROBOT", result);
+                }
+                LOGGER.trace(result);
+            } else {
+                PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
+                LOGGER.error("Could not set ROBOT export file");
+                robotTemplateFile = null;
+            }
+        };
+        this.addNewHpoTermBox.setRunHpoQcAction(runHpoQcHandler);
     }
-
-
 
 
 }

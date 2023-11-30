@@ -11,7 +11,7 @@
 <?import javafx.scene.web.WebView?>
 <?import org.monarchinitiative.hpo2robot.view.PmidXrefAdder?>
 <?import org.monarchinitiative.hpo2robot.view.GitHubIssueBox?>
-<?import org.monarchinitiative.hpo2robot.view.AddNewHpoTerm?>
+<?import org.monarchinitiative.hpo2robot.view.RobotRunnerPane?>
 <?import org.monarchinitiative.hpo2robot.controller.OntologyTree?>
 
 <BorderPane prefHeight="1000.0" prefWidth="1400.0"
@@ -69,7 +69,7 @@
                 <ParentTermAdder fx:id="parentTermAdder"/>
                 <ValidatingTextEntryPane fx:id="definitionPane"/>
                 <PmidXrefAdder fx:id="pmidXrefAdderBox"/>
-                <AddNewHpoTerm fx:id="addNewHpoTermBox"/>
+                <RobotRunnerPane fx:id="addNewHpoTermBox"/>
                 <GitHubIssueBox fx:id="gitHubIssueBox"/>
             </VBox>
 
