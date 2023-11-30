@@ -262,7 +262,7 @@ public class PopUps {
         alert.showAndWait();
     }
 
-
+/*
     public static Optional<String> getPMID() {
         final Pattern pattern = Pattern.compile("PMID:\\d+");
         String promptText = "PMID:...";
@@ -290,7 +290,7 @@ public class PopUps {
             // empty string entered, do not call error
             return opt;
         }
-    }
+    }*/
 
 
 

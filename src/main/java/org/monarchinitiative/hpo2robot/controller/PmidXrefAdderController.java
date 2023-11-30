@@ -56,7 +56,7 @@ public class PmidXrefAdderController implements Initializable  {
         pmidList = new ArrayList<>();
         synonymList = new ArrayList<>();
         pmidButton.setOnAction(e -> {
-            Optional<String> opt = PopUps.getPMID();
+            Optional<String> opt = UserStringFetcher.fetchPubmed();
             if (opt.isPresent()) {
                 pmidList.add(opt.get());
                 LOGGER.trace("Adding {}", opt.get());
