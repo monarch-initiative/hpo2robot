@@ -1,7 +1,9 @@
 package org.monarchinitiative.hpo2robot.controller;
 
 import javafx.application.HostServices;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -175,7 +177,11 @@ public class MainWindowController extends BaseController implements Initializabl
                 .and(termLabelValidator.getIsValidProperty())
                 .and(definitionPane.isReadyProperty());
         this.robotIssueIsReadyProperty.bind(readyBinding);
-        this.addNewHpoTermBox.bindNewTermButton(robotIssueIsReadyProperty);
+        this.addNewHpoTermBox.bindNewRobotItemButton(robotIssueIsReadyProperty);
+        IntegerBinding robotTableSizeBinding = Bindings.size(robotTableView.getItems());
+        BooleanProperty tableReadyProperty = new SimpleBooleanProperty();
+        tableReadyProperty.bind(robotTableSizeBinding.greaterThan(0));
+        this.addNewHpoTermBox.bindWriteRobotFileButton(tableReadyProperty);
     }
 
     private void setUpPmidXrefAdder() {
@@ -449,20 +455,12 @@ public class MainWindowController extends BaseController implements Initializabl
             }
         };
         this.addNewHpoTermBox.setExportRobotAction(exportHandler);
-        EventHandler<ActionEvent> runRobotHandler = actionEvent -> {
+        EventHandler<ActionEvent> clearRobotFileHandler = actionEvent -> {
             Optional<File> opt = model.getHpoSrcDir();
             if (opt.isPresent()) {
                 File hpoSrcDir = opt.get();
                 RobotRunner runner = new RobotRunner(hpoSrcDir);
-                LOGGER.info("ROBOT command: {}", runner.getCommandString());
-                String result = runner.runRobot();
-                Optional<Integer> exitOpt = runner.getExitCode();
-                if (exitOpt.isPresent()) {
-                    PopUps.alertDialog("ROBOT", result);
-
-                } else {
-                    PopUps.alertDialog("ERROR running ROBOT", result);
-                }
+                runner.clearRobotFile();
 
                 //LOGGER.info(gobbledText);
             } else {
@@ -470,28 +468,24 @@ public class MainWindowController extends BaseController implements Initializabl
                 robotTemplateFile = null;
             }
         };
-        this.addNewHpoTermBox.setRunRobotAction(runRobotHandler);
-        EventHandler<ActionEvent> runHpoQcHandler = actionEvent -> {
+        this.addNewHpoTermBox.setClearRobotFileHandler(clearRobotFileHandler);
+        EventHandler<ActionEvent> copyRobotCommandHandler = actionEvent -> {
             Optional<File> opt = model.getHpoSrcDir();
             if (opt.isPresent()) {
                 File hpoSrcDir = opt.get();
                 RobotRunner runner = new RobotRunner(hpoSrcDir);
-                String result = runner.runQc();
-                Optional<Integer> exitOpt = runner.getExitCode();
-                if (exitOpt.isPresent()) {
-                    PopUps.alertDialog("ROBOT", result);
-
-                } else {
-                    PopUps.alertDialog("ERROR running ROBOT", result);
-                }
-                LOGGER.trace(result);
+                String command = runner.getCommandString();
+                final Clipboard clipboard = Clipboard.getSystemClipboard();
+                final ClipboardContent content = new ClipboardContent();
+                content.putString(command);
+                clipboard.setContent(content);
+                LOGGER.trace(command);
             } else {
-                PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
-                LOGGER.error("Could not set ROBOT export file");
-                robotTemplateFile = null;
+                PopUps.showInfoMessage("Error", "Could not get ROBOT command");
+                LOGGER.error("Could not get ROBOT command");
             }
         };
-        this.addNewHpoTermBox.setRunHpoQcAction(runHpoQcHandler);
+        this.addNewHpoTermBox.copyRobotCommandAction(copyRobotCommandHandler);
     }
 
 

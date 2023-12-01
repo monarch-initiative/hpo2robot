@@ -29,8 +29,6 @@ public class ParentTermAdder extends HBox {
     private final Logger LOGGER = LoggerFactory.getLogger(ParentTermAdder.class);
     private ParentTermAdderController controller;
 
-    private StringProperty parentTermLabelStringProperty;
-
 
     private HpoRosettaStone rosettaStone = null;
 
@@ -47,7 +45,7 @@ public class ParentTermAdder extends HBox {
             loader.setController(controller);
             Node node = loader.load();
             this.getChildren().add(node);
-            parentTermLabelStringProperty = new SimpleStringProperty("");
+            StringProperty parentTermLabelStringProperty = new SimpleStringProperty("");
             parentTermLabelStringProperty.bindBidirectional(controller.parentTermProperty());
             parentTermReadyProperty.bind(controller.parentTermsReady());
         } catch (Exception e) {

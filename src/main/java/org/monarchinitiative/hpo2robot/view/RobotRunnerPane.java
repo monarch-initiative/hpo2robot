@@ -58,19 +58,23 @@ public class RobotRunnerPane extends HBox {
         controller.setClearRobotAction(handler);
     }
 
-    public void setRunRobotAction(EventHandler<ActionEvent> handler) {
-        controller.setRunRobotAction(handler);
+    public void setClearRobotFileHandler(EventHandler<ActionEvent> handler) {
+        controller.setClearRobotFileAction(handler);
     }
 
-    public void setRunHpoQcAction(EventHandler<ActionEvent> handler) {
-        controller.setRunHpoQcAction(handler);
+    public void copyRobotCommandAction(EventHandler<ActionEvent> handler) {
+        controller.copyRobotCommandAction(handler);
     }
 
     public void clearFields() {
         robotStatusLabelProperty.set("");
     }
 
-    public void bindNewTermButton(BooleanProperty robotIssueIsReadyProperty) {
+    public void bindNewRobotItemButton(BooleanProperty robotIssueIsReadyProperty) {
         this.controller.bindNewTermButton(robotIssueIsReadyProperty);
+    }
+
+    public void bindWriteRobotFileButton(BooleanProperty robotTableIsReadyProperty) {
+        this.controller.bindRobotTableButton(robotTableIsReadyProperty);
     }
 }

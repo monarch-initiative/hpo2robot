@@ -80,7 +80,7 @@ public class RobotRunner {
                                 long processPid = p.pid();
                                 String msg = String.format("ROBOT Command %s - PID: %d; exit code: %d.\n", myCommand.get(), processPid, exitCode);
                                 LOGGER.info(msg);
-                                return String.format("%s%s", msg, sb.toString());
+                                return String.format("%s%s", msg, sb);
                             } catch (IOException e) {
                                 LOGGER.error(e.getMessage());
                                 exitCode = null;
@@ -95,4 +95,13 @@ public class RobotRunner {
         return service.valueProperty().toString();
     }
 
+    public void clearRobotFile() {
+        String FILE_PATH = hpoFolder.getAbsolutePath() + File.separator + "tmp/hpo2robot.tsv";
+        try {
+            new PrintWriter(FILE_PATH).close();
+        } catch (FileNotFoundException e) {
+            LOGGER.error("Could not delete contents of ROBOTG file: {}", e.getMessage());
+        }
+        LOGGER.info("Cleared ROBOT file at {}", FILE_PATH);
+    }
 }

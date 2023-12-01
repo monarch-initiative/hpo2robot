@@ -21,7 +21,7 @@ public class GitHubUtil {
             return "\"\"";
         }
 
-        char         c = 0;
+        char         c;
         int          i;
         int          len = string.length();
         StringBuilder sb = new StringBuilder(len + 4);

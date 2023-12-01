@@ -21,9 +21,7 @@ public class AvailableHpoIds {
 
     public Optional<TermId> getNextAvailableId() {
         Optional<TermId> opt = availableHpoIds.stream().filter(Predicate.not(assignedHpoIds::contains)).findFirst();
-        if (opt.isPresent()) {
-            assignedHpoIds.add(opt.get());
-        }
+        opt.ifPresent(assignedHpoIds::add);
         return opt;
     }
 

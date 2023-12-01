@@ -35,9 +35,9 @@ public class RobotRunnerController implements Initializable {
     private Button exportRobotButton;
 
     @FXML
-    private Button runRobotButton;
+    private Button clearRobotFileButton;
     @FXML
-    private Button runHpoQcScriptButton;
+    private Button copyRobotCommandButton;
 
 
     @FXML
@@ -65,7 +65,7 @@ public class RobotRunnerController implements Initializable {
         newRobotRowButton.setOnAction(handler);
     }
 
-    public void setRunHpoQcAction(EventHandler<ActionEvent> handler) { runHpoQcScriptButton.setOnAction(handler);}
+    public void copyRobotCommandAction(EventHandler<ActionEvent> handler) { copyRobotCommandButton.setOnAction(handler);}
     public void setExportRobotAction(EventHandler<ActionEvent> handler) {
         exportRobotButton.setOnAction(handler);
     }
@@ -75,8 +75,8 @@ public class RobotRunnerController implements Initializable {
     }
 
 
-    public void setRunRobotAction(EventHandler<ActionEvent> handler) {
-        runRobotButton.setOnAction(handler);
+    public void setClearRobotFileAction(EventHandler<ActionEvent> handler) {
+        clearRobotFileButton.setOnAction(handler);
     }
 
 
@@ -93,5 +93,9 @@ public class RobotRunnerController implements Initializable {
             } else {
                 Tooltip.uninstall(newRobotItemBox, isDisabledTooltip);
             }});
+    }
+
+    public void bindRobotTableButton(BooleanProperty robotTableIsReadyProperty) {
+        this.exportRobotButton.disableProperty().bind(robotTableIsReadyProperty.not());
     }
 }

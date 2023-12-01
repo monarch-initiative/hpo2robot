@@ -40,8 +40,6 @@ public class ParentTermAdderController implements Initializable {
 
     private final BooleanProperty parentTermReadyProperty = new SimpleBooleanProperty(false);
 
-    private IntegerBinding parentTermLabelSetSize;
-
     private final ObservableSet<String> parentTermLabels;
 
     public ParentTermAdderController() {
@@ -60,7 +58,7 @@ public class ParentTermAdderController implements Initializable {
         addButton.setStyle("-fx-spacing: 10;");
         Font largeFont = Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 18);
         parentTermLabel.setFont(largeFont);
-        parentTermLabelSetSize = Bindings.size(parentTermLabels);
+        IntegerBinding parentTermLabelSetSize = Bindings.size(parentTermLabels);
         parentTermReadyProperty.bind(parentTermLabelSetSize.greaterThan(0));
         setInvalid();
     }
