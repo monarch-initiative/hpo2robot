@@ -117,8 +117,9 @@ public class PmidXrefAdderController implements Initializable  {
     }
 
     public void clearFields() {
-        pmidList = new ArrayList<>();
+        pmidList.clear();
         pmidLabel.setText("(0)");
+        synonymList.clear();
     }
 
     /**

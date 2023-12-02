@@ -432,8 +432,6 @@ public class MainWindowController extends BaseController implements Initializabl
     }
 
 
-    private File robotTemplateFile = null;
-
     /**
      * Set up handlers for the three buttons on the new ROBOT item box
      */
@@ -443,7 +441,14 @@ public class MainWindowController extends BaseController implements Initializabl
             clearFields();
         };
         this.addNewHpoTermBox.setCreateNewRobotItemAction(handler);
-        EventHandler<ActionEvent> clearHandler = actionEvent -> this.robotTableView.getItems().clear();
+        EventHandler<ActionEvent> clearHandler = actionEvent -> {
+            boolean OK = PopUps.getBooleanFromUser("Are you sure you want to clear the ROBOT item table?",
+                    "Choose OK to permanently delete the data in the ROBOT item table",
+                    "Warning");
+            if (OK) {
+                this.robotTableView.getItems().clear();
+            }
+        };
         this.addNewHpoTermBox.setClearRobotAction(clearHandler);
         EventHandler<ActionEvent> exportHandler = actionEvent -> {
             Optional<File> opt = this.model.getRobotSaveFileOpt();
