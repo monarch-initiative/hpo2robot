@@ -145,21 +145,7 @@ public class PopUps {
 
     }
 
-    /**
-     * Ask user a boolean question and get an answer.
-     *
-     * @param windowTitle Title of PopUp window
-     * @return true or false response from user
-     */
-    public static boolean getBooleanFromUser(String question, String headerText, String windowTitle) {
-        Alert al = new Alert(AlertType.CONFIRMATION);
-        al.setTitle(windowTitle);
-        al.setHeaderText(headerText);
-        al.setContentText(question);
 
-        Optional<ButtonType> result = al.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
-    }
 
     /**
      * Present user a window with buttons

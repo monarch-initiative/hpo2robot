@@ -22,7 +22,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.monarchinitiative.hpo2robot.controller.widgets.BooleanRetrieverWidget;
 import org.monarchinitiative.hpo2robot.github.GitHubUtil;
 import org.monarchinitiative.hpo2robot.model.Model;
 import org.monarchinitiative.hpo2robot.model.RobotItem;
@@ -442,9 +444,11 @@ public class MainWindowController extends BaseController implements Initializabl
         };
         this.addNewHpoTermBox.setCreateNewRobotItemAction(handler);
         EventHandler<ActionEvent> clearHandler = actionEvent -> {
-            boolean OK = PopUps.getBooleanFromUser("Are you sure you want to clear the ROBOT item table?",
+            Stage stage = (Stage) this.addNewHpoTermBox.getScene().getWindow();
+            boolean OK = BooleanRetrieverWidget.getBooleanFromUser("Are you sure you want to clear the ROBOT item table?",
                     "Choose OK to permanently delete the data in the ROBOT item table",
-                    "Warning");
+                    "Warning",
+                    stage);
             if (OK) {
                 this.robotTableView.getItems().clear();
             }
@@ -470,7 +474,6 @@ public class MainWindowController extends BaseController implements Initializabl
                 //LOGGER.info(gobbledText);
             } else {
                 PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
-                robotTemplateFile = null;
             }
         };
         this.addNewHpoTermBox.setClearRobotFileHandler(clearRobotFileHandler);
