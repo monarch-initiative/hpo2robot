@@ -161,6 +161,11 @@ public class RobotItem {
     }
 
 
+    private String getSynonymUri(SynonymType syntype) {
+      return String.format("http://purl.obolibrary.org/obo/hp#%s", syntype.name().toLowerCase());
+    }
+
+
     /**
      * @return The one or more rows of the ROBOT file that correspond to a GitHub item.
      */
@@ -198,8 +203,8 @@ public class RobotItem {
             rowItems.add(orcidId);
             rowItems.add(gitHubIssue);
             rowItems.add(synonym.label());
-            if (synonym.synonymType() == SynonymType.NONE) {
-                rowItems.add(synonym.synonymType().name());
+            if (synonym.synonymType() != SynonymType.NONE) {
+                rowItems.add(getSynonymUri(synonym.synonymType()));
             } else {
                 rowItems.add(EMPTY_CELL);
             }
@@ -222,7 +227,7 @@ public class RobotItem {
                     rowItems.add(syn.label());                          // synonym
                     rowItems.add(EMPTY_CELL);                           // synonym orcid
                     rowItems.add(EMPTY_CELL);                           // synonym PMID
-                    rowItems.add(syn.synonymType().name());             // synonym type
+                    rowItems.add(getSynonymUri(synonym.synonymType())); // synonym type
                     rows.add(String.join("\t", rowItems));
                 }
             }

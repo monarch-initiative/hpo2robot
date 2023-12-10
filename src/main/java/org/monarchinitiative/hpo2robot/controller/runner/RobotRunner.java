@@ -15,7 +15,7 @@ import java.util.Optional;
 public class RobotRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RobotRunner.class);
 
-    private static final String COMMAND = "sh run.sh make MERGE_TEMPLATE_FILE=tmp/hpo2robot.tsv";
+    private static final String COMMAND = "sh run.sh make MERGE_TEMPLATE_FILE=tmp/robot2hpo-merge.tsv merge_template";
 
     String gobbledText;
 
