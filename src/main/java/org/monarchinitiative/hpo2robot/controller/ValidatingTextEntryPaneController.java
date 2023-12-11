@@ -170,7 +170,15 @@ public class ValidatingTextEntryPaneController implements Initializable {
             }
         });
         Optional<String> opt = dialog.showAndWait();
-        return opt.orElse("");
+        // silently remove double white space or trailing/leading whitespace
+        if (opt.isPresent()) {
+            String s = opt.get();
+            s = s.trim();
+            s = s.replaceAll("  ", "");
+            return s;
+        } else {
+            return "";
+        }
     }
 
 

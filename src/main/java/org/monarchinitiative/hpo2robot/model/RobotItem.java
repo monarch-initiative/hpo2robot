@@ -227,7 +227,11 @@ public class RobotItem {
                     rowItems.add(syn.label());                          // synonym
                     rowItems.add(EMPTY_CELL);                           // synonym orcid
                     rowItems.add(EMPTY_CELL);                           // synonym PMID
-                    rowItems.add(getSynonymUri(synonym.synonymType())); // synonym type
+                    if (synonym.synonymType() != SynonymType.NONE) {    // synonym type
+                        rowItems.add(getSynonymUri(synonym.synonymType()));
+                    } else {
+                        rowItems.add(EMPTY_CELL);
+                    }
                     rows.add(String.join("\t", rowItems));
                 }
             }

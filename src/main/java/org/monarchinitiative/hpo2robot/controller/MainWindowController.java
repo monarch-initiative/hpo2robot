@@ -246,7 +246,17 @@ public class MainWindowController extends BaseController implements Initializabl
      * This method uses to the data entered by the user to add another ROBOT item to the table
      */
     private void createNewRobotItem() {
-        model.setHpoTermLabel(termLabelValidator.getLabel().get());
+        String newHpoLabel = termLabelValidator.getLabel().get();
+        var hpo = hpOntology.get();
+        boolean duplicated = hpo.getTerms().stream()
+                .map(Term::getName)
+                .anyMatch(t -> t.equals(newHpoLabel));
+        if (duplicated) {
+            PopUps.alertDialog("Error",
+                    String.format("%s already present in ontology.", newHpoLabel));
+            return;
+        }
+        model.setHpoTermLabel(newHpoLabel);
         model.setDefinition(this.definitionPane.getDefinition());
         model.setparentTerms(parentTermAdder.getParentTermList());
         model.setComment(this.definitionPane.getComment());
