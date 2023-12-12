@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
 import org.monarchinitiative.hpo2robot.controller.widgets.UserStringFetcher;
 import org.monarchinitiative.hpo2robot.model.Synonym;
 import org.monarchinitiative.hpo2robot.view.ViewFactory;
@@ -95,15 +94,6 @@ public class PmidXrefAdderController implements Initializable  {
     }
     private static final String NOT_INITIALIZED = "not initialized";
 
-    public static String getStringFromUser(String windowTitle, String promptText, String labelText) {
-        TextInputDialog dialog = new TextInputDialog(promptText);
-        dialog.setTitle(windowTitle);
-        dialog.setHeaderText(null);
-        dialog.setContentText(labelText);
-        Optional<String> result = dialog.showAndWait();
-        return result.orElse(NOT_INITIALIZED);
-
-    }
 
     public List<String> getPmidList() {
         return pmidList;

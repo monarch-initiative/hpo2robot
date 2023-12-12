@@ -319,7 +319,7 @@ public class RobotItem {
     }
 
     public Optional<String> getGitHubIssueOpt() {
-        if (gitHubIssue == "") {
+        if (gitHubIssue.equals(EMPTY_CELL)) {
             return Optional.empty();
         } else {
             return Optional.of(gitHubIssue);

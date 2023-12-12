@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This control let's us add PMID and XREFs.
@@ -53,6 +54,10 @@ public class PmidXrefAdder extends AnchorPane {
         } else {
             return controller.getSynonymList();
         }
+    }
+
+    public Optional<String> getCustomOrcidOpt() {
+        return controller.customOrcidOpt();
     }
 
     public void clearFields() {

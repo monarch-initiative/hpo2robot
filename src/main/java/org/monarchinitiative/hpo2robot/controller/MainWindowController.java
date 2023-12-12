@@ -264,6 +264,8 @@ public class MainWindowController extends BaseController implements Initializabl
         model.setSynonymList(pmidXrefAdderBox.getSynonymList());
         Optional<String> opt = gitHubIssueBox.getGitHubIssueNumber();
         opt.ifPresent(model::setGitHubIssue);
+        Optional<String> customOrcidOpt = pmidXrefAdderBox.getCustomOrcidOpt();
+        customOrcidOpt.ifPresent(model::setOrcid);
         Optional<RobotItem> itemOpt = model.getRobotItemOpt();
         if (itemOpt.isPresent()) {
             model.reset();
