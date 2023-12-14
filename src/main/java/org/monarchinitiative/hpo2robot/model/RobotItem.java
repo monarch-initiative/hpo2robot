@@ -223,7 +223,7 @@ public class RobotItem {
                     rowItems.add(EMPTY_CELL);                           // Definition_PMID
                     rowItems.add(EMPTY_CELL);                           // rdfs:comment
                     rowItems.add(EMPTY_CELL);                           // creator orcid
-                    rowItems.add(NOT_AVAILABLE);                        // github
+                    rowItems.add(EMPTY_CELL);                           // github
                     rowItems.add(syn.label());                          // synonym
                     rowItems.add(EMPTY_CELL);                           // synonym orcid
                     rowItems.add(EMPTY_CELL);                           // synonym PMID
@@ -335,15 +335,20 @@ public class RobotItem {
         return synonymList;
     }
 
+    private String getHpoMarkdownLink(Term term) {
+        String terminfo = String.format("%s (%s)", term.getName(), term.id().getValue());
+        return String.format("[%s](https://hpo.jax.org/app/browse/term/%s)", terminfo,term.id().getValue());
+
+    }
+
     public String getIssueSummary() {
         StringBuilder sb = new StringBuilder();
         sb.append("Adding new term: \n");
         sb.append("- ID: ").append(this.newTermId.getValue()).append("\n");
         sb.append("- label: ").append(this.getNewTermLabel()).append("\n");
         String parents = parentTerms.stream()
-                .map(Term::id)
-                .map(TermId::getValue)
-                .collect(Collectors.joining("|"));
+                .map(this::getHpoMarkdownLink)
+                .collect(Collectors.joining(" | "));
         sb.append("- parents: ").append(parents).append("\n");
         String pmids = String.join("|", getPmids());
         sb.append("- pmid: ").append(pmids).append("\n");

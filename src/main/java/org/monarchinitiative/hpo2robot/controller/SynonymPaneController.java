@@ -99,7 +99,8 @@ public class SynonymPaneController  extends BaseController implements Initializa
     @FXML
     public void okAction(ActionEvent e) {
         Stage stage = (Stage) this.synonymTextField.getScene().getWindow();
-        this.synonymLabel = synonymTextField.getText();
+        String syntext = synonymTextField.getText();
+        this.synonymLabel =  syntext.replaceAll("  ", " ").trim();
         this.synonymType = (SynonymType) radioButtonToggleGroup.getSelectedToggle().getUserData();
         viewFactory.closeStage(stage);
     }

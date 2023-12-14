@@ -482,8 +482,6 @@ public class MainWindowController extends BaseController implements Initializabl
                 File hpoSrcDir = opt.get();
                 RobotRunner runner = new RobotRunner(hpoSrcDir);
                 runner.clearRobotFile();
-
-                //LOGGER.info(gobbledText);
             } else {
                 PopUps.showInfoMessage("Error", "Could not set ROBOT export file");
             }
