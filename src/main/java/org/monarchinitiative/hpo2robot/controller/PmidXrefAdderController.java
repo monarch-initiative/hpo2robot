@@ -1,11 +1,14 @@
 package org.monarchinitiative.hpo2robot.controller;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.text.Font;
 import org.monarchinitiative.hpo2robot.controller.widgets.UserStringFetcher;
 import org.monarchinitiative.hpo2robot.model.Synonym;
 import org.monarchinitiative.hpo2robot.view.ViewFactory;
@@ -37,13 +40,16 @@ public class PmidXrefAdderController implements Initializable  {
     private Label synonymAdderLabel;
 
     @FXML
+    private Label orcidLabel;
+
+    @FXML
     private Button orcidButton;
 
     private List<String> pmidList;
 
     private List<Synonym> synonymList;
 
-    private String customOrcid = null;
+    private StringProperty customOrcidProperty;
 
     private ViewFactory viewFactory = null;
 
@@ -73,9 +79,9 @@ public class PmidXrefAdderController implements Initializable  {
         orcidButton.setOnAction(actionEvent -> {
             Optional<String> opt = UserStringFetcher.fetchORCID();
             if (opt.isPresent()) {
-                System.out.println("GOT ORCID " + opt.get());
-                customOrcid = opt.get();
+                customOrcidProperty.set(opt.get());
             } else {
+                customOrcidProperty.set("");
                 LOGGER.error("Could not retrieve custom ORCID");
             }
         });
@@ -91,6 +97,9 @@ public class PmidXrefAdderController implements Initializable  {
             String synonymText = synonymList.isEmpty() ? "" : String.format("(%d)", synonymList.size());
             this.synonymAdderLabel.setText(synonymText);
         });
+        customOrcidProperty = new SimpleStringProperty("");
+        orcidLabel.textProperty().bind(customOrcidProperty);
+        orcidLabel.setFont(new Font("Arial", 8));
     }
     private static final String NOT_INITIALIZED = "not initialized";
 
@@ -103,13 +112,18 @@ public class PmidXrefAdderController implements Initializable  {
 
 
     public Optional<String> customOrcidOpt() {
-        return Optional.ofNullable(customOrcid);
+        if (customOrcidProperty.get().isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.ofNullable(customOrcidProperty.get());
+        }
     }
 
     public void clearFields() {
         pmidList.clear();
         pmidLabel.setText("(0)");
         synonymList.clear();
+        customOrcidProperty.set("");
     }
 
     /**

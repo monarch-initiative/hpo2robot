@@ -58,7 +58,7 @@ public class RobotRunner {
             protected Task<String> createTask() {
                     return new Task<>() {
                         @Override
-                        protected String call() throws Exception {
+                        protected String call() {
                             StringBuilder sb = new StringBuilder();
                             ProcessBuilder pb = new ProcessBuilder(commandParts);
                             pb.directory(hpoFolder);
