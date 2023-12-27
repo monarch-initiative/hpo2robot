@@ -11,14 +11,20 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.monarchinitiative.hpo2robot.controller.widgets.Platform;
 import org.monarchinitiative.hpo2robot.controller.widgets.UserStringFetcher;
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.view.ViewFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.monarchinitiative.hpo2robot.io.FileDownloader;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -26,6 +32,8 @@ public class OptionsWindowController extends BaseController implements Initializ
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionsWindowController.class);
 
     private static final String NOT_INITIALIZED = "not initialized";
+
+    private static final String N_A = "na";
     @FXML
     public Label hpSrcOntologyLabel;
     @FXML
@@ -55,18 +63,6 @@ public class OptionsWindowController extends BaseController implements Initializ
 
     @FXML
     void okButtonAction() {
-        String hp_json = this.hpJsonProperty.get();
-        String orcid = orcidProperty.get();
-        String hpSrcOntology = hpSrcOntologyProperty.get();
-        if (!hp_json.equals(NOT_INITIALIZED)) {
-            options.setHpJsonFile(new File(hp_json));
-        }
-        if (!orcid.equals(NOT_INITIALIZED)) {
-            options.setOrcid(orcid);
-        }
-        if (! hpSrcOntology.equals(NOT_INITIALIZED)) {
-            options.setHpSrcOntologyDir(new File(hpSrcOntology));
-        }
         Stage stage = (Stage) this.orcidLabel.getScene().getWindow();
         viewFactory.closeStage(stage);
     }
@@ -82,6 +78,15 @@ public class OptionsWindowController extends BaseController implements Initializ
         hpJsonProperty = new SimpleStringProperty(NOT_INITIALIZED);
         hpSrcOntologyProperty = new SimpleStringProperty(NOT_INITIALIZED);
         orcidProperty = new SimpleStringProperty(NOT_INITIALIZED);
+        // initialize options that were saved in the $HOME/.hpo2robot.txt file
+        Map<String, String> opts = Options.readOptions();
+        for (var e : opts.entrySet()) {
+            switch (e.getKey()) {
+                case Options.HP_JSON_KEY -> hpJsonProperty.set(e.getValue());
+                case Options.ORCID_KEY -> orcidProperty.set(e.getValue());
+                case Options.HP_SRC_DIRECTORY -> hpSrcOntologyProperty.set(e.getValue());
+            }
+        }
     }
 
     @Override
@@ -116,26 +121,33 @@ public class OptionsWindowController extends BaseController implements Initializ
     }
 
     /**
-     * Choose the path to the hp.json file; this file is used for the ontology browser and autocomplete
-     * for the parents and does not necessarily have to be the very latest version unless a new term
-     * is needed as a parent term.
+     * Download the hp.json file to $HOME/.hpo2robot/hp.json
      */
-    public void setHpJsonFile(ActionEvent e) {
+    public void downloadJson(ActionEvent e) {
         e.consume();
-        Optional<File> opt = setFile("Select hp.json File", "JSON file", "*.json");
-        if (opt.isPresent()) {
-            File f = opt.get();
-            this.options.setHpJsonFile(f);
-            this.hpJsonProperty.set(f.getAbsolutePath());
+        File hpo2robotDir = Platform.getHpo2RobotDir();
+        Path hpJsonPath = Paths.get(String.valueOf(hpo2robotDir), "hp.json");
+
+        try {
+            URL hpoJson = new URL("http://purl.obolibrary.org/obo/hp.json");
+            FileDownloader downloader = new FileDownloader();
+            downloader.copyURLToFile(hpoJson, hpJsonPath.toFile());
+            } catch (MalformedURLException ex) {
+            LOGGER.error("Could not download hp.json: {}", ex.getMessage());
+                throw new RuntimeException(ex);
         }
+        // if we get here, download was successful
+        hpJsonProperty.set(hpJsonPath.toFile().getAbsolutePath());
     }
+
+
 
     public void setORCID(ActionEvent e) {
         e.consume();
         Optional<String> opt = UserStringFetcher.fetchORCID();
         if (opt.isPresent()) {
             String orcid = opt.get();
-            this.options.setOrcid(orcid);
+            //this.options.setOrcid(orcid);
             this.orcidProperty.set(orcid);
         } else {
             LOGGER.warn("Could not retrieve ORCID from user");
@@ -153,15 +165,15 @@ public class OptionsWindowController extends BaseController implements Initializ
     }
 
     /**
-     * Set the path to the cloned github repository human-phenotype-ontology/src/ontology
-     * Note that the repository must be up to date (pull) to avoid BAD THINGS.
+     * Set the path to the cloned GitHub repository human-phenotype-ontology/src/ontology
+     * Note that the repository must be up-to-date (pull) to avoid BAD THINGS.
      */
     public void setHpSrcOntology(ActionEvent e) {
         e.consume();
         Optional<File> opt = setDirectory("Set hpo/src/ontology folder");
         if (opt.isPresent()) {
             File f = opt.get();
-            this.options.setHpSrcOntologyDir(f);
+           // this.options.setHpSrcOntologyDir(f);
             this.hpSrcOntologyProperty.set(f.getAbsolutePath());
         }
     }
@@ -177,18 +189,21 @@ public class OptionsWindowController extends BaseController implements Initializ
     }
 
     private Optional<File> setDirectory(String title) {
-        DirectoryChooser dchooser = new DirectoryChooser();
-        dchooser.setTitle(title);
+        DirectoryChooser dirChooser = new DirectoryChooser();
+        dirChooser.setTitle(title);
         Stage stage = (Stage) this.hpJsonLabel.getScene().getWindow();
-        File f = dchooser.showDialog(stage);
+        File f = dirChooser.showDialog(stage);
         return Optional.ofNullable(f);
     }
 
 
     public void setCurrentOptions(Options options) {
-        this.options = options;
+        //this.options = options;
         this.hpJsonProperty.set(options.getHpJsonFile().getAbsolutePath());
         this.hpSrcOntologyProperty.set(options.getHpSrcOntologyDir().getAbsolutePath());
         this.orcidProperty.set(options.getOrcid());
     }
+
+
+
 }

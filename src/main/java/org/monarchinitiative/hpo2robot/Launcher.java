@@ -27,6 +27,7 @@ public class Launcher extends Application {
         HostServices hostServices = getHostServices();
         viewFactory = new ViewFactory(options, hostServices);
         viewFactory.showMainWindow();
+        stage.setOnCloseRequest(e -> PersistenceAccess.saveToPersistence(viewFactory.getOptions()));
     }
 
     @Override

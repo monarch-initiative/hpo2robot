@@ -20,7 +20,7 @@
          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Button fx:id="hpJsonButton" mnemonicParsing="false" onAction="#setHpJsonFile" text="Open" GridPane.columnIndex="1" />
+        <Button fx:id="hpJsonButton" mnemonicParsing="false" onAction="#downloadJson" text="Download" GridPane.columnIndex="1" />
         <Label fx:id="hpJsonLabel" text="not initialized" GridPane.columnIndex="2" />
         <Button fx:id="orcidButton" mnemonicParsing="false" onAction="#setORCID" text="Set" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label fx:id="orcidLabel" text="not initialized" GridPane.columnIndex="2" GridPane.rowIndex="2" />

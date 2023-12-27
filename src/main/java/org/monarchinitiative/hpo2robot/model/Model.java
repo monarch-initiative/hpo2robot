@@ -13,7 +13,7 @@ import java.util.*;
 
 /**
  * This class keeps a record of items that we can use to make the next ROBOT item.
- * Note that for now we keep the list of approvaed ROBOT items in the MainController.
+ * Note that for now we keep the list of approved ROBOT items in the MainController.
  *
  * @author Peter N Robinson
  */

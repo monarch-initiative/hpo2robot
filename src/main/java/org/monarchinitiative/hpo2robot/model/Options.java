@@ -5,9 +5,13 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.monarchinitiative.hpo2robot.controller.widgets.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.Serializable;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +20,11 @@ import java.util.regex.Pattern;
  * between HPO2ROBOT sessions.
  */
 public class Options implements Serializable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Options.class);
+
+    public final static String OPTIONS_HEADER_LINE = "! hpo2robot options file";
+
+    public final static String N_A = "n/a";
 
     /** Regular expression to check whether an input string is a valid ORCID id. (just the 16 digits) */
     private static final String ORCID_REGEX =
@@ -34,6 +43,8 @@ public class Options implements Serializable {
 
     private final BooleanBinding isReady;
 
+
+
     public Options(String hpJsonFile, String orcid, String hpSrcOntologyFolder) {
         this();
         this.hpJsonFile.set(new File(hpJsonFile));
@@ -44,6 +55,8 @@ public class Options implements Serializable {
     public Options(){
         isReady = hpJsonFile.isNotNull().and(hpSrcOntologyDirectory.isNotNull()).and(orcid.isNotEmpty());
     }
+
+
 
     public File getHpJsonFile() {
         return hpJsonFile.get();
@@ -121,5 +134,74 @@ public class Options implements Serializable {
             return String.format("Malformed ORCID: \"%s\". ", orcid.get());
         }
         return EMPTY_STRING;
+    }
+
+    private boolean validOrcid(String orcid) {
+        if (orcid == null) return false;
+        final Matcher matcher = ORCID_PATTERN.matcher(orcid);
+        return matcher.matches();
+    }
+
+    private boolean hpSrcOntologyDirValid(File hpoDir) {
+        if (hpoDir == null) return false;
+        if (! hpoDir.isDirectory()) return false;
+        // the directory path should be hpo/src/ontology
+        String dir = hpoDir.getAbsolutePath();
+        return dir.contains("ontology") && dir.contains("hpo") && dir.contains("src");
+    }
+
+    private boolean hpJsonFileValid(File hpJsonFile) {
+        if (hpJsonFile == null) return false;
+        if (! hpJsonFile.isFile()) return false;
+        return hpJsonFile.getName().equals("hp.json");
+    }
+
+    public final static String HP_JSON_KEY = "hp.json.file";
+
+    public final static String HP_SRC_DIRECTORY = "hp.src.dir";
+    public final static String ORCID_KEY = "orcid";
+
+    public void writeOptions() {
+        File file = Platform.getHpo2RobotOptionsFile();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))){
+            bw.write(OPTIONS_HEADER_LINE + "\n");
+            if (hpJsonFileValid(hpJsonFile.get())) {
+                bw.write(HP_JSON_KEY + ":" + hpJsonFile.get());
+            }
+            if (validOrcid(orcid.get())) {
+                bw.write(ORCID_KEY + ":" + orcid.get());
+            }
+            if (hpSrcOntologyDirValid(hpSrcOntologyDirectory.get()) ) {
+                bw.write(HP_SRC_DIRECTORY + ":" + hpSrcOntologyDirectory.get());
+            }
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    public static Map<String, String> readOptions() {
+        File hpo2robotOptionsFile = Platform.getHpo2RobotOptionsFile();
+        Map<String,String> optionsMap = new HashMap<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(hpo2robotOptionsFile))){
+            String line;
+            while ((line=br.readLine()) != null) {
+                if (line.startsWith("!")) continue;
+                String [] fields = line.split(":");
+                if (fields.length != 2) {
+                    LOGGER.error("Malformed options line with {} fields: {}", fields.length, line);
+                    continue;
+                }
+                String item = fields[0].trim();
+                String value = fields[1].trim();
+                switch (item) {
+                    case HP_JSON_KEY -> optionsMap.put(HP_JSON_KEY, value);
+                    case ORCID_KEY -> optionsMap.put(ORCID_KEY, value);
+                    case HP_SRC_DIRECTORY -> optionsMap.put(HP_SRC_DIRECTORY, value);
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return optionsMap;
     }
 }

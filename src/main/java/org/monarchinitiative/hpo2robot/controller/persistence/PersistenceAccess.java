@@ -49,6 +49,20 @@ public class PersistenceAccess {
     }
 
 
+    public void saveOptions(Options options) {
+        Properties properties = new Properties();
+        properties.setProperty(HP_JSON_FILE, options.getHpJsonFile().getAbsolutePath());
+        properties.setProperty(HPO_SRC_FOLDER, options.getHpSrcOntologyDir().getAbsolutePath());
+        properties.setProperty(USER_ORCID, options.getOrcid());
+        try {
+            properties.store(new FileOutputStream(HPO2ROBOT_LOCATION), null);
+        } catch (IOException e) {
+            LOGGER.error("Could not store properties file: {}", e.getMessage());
+        }
+        // prop.store(new FileOutputStream("xyz.properties"), null);
+    }
+
+
     /**
      * Create the hpo2robot directory if it does not exist already and
      * save the Options object there as a serialized object
@@ -66,8 +80,9 @@ public class PersistenceAccess {
         File hpSrcOntologyDirectory = options.getHpSrcOntologyDir();
         if (hpSrcOntologyDirectory != null)
             properties.setProperty(HPO_SRC_FOLDER, hpSrcOntologyDirectory.getAbsolutePath());
-
-        properties.setProperty(USER_ORCID, options.getOrcid());
+        if (options.getOrcid() != null) {
+            properties.setProperty(USER_ORCID, options.getOrcid());
+        }
 
         try {
             Files.createDirectories(Paths.get(HPO2ROBOT_DIRPATH));
