@@ -119,6 +119,7 @@ public class MainWindowController extends BaseController implements Initializabl
         ontologyTree.addHookProperty().set(this::addPhenotypeTerm);
         ontologyTree.ontologyProperty().bind(hpOntology);
 
+
         // Setup event handlers to update HPO in case the user changes path to another one
         viewFactory.getOptions().hpJsonFileProperty().addListener((obs, old, hpJsonFilePath) -> loadHpo(hpJsonFilePath));
         // Do the actual loading..
@@ -133,6 +134,7 @@ public class MainWindowController extends BaseController implements Initializabl
                 protected MinimalOntology call() {
                     MinimalOntology hpoOntology = OntologyLoader.loadOntology(hpJsonFilePath);
                     LOGGER.info("Loaded HPO, version {}", hpoOntology.version().orElse("n/a"));
+                    parentTermAdder.setOntology(hpOntology.get());
                     return hpoOntology;
                 }
             };

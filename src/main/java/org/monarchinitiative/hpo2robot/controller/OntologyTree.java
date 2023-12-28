@@ -235,10 +235,11 @@ public class OntologyTree extends VBox {
                     .getParentsStream(termId, false)
                     .findFirst();
             while (parentOpt.isPresent()) {
+                parentOpt.ifPresent(termStack::add);
                 parentOpt = hpo.graph()
                         .getParentsStream(parentOpt.get(), false)
                         .findFirst();
-                parentOpt.ifPresent(termStack::add);
+
             }
             List<TreeItem<Term>> children = ontologyTreeView.getRoot().getChildren();
             termStack.pop(); // get rid of 'ALl'

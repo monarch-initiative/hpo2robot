@@ -21,10 +21,9 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class GitHubIssueBoxController implements Initializable  {
-    Logger LOGGER = LoggerFactory.getLogger(GitHubIssueBoxController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(GitHubIssueBoxController.class);
 
     @FXML
     VBox githubVBox;
@@ -78,6 +77,7 @@ public class GitHubIssueBoxController implements Initializable  {
         });
         File skippedIssueFile = Platform.getSkippedIssueFile();
         this.skippedIssueSet = readSkippedIssues(skippedIssueFile);
+        LOGGER.info("Skipped issues: n={}", skippedIssueSet.size());
     }
 
     private Set<String> readSkippedIssues(File skippedIssueFile) {
@@ -158,7 +158,13 @@ public class GitHubIssueBoxController implements Initializable  {
     private void getGitHubIssues() {
         GitHubIssueRetriever retriever = new GitHubIssueRetriever();
         gitHubIssueMap.clear();
-        retriever.getIssues().forEach(i -> gitHubIssueMap.put(i, true));
+        retriever.getIssues().forEach(i -> {
+            // remove the issues that we have skipped so that they are not presented twice.
+            if (! skippedIssueSet.contains(i.getIssueNumber())) {
+                gitHubIssueMap.put(i, true);
+            }
+        });
+
         String message = String.format("Retrieved %d issues from GitHub", gitHubIssueMap.size());
         gitHubStatusLabel.setTextFill(Color.BLACK);
         gitHubStatusLabel.setFont(SMALL_FONT);
@@ -171,7 +177,6 @@ public class GitHubIssueBoxController implements Initializable  {
                 gitHubIssueMap.entrySet()
                         .stream()
                         .filter(Map.Entry::getValue)
-                        .filter(Predicate.not(skippedIssueSet::contains))
                         .findFirst();
         if (opt.isEmpty()) {
             PopUps.alertDialog("Warning", "No open GitHub issues, retrieve more");

@@ -58,6 +58,7 @@ public class ParentTermAdder extends HBox {
             LOGGER.error("Attempt to set Ontology with null pointer.");
             return;
         }
+        LOGGER.info("Adding ontology to parent-term-adder {}", ontology.version().orElse("n/a"));
         rosettaStone = new HpoRosettaStone(ontology);
         TextFields.bindAutoCompletion(controller.getTextField(), rosettaStone.allLabels());
     }
