@@ -51,6 +51,12 @@ public class GitHubIssueBoxController implements Initializable  {
     private Optional<HostServices> hostServicesOpt;
 
     private Set<String> skippedIssueSet;
+    /**
+     * Variable that stores the number of non-skipped issues in the current batch
+     */
+    private int retrievedIssues;
+
+    private int githubPaginationPage;
 
 
 
@@ -78,6 +84,7 @@ public class GitHubIssueBoxController implements Initializable  {
         File skippedIssueFile = Platform.getSkippedIssueFile();
         this.skippedIssueSet = readSkippedIssues(skippedIssueFile);
         LOGGER.info("Skipped issues: n={}", skippedIssueSet.size());
+        githubPaginationPage = 1;
     }
 
     private Set<String> readSkippedIssues(File skippedIssueFile) {
@@ -156,7 +163,8 @@ public class GitHubIssueBoxController implements Initializable  {
     }
     @FXML
     private void getGitHubIssues() {
-        GitHubIssueRetriever retriever = new GitHubIssueRetriever();
+        GitHubIssueRetriever retriever = new GitHubIssueRetriever(githubPaginationPage);
+        githubPaginationPage++;
         gitHubIssueMap.clear();
         retriever.getIssues().forEach(i -> {
             // remove the issues that we have skipped so that they are not presented twice.
@@ -169,6 +177,7 @@ public class GitHubIssueBoxController implements Initializable  {
         gitHubStatusLabel.setTextFill(Color.BLACK);
         gitHubStatusLabel.setFont(SMALL_FONT);
         gitHubStatusLabel.setText(message);
+        retrievedIssues = gitHubIssueMap.size();
     }
 
 
@@ -200,6 +209,14 @@ public class GitHubIssueBoxController implements Initializable  {
             }
             gitHubIssueMap.put(nextPendingIssue, false);
         }
+        long openIssues = gitHubIssueMap.entrySet()
+                .stream()
+                .filter(Map.Entry::getValue)
+                .count();
+        String message = String.format("%d/%d GitHub issues open", openIssues, retrievedIssues);
+        gitHubStatusLabel.setTextFill(Color.BLACK);
+        gitHubStatusLabel.setFont(SMALL_FONT);
+        gitHubStatusLabel.setText(message);
     }
     public void setHostServices(Optional<HostServices> hostServicesOpt) {
         this.hostServicesOpt = hostServicesOpt;

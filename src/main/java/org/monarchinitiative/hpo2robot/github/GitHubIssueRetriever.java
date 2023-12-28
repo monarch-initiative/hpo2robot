@@ -34,8 +34,10 @@ public class GitHubIssueRetriever {
     private final String username;
     private final String token;
 
+    private final int pagination;
 
-    public GitHubIssueRetriever() {
+
+    public GitHubIssueRetriever(int page) {
         Optional<List<String>> opt = GitHubUtil.githubCredentialToken();
         if (opt.isPresent()) {
             List<String> userInfoList = opt.get();
@@ -46,8 +48,14 @@ public class GitHubIssueRetriever {
             username = null;
             token = null;
         }
+        pagination = page;
         int responsecode = retrieveIssues();
         LOGGER.trace(String.format("We retrieved %d issues with response code %d", issues.size() ,responsecode));
+    }
+
+
+    public GitHubIssueRetriever() {
+       this(1);
     }
 
 
@@ -84,9 +92,14 @@ public class GitHubIssueRetriever {
 
     @SuppressWarnings("resource")
     private int retrieveIssues()  {
+        String hpo_url;
+        if (pagination==1) {
+            hpo_url = "https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues";
+        } else {
+            hpo_url = "https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues?page=" + String.valueOf(pagination);
+        }
         try {
-            final String hpo_github_url ="https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues";
-
+            final String hpo_github_url = hpo_url;
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request;
             if (token != null) {
