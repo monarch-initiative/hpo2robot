@@ -96,23 +96,22 @@ public class GitHubIssueRetriever {
         if (pagination==1) {
             hpo_url = "https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues";
         } else {
-            hpo_url = "https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues?page=" + String.valueOf(pagination);
+            hpo_url = "https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues?page=" + pagination;
         }
         try {
-            final String hpo_github_url = hpo_url;
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request;
             if (token != null) {
                  request = HttpRequest.newBuilder()
                         .version(HttpClient.Version.HTTP_2)
-                        .uri(URI.create(hpo_github_url))
+                        .uri(URI.create(hpo_url))
                         .header("Authorization", " " + token)
                         .GET()
                         .build();
             } else {
                 request = HttpRequest.newBuilder()
                         .version(HttpClient.Version.HTTP_2)
-                        .uri(URI.create(hpo_github_url))
+                        .uri(URI.create(hpo_url))
                         .GET()
                         .build();
             }

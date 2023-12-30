@@ -292,6 +292,7 @@ public class PopUps {
         String htmlBody = String.join("\n", htmlSegments);
         return HEADER +
                 "<H1>HPO Issue #" + issue.getIssueNumber() + "</H1>\n" +
+                "<p class=\"important\">" + issue.getTitle() + "</p>" +
                 "<p class=\"important\">" + htmlBody + "</p>" +
                 FOOTER;
     }

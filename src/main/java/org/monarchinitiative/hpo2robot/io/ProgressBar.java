@@ -2,7 +2,6 @@ package org.monarchinitiative.hpo2robot.io;
 
 /**
  * A simple status bar that only work on terminals where "\r" has an affect.
- *
  * The progress is done/shown in the closed interval <code>[min, max]</code>.
  *
  * @author <a href="mailto:manuel.holtgrewe@charite.de">Manuel Holtgrewe</a>

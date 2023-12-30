@@ -154,7 +154,6 @@ public class ValidatingTextEntryPaneController implements Initializable {
         userTextField.textProperty().addListener( // ChangeListener
                 (observable, oldValue, newValue) -> {
                     String txt = newValue.replaceAll("\\n", " ");
-                    txt = txt.replaceAll("  ", " ");
                     userTextField.setText(txt);
                 });
         userTextField.setText(initialText);
@@ -174,7 +173,7 @@ public class ValidatingTextEntryPaneController implements Initializable {
         if (opt.isPresent()) {
             String s = opt.get();
             s = s.trim();
-            s = s.replaceAll("  ", "");
+            s = s.replaceAll("  ", " ");
             return s;
         } else {
             return "";
