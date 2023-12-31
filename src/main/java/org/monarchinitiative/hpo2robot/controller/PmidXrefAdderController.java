@@ -123,6 +123,7 @@ public class PmidXrefAdderController implements Initializable  {
         pmidList.clear();
         pmidLabel.setText("(0)");
         synonymList.clear();
+        synonymAdderLabel.setText("");
         customOrcidProperty.set("");
     }
 

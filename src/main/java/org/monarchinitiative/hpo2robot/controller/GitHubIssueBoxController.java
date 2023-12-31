@@ -84,7 +84,7 @@ public class GitHubIssueBoxController implements Initializable  {
         File skippedIssueFile = Platform.getSkippedIssueFile();
         this.skippedIssueSet = readSkippedIssues(skippedIssueFile);
         LOGGER.info("Skipped issues: n={}", skippedIssueSet.size());
-        githubPaginationPage = 1;
+        githubPaginationPage = 40;
     }
 
     private Set<String> readSkippedIssues(File skippedIssueFile) {

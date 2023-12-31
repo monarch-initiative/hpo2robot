@@ -54,9 +54,7 @@ public class GitHubIssueRetriever {
     }
 
 
-    public GitHubIssueRetriever() {
-       this(1);
-    }
+
 
 
     public List<GitHubIssue> getIssues(){ return issues; }
@@ -98,6 +96,7 @@ public class GitHubIssueRetriever {
         } else {
             hpo_url = "https://api.github.com/repos/obophenotype/human-phenotype-ontology/issues?page=" + pagination;
         }
+        LOGGER.trace(hpo_url);
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request;
