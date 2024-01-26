@@ -84,7 +84,7 @@ public class GitHubIssueBoxController implements Initializable  {
         File skippedIssueFile = Platform.getSkippedIssueFile();
         this.skippedIssueSet = readSkippedIssues(skippedIssueFile);
         LOGGER.info("Skipped issues: n={}", skippedIssueSet.size());
-        githubPaginationPage = 40;
+        githubPaginationPage = 1;
     }
 
     private Set<String> readSkippedIssues(File skippedIssueFile) {
@@ -163,8 +163,8 @@ public class GitHubIssueBoxController implements Initializable  {
     }
     @FXML
     private void getGitHubIssues() {
-        GitHubIssueRetriever retriever = new GitHubIssueRetriever(githubPaginationPage);
-        githubPaginationPage++;
+        GitHubIssueRetriever retriever = new GitHubIssueRetriever(this.githubPaginationPage);
+        this.githubPaginationPage++;
         gitHubIssueMap.clear();
         retriever.getIssues().forEach(i -> {
             // remove the issues that we have skipped so that they are not presented twice.
@@ -173,7 +173,8 @@ public class GitHubIssueBoxController implements Initializable  {
             }
         });
 
-        String message = String.format("Retrieved %d issues from GitHub", gitHubIssueMap.size());
+        String message = String.format("Retrieved %d issues from GitHub (page %d)", gitHubIssueMap.size(),
+                githubPaginationPage);
         gitHubStatusLabel.setTextFill(Color.BLACK);
         gitHubStatusLabel.setFont(SMALL_FONT);
         gitHubStatusLabel.setText(message);
@@ -232,5 +233,9 @@ public class GitHubIssueBoxController implements Initializable  {
 
     public Optional<String> getGitHubIssueNumber() {
         return currentIssueOpt.map(GitHubIssue::getIssueNumber);
+    }
+
+    public void setPaginationPage(int next) {
+        this.githubPaginationPage = next;
     }
 }

@@ -97,6 +97,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
     private final BooleanProperty robotIssueIsReadyProperty = new SimpleBooleanProperty(false);
 
+
     public MainWindowController(ViewFactory viewFactory, String fxmlName) {
         super(viewFactory, fxmlName);
         model = new Model();
@@ -509,4 +510,14 @@ public class MainWindowController extends BaseController implements Initializabl
     }
 
 
+    public void githubIssuePageAction(ActionEvent actionEvent) {
+        String response = PopUps.getStringFromUser("GitHub Issue Page",
+                "page...","Enter page to get next open issues");
+        try {
+            int i = Integer.parseInt(response);
+            gitHubIssueBox.setPaginationPage(i);
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Could not retrieve next GitHub issue page for {}: {}", response, e.getMessage());
+        }
+    }
 }

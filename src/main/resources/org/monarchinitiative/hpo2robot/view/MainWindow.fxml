@@ -27,6 +27,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
                 <MenuItem mnemonicParsing="false" onAction="#optionsAction" fx:id="optionsMenuItem" text="Options"/>
+                <MenuItem mnemonicParsing="false" onAction="#githubIssuePageAction" fx:id="githubIssuePageMenuItem" text="GitHub Page"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <MenuItem mnemonicParsing="false" text="About"/>

@@ -52,4 +52,8 @@ public class GitHubIssueBox extends HBox  {
     public Optional<String> getGitHubIssueNumber() {
         return controller.getGitHubIssueNumber();
     }
+
+    public void setPaginationPage(int page) {
+        controller.setPaginationPage(page);
+    }
 }
