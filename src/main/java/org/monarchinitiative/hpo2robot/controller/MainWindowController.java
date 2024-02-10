@@ -24,6 +24,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.monarchinitiative.hpo2robot.controller.services.TemplateService;
 import org.monarchinitiative.hpo2robot.controller.widgets.BooleanRetrieverWidget;
 import org.monarchinitiative.hpo2robot.github.GitHubUtil;
 import org.monarchinitiative.hpo2robot.model.Model;
@@ -53,6 +54,8 @@ public class MainWindowController extends BaseController implements Initializabl
     @FXML
     public MenuItem optionsMenuItem;
     @FXML
+    public Menu templatesMenu;
+    @FXML
     public WebView currentRobotView;
     @FXML
     public PmidXrefAdder pmidXrefAdderBox;
@@ -60,6 +63,7 @@ public class MainWindowController extends BaseController implements Initializabl
     public GitHubIssueBox gitHubIssueBox;
     @FXML
     public RobotRunnerPane addNewHpoTermBox;
+
     @FXML
     private TableView<RobotItem> robotTableView;
     @FXML
@@ -170,6 +174,12 @@ public class MainWindowController extends BaseController implements Initializabl
         setUpGithubColumnContextMenu();
         setUpPmidXrefAdder();
         setUpNewTermReadiness();
+        setUpTemplatesMenuItems();
+    }
+
+    private void setUpTemplatesMenuItems() {
+        List<MenuItem> menuItemList = TemplateService.getTemplateMenuItems();
+        this.templatesMenu.getItems().addAll(menuItemList);
     }
 
     /**
@@ -519,5 +529,14 @@ public class MainWindowController extends BaseController implements Initializabl
         } catch (NumberFormatException e) {
             LOGGER.warn("Could not retrieve next GitHub issue page for {}: {}", response, e.getMessage());
         }
+    }
+
+    public void showVersionsAction(ActionEvent actionEvent) {
+        String hpo_json_version = "n/a";
+        if (hpOntology != null) {
+            Optional<String> opt = hpOntology.get().version();
+            hpo_json_version = opt.orElse("could not retrieve version");
+        }
+        PopUps.alertDialog("hp.json version", String.format("hp.json: %s", hpo_json_version));
     }
 }

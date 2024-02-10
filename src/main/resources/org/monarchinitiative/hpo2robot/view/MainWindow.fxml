@@ -27,8 +27,10 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
                 <MenuItem mnemonicParsing="false" onAction="#optionsAction" fx:id="optionsMenuItem" text="Options"/>
+                <MenuItem mnemonicParsing="false" onAction="#showVersionsAction" fx:id="showVersionsMenuItem" text="Show version"/>
                 <MenuItem mnemonicParsing="false" onAction="#githubIssuePageAction" fx:id="githubIssuePageMenuItem" text="GitHub Page"/>
             </Menu>
+            <Menu mnemonicParsing="false" fx:id="templatesMenu" text="Templates"></Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <MenuItem mnemonicParsing="false" text="About"/>
             </Menu>
