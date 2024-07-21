@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 public class GitHubIssueBox extends HBox  {
-    Logger LOGGER = LoggerFactory.getLogger(GitHubIssueBox.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(GitHubIssueBox.class);
 
     private GitHubIssueBoxController controller;
 

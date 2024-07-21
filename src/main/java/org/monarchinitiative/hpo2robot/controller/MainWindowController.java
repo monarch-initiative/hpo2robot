@@ -127,7 +127,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
         // Setup event handlers to update HPO in case the user changes path to another one
         viewFactory.getOptions().hpJsonFileProperty().addListener((obs, old, hpJsonFilePath) -> loadHpo(hpJsonFilePath));
-        // Do the actual loading..
+        // Do the actual loading.
         loadHpo(viewFactory.getOptions().getHpJsonFile());
         this.model.setOptions(viewFactory.getOptions());
     }

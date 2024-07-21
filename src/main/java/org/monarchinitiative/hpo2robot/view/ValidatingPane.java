@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ValidatingPane extends AnchorPane {
-    Logger LOGGER = LoggerFactory.getLogger(ValidatingPane.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ValidatingPane.class);
 
     StringProperty fieldNameProperty;
 
