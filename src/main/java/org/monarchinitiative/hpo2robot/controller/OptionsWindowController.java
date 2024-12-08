@@ -15,18 +15,23 @@ import org.monarchinitiative.hpo2robot.controller.widgets.Platform;
 import org.monarchinitiative.hpo2robot.controller.widgets.UserStringFetcher;
 import org.monarchinitiative.hpo2robot.model.Options;
 import org.monarchinitiative.hpo2robot.view.ViewFactory;
+import org.monarchinitiative.phenol.base.PhenolRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.monarchinitiative.hpo2robot.io.FileDownloader;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+
 
 public class OptionsWindowController extends BaseController implements Initializable {
     private static final Logger LOGGER = LoggerFactory.getLogger(OptionsWindowController.class);
@@ -129,12 +134,14 @@ public class OptionsWindowController extends BaseController implements Initializ
         Path hpJsonPath = Paths.get(String.valueOf(hpo2robotDir), "hp.json");
 
         try {
-            URL hpoJson = new URL("http://purl.obolibrary.org/obo/hp.json");
+            URL hpoJson = new URI("http://purl.obolibrary.org/obo/hp.json").toURL();
             FileDownloader downloader = new FileDownloader();
             downloader.copyURLToFile(hpoJson, hpJsonPath.toFile());
             } catch (MalformedURLException ex) {
             LOGGER.error("Could not download hp.json: {}", ex.getMessage());
                 throw new RuntimeException(ex);
+        } catch (URISyntaxException ex) {
+            throw new PhenolRuntimeException(ex);
         }
         // if we get here, download was successful
         hpJsonProperty.set(hpJsonPath.toFile().getAbsolutePath());

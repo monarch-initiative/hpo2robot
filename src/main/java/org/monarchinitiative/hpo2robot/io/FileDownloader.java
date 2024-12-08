@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -126,7 +124,7 @@ public class FileDownloader {
                 pb.print(fileSize);
             // return file
             return dest;
-        } catch (IOException | IllegalStateException e) {
+        } catch (IOException | IllegalStateException | URISyntaxException e) {
             logger.error(String.format("Failed to downloaded file from %s", src.getHost()), e);
             throw new RuntimeException("ERROR: Problem downloading file: " + e.getMessage());
         }
@@ -134,7 +132,7 @@ public class FileDownloader {
 
 
     protected static URLConnection connect(URLConnection conn, int connectionTimeout, String acceptHeaders, Set<String> visited)
-            throws IOException {
+            throws IOException, URISyntaxException {
         if (conn instanceof HttpURLConnection) {
             // follow redirects to HTTPS
             HttpURLConnection con = (HttpURLConnection) conn;
@@ -150,7 +148,7 @@ public class FileDownloader {
                     || responseCode == 307 || responseCode == 308) {
                 String location = con.getHeaderField("Location");
                 if (visited.add(location)) {
-                    URL newURL = new URL(location);
+                    URL newURL = new URI(location).toURL();
                     return connect(rebuildConnection(connectionTimeout, newURL, acceptHeaders),
                             connectionTimeout, acceptHeaders, visited);
                 } else {
