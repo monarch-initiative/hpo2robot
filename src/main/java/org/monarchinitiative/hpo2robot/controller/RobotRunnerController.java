@@ -38,6 +38,8 @@ public class RobotRunnerController implements Initializable {
     private Button clearRobotFileButton;
     @FXML
     private Button copyRobotCommandButton;
+    @FXML
+    private Button createPromptCommandButton;
 
 
     @FXML
@@ -77,6 +79,10 @@ public class RobotRunnerController implements Initializable {
 
     public void setClearRobotFileAction(EventHandler<ActionEvent> handler) {
         clearRobotFileButton.setOnAction(handler);
+    }
+
+    public void setCreatePromptCommandButton(EventHandler<ActionEvent> handler) {
+        createPromptCommandButton.setOnAction(handler);
     }
 
 

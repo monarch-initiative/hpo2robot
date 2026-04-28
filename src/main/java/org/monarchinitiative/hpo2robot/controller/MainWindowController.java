@@ -24,6 +24,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.monarchinitiative.hpo2robot.controller.services.PromptService;
 import org.monarchinitiative.hpo2robot.controller.services.TemplateService;
 import org.monarchinitiative.hpo2robot.controller.widgets.BooleanRetrieverWidget;
 import org.monarchinitiative.hpo2robot.github.GitHubUtil;
@@ -517,6 +518,16 @@ public class MainWindowController extends BaseController implements Initializabl
             }
         };
         this.addNewHpoTermBox.copyRobotCommandAction(copyRobotCommandHandler);
+        EventHandler<ActionEvent> createPrompt = actionEvent -> {
+            String newHpoLabel = termLabelValidator.getLabel().get();
+            String prompt = PromptService.query(newHpoLabel);
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+            final ClipboardContent content = new ClipboardContent();
+            content.putString(prompt);
+            clipboard.setContent(content);
+        };
+        this.addNewHpoTermBox.setCreatePromptCommandButton(createPrompt);
+
     }
 
 

@@ -65,6 +65,9 @@ public class RobotRunnerPane extends HBox {
     public void copyRobotCommandAction(EventHandler<ActionEvent> handler) {
         controller.copyRobotCommandAction(handler);
     }
+    public void setCreatePromptCommandButton(EventHandler<ActionEvent> handler) {
+        controller.setCreatePromptCommandButton(handler);
+    }
 
     public void clearFields() {
         robotStatusLabelProperty.set("");
