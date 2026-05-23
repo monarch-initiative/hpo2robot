@@ -26,9 +26,9 @@ public class Options implements Serializable {
 
     public final static String N_A = "n/a";
 
-    /** Regular expression to check whether an input string is a valid ORCID id. (just the 16 digits) */
+    /** Regular expression to check whether an input string is a valid ORCID id. (16 characters with hyphens, ending in digit or X) */
     private static final String ORCID_REGEX =
-            "^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$";
+            "^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]$";
 
     private static final String EMPTY_STRING = "";
 
