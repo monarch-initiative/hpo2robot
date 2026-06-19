@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.monarchinitiative</groupId>
     <artifactId>hpo2robot</artifactId>
-    <version>0.3.18</version>
+    <version>0.3.19</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <javafx.version>21.0.1</javafx.version>
-        <phenol.version>2.1.0</phenol.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <javafx.version>26.0.1</javafx.version>
+        <phenol.version>2.1.4</phenol.version>
         <juunit-jupiter.version>5.10.1</juunit-jupiter.version>
         <slf4j.version>2.0.9</slf4j.version>
         <jackson.version>2.15.1</jackson.version>
@@ -105,9 +105,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.12.1</version>
                 <configuration>
-                    <release>21</release>
-                    <source>21</source>
-                    <target>21</target>
+                    <release>25</release>
+                    <source>25</source>
+                    <target>25</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -134,6 +134,8 @@
                         <option>-XX:+UseG1GC</option>
                         <option>--add-exports</option>
                         <option>javafx.base/com.sun.javafx.event=org.controlsfx.controls</option>
+                        <option>--add-modules</option>
+                        <option>jdk.jsobject</option>
                     </options>
                 </configuration>
                 <executions>
