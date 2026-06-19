@@ -104,20 +104,31 @@ public class ViewFactory {
         Scene scene = new Scene(parent);
         Stage stage = new Stage();
         stage.setScene(scene);
+        stage.setTitle("HPO2Robot");
+     
         if (title != null) {
             stage.setTitle(title);
         }
         stage.showAndWait();
     }
 
+
     private void initializeStageAndWait(BaseController controller) {
         initializeStageAndWait(controller, null);
     }
 
 
-    public void showMainWindow() {
+    public void showMainWindow(Stage stage) {
         BaseController controller = new MainWindowController(this, "MainWindow.fxml");
-        initializeStage(controller);
+        Optional<Parent> opt = initializeBaseStage(controller);
+        if (opt.isEmpty()) {
+            LOGGER.error("Could not initialize main window stage template");
+            return;
+        }
+        Parent parent = opt.get();
+        Scene scene = new Scene(parent);
+        stage.setScene(scene);
+        stage.show();
     }
 
 

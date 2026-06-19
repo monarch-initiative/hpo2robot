@@ -8,6 +8,7 @@ module org.monarchinitiative.hpo2robot {
     requires org.slf4j;
     requires json.simple;
     requires java.net.http;
+    requires java.desktop;
 
     opens org.monarchinitiative.hpo2robot.view to javafx.fxml, javafx.web;
     opens org.monarchinitiative.hpo2robot.controller to javafx.fxml, javafx.web;
