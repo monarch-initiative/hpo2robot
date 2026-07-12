@@ -27,3 +27,4 @@ replay_pid*
 /pom.xml.versionsBackup
 
 target/
+.vscode/

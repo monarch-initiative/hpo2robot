@@ -205,48 +205,70 @@ public class MainWindowController extends BaseController implements Initializabl
     }
 
     private void setUpGithubColumnContextMenu() {
-        issueCol.setCellFactory(
-                (column) -> {
-                    final TableCell<RobotItem, String> cell = new TableCell<>();
-                    cell.itemProperty().addListener(// ChangeListener
-                            (obs, oldValue, newValue) -> {
-                                if (newValue != null) {
-                                    final ContextMenu cellMenu = new ContextMenu();
-                                    MenuItem ghMenuItem = new MenuItem("Open GitHub Issue");
-                                    ghMenuItem.setOnAction(e -> {
-                                        RobotItem item = cell.getTableRow().getItem();
-                                        String gitHubIssue = item.getIssue();
-                                        if (hostServicesOpt.isPresent()) {
-                                            GitHubUtil.openInGithubAction(gitHubIssue, hostServicesOpt.get());
-                                        } else {
-                                            LOGGER.error("Could not access HostServices");
-                                        }
-                                    });
-                                    MenuItem summaryMenuItem = new MenuItem("Copy item summary");
-                                    summaryMenuItem.setOnAction(e -> {
-                                        RobotItem item = cell.getTableRow().getItem();
-                                        String summary = item.getIssueSummary();
-                                        final Clipboard clipboard = Clipboard.getSystemClipboard();
-                                        final ClipboardContent content = new ClipboardContent();
-                                        content.putString(summary);
-                                        clipboard.setContent(content);
+    issueCol.setCellFactory(column -> {
+        return new TableCell<RobotItem, String>() {
+            private final ContextMenu cellMenu = new ContextMenu();
 
-                                    });
-                                    MenuItem markedFinishedMenuItem = new MenuItem("Mark finished");
-                                    markedFinishedMenuItem.setOnAction(e -> {
-                                        TableRow<RobotItem> currentRow = cell.getTableRow();
-                                        currentRow.setStyle("-fx-background-color:darkgrey");
-                                    });
-                                    cellMenu.getItems().addAll(ghMenuItem, summaryMenuItem, markedFinishedMenuItem);
-                                    cell.setContextMenu(cellMenu);
-                                }
-                            }
-                    );
-                    cell.textProperty().bind(cell.itemProperty());
-                    return cell;
+            // Initialize the menu once per cell instance
+            {
+                MenuItem ghMenuItem = new MenuItem("Open GitHub Issue");
+                ghMenuItem.setOnAction(e -> {
+                    RobotItem item = getTableRow().getItem();
+                    if (item != null && hostServicesOpt.isPresent()) {
+                        GitHubUtil.openInGithubAction(item.getIssue(), hostServicesOpt.get());
+                    } else if (hostServicesOpt.isEmpty()) {
+                        LOGGER.error("Could not access HostServices");
+                    }
                 });
-    }
 
+                MenuItem summaryMenuItem = new MenuItem("Copy item summary");
+                    summaryMenuItem.setOnAction(e -> {
+                        RobotItem item = getTableRow().getItem();
+                        // Safety check: ensure the item exists and the field isn't blank
+                        if (item != null && item.getIssueSummary() != null) {
+                            String summary = item.getIssueSummary();
+                            final Clipboard clipboard = Clipboard.getSystemClipboard();
+                            final ClipboardContent content = new ClipboardContent();
+                            content.putString(summary);
+                            clipboard.setContent(content);
+                        }
+                    });
+
+                MenuItem markedFinishedMenuItem = new MenuItem("Mark finished");
+                markedFinishedMenuItem.setOnAction(e -> {
+                    TableRow<RobotItem> currentRow = getTableRow();
+                    if (currentRow != null) {
+                        currentRow.setStyle("-fx-background-color:darkgrey");
+                    }
+                });
+
+                cellMenu.getItems().addAll(ghMenuItem, summaryMenuItem, markedFinishedMenuItem);
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                // If the row itself is completely empty (beyond the end of the data list)
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                    setContextMenu(null); 
+                } 
+                // If the row exists, but this specific field is null or empty
+                else if (item == null || item.trim().isEmpty()) {
+                    setText("N/A");           // Display placeholder visually
+                    setContextMenu(cellMenu);  // Enable the context menu anyway
+                } 
+                // Regular data present
+                else {
+                    setText(item);
+                    setContextMenu(cellMenu);
+                }
+            }
+        };
+    });
+}
 
     private void clearFields() {
         this.termLabelValidator.clearFields();
